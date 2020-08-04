@@ -14,7 +14,7 @@
       list-style-type: square;
     }
 
-    tr td {
+    .table-af tr td {
       text-align: center;
     }
   </style>
@@ -22,33 +22,24 @@
 
 <body style="font-family:Arial;font-size:12px">
   <?php
-  // if($data->status == '0'){
-  //   $status = "Open";
-  // } else if ($data->status == "1") {
-  //   $status = "Deal";
-
-  // } else if ($data->status == "2") {
-  //   $status = "Lost";
-
-  // } else {
-  //   $status = "Tidak ada status";
-
-  // }
+  // echo "<pre>";
+  // print_r($customer);
+  // echo "<pre>";
+  // exit;
+  $date = date('Y-m-d');
   ?>
-  <!-- <h4 style="text-align: right;position:relative;margin:0px">Status : <?= $status ?></h4> -->
-  <!-- <hr> -->
-  <p>Jakarta, 26 November 2019</p>
+
+  <p>Jakarta, <?= date('d F Y') ?></p>
   <div class="">
     <p>
       Kepada Yth,<br>
-      <b>Ibu Rina Meitia Nizar</b> <br>
-      Jl. Kertanegara No. 49 <br>
-      Jakarta <br>
+      <b><?= $customer->name_customer ?></b> <br>
+      <?= $customer->address_office ?>
     </p>
 
     <p>
-      <b>Ref.367R2/IDF/ER/PR/11/19</b><br>
-      <b>Perihal: Penawaran Harga Residential Jl. Kertanegara No. 49 </b>
+      <b>Ref. <?= $data->id_quotation ?></b><br>
+      <b>Perihal: Penawaran Harga </b>
     </p>
 
     <p>
@@ -57,7 +48,7 @@
       Sesuai dengan permintaan maka kami lampirkan penawaran harga, dengan total keseluruhannya :
     </p>
 
-    <p style="padding: 5px;border:1px solid #ccc;background-color:yellow"><b> Rp. 66.981.772 GRAND TOTAL</b></p>
+    <p style="padding: 5px;border:1px solid #ccc;background-color:yellow"><b> Rp. <?= number_format($data->grand_total) ?> GRAND TOTAL</b></p>
     <p>dengan perincian terlampir.</p>
 
     <p>
@@ -218,7 +209,7 @@
       </li>
     </ol>
     <p>
-      <table border="1" style="border-collapse: collapse;" width="100%">
+      <table border="1" style="border-collapse: collapse;" class="table-af" width="100%">
         <thead>
           <tr>
             <th rowspan="2">Fabric Quantity dari kode pabrik yang sama</th>
@@ -264,7 +255,7 @@
     </ol>
   </div>
   <br>
-  <table width="100%">
+  <table width="100%" class="table-af">
     <tr>
       <td>
         <p>Hormat kami, Menyetujui,</p>
@@ -288,15 +279,22 @@
       <td></td>
       <td>(________________________)</td>
     </tr>
+    <?php
+
+    // echo "<pre>";
+    // print_r($karyawan);
+    // echo "<pre>";
+    // exit;
+    ?>
     <tr>
-      <td>Sales : Erry</td>
+      <td>Sales : <?= $karyawan->nama_karyawan ?></td>
       <td></td>
       <td>Nama Jelas</td>
     </tr>
   </table>
   <div>
-    <p>Contact Person (Admin) : Ulfi <br>
-      Email: erry@idefabcipta.com cc ulfi@idefabcipta.com
+    <!-- <p>Contact Person (Admin) : <br> -->
+    Email: <?= $karyawan->email ?>
     </p>
     <p>
     </p>

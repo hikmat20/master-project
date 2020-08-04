@@ -19,3 +19,10 @@ ERROR - 2020-08-04 09:52:58 --> Severity: Warning --> Cannot modify header infor
 ERROR - 2020-08-04 09:52:58 --> Severity: Core Error --> Directive 'register_globals' is no longer available in PHP Unknown 0
 ERROR - 2020-08-04 09:52:58 --> Severity: Core Error --> Directive 'register_globals' is no longer available in PHP Unknown 0
 ERROR - 2020-08-04 09:54:32 --> Severity: Core Error --> Directive 'register_globals' is no longer available in PHP Unknown 0
+ERROR - 2020-08-04 10:23:53 --> Severity: Core Error --> Directive 'register_globals' is no longer available in PHP Unknown 0
+ERROR - 2020-08-04 10:26:11 --> Severity: Warning --> date_format() expects parameter 1 to be DateTimeInterface, string given /home/ssc/idefab_dev/application/modules/quotation_proses/views/print_quotation1.php 32
+ERROR - 2020-08-04 10:37:38 --> Severity: Warning --> Cannot modify header information - headers already sent by (output started at /home/ssc/idefab_dev/application/libraries/Mpdf.php:7464) /home/ssc/idefab_dev/system/core/Common.php 573
+ERROR - 2020-08-04 10:37:38 --> Severity: Core Error --> Directive 'register_globals' is no longer available in PHP Unknown 0
+ERROR - 2020-08-04 10:50:12 --> Severity: Core Error --> Directive 'register_globals' is no longer available in PHP Unknown 0
+ERROR - 2020-08-04 10:50:16 --> Severity: Core Error --> Directive 'register_globals' is no longer available in PHP Unknown 0
+ERROR - 2020-08-04 11:08:11 --> Severity: Core Error --> Directive 'register_globals' is no longer available in PHP Unknown 0
