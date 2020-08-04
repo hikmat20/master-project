@@ -334,7 +334,12 @@ class Mso_proses extends Admin_Controller
         'pic_invoice'          => $data['pic_invoice'],
         'phone_pic_inv'        => $data['phone_pic_inv'],
         'address_inv'          => $data['address_inv'],
-        'jenis_tagihan'        => $data['tagihan'],
+        'payment_term'         => $data['payment_term'],
+        'payment_percent_1'    => $data['paymentDpPersen1'],
+        'payment_value_1'      => $data['paymentDpValue1'],
+        'payment_percent_2'    => $data['paymentDpPersen2'],
+        'payment_value_2'      => $data['paymentDpValue2'],
+        'tempo_week'           => $data['tempo_week'],
         'status'               => $data['status']
       );
 

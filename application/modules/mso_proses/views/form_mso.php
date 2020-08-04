@@ -128,6 +128,29 @@
                         </tr>
                     </table>
                 </div>
+                <div class="col-md-6">
+                    <table class="table-condensed payment_term" width="100%">
+                        <tbody>
+                            <tr>
+                                <th width="30%">Payment Term</th>
+                                <td>
+                                    <select name="payment_term" onchange="myFunction()" id="paymentTerm" class="select2 required form-control paymentTerm">
+                                        <option value=""></option>
+                                        <option value="CA">Cash in Advance</option>
+                                        <option value="DP">Down Payment</option>
+                                        <option value="TM">Tempo</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                    <div class="detailPayterm"></div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
             <hr>
             <div class="row">
@@ -274,7 +297,7 @@
                                     <input type="date" name="pemasangan[$rm][tgl_pasang]" class="bg-gray form-control required" value="<?= $room->installation_date ?>">
                                 </td>
                                 <td>
-                                    <input type="text" name="pemasangan[$rm][keterangan]" id="keterangan" class="form-control" value="<?= $room->notes ?>">
+                                    <input type="text" name="pemasangan[$rm][keterangan]" class="form-control" value="<?= $room->notes ?>">
                                 </td>
                             </tr>
                         <?php
@@ -288,8 +311,48 @@
             <button type="button" class="btn btn-md btn-primary pull-right" id="saveMso"><i class="fa fa-save"></i> Save</button>
         </div>
 </form>
-
 <script type="text/javascript">
+    function myFunction() {
+        const py = document.getElementById("paymentTerm").value;
+        console.log(py);
+        var html = '';
+        if (py == 'TM') {
+            var html =
+
+                '<div class="input-group col-sm-6">' +
+                '    <input type="number" class="form-control text-right required" name="tempo_week" id="weekTempo" min="0" placeholder="0">' +
+                '    <span class="input-group-addon">' +
+                '        <span >Week</span>' +
+                '    </span>' +
+
+                '</div>'
+        } else if (py == 'DP') {
+            var html =
+                '<div class="input-group">' +
+                '    <span class="input-group-addon">1</span>' +
+                '    <input type="text" name="paymentDpPersen1" class="form-control required text-right" placeholder="0">' +
+                '    <span class="input-group-addon">%</span>' +
+                '    <span class="input-group-addon">Rp.</span>' +
+                '    <input type="text" name="paymentDpValue1" class="form-control text-right" placeholder="0">' +
+                '</div>' +
+                '<div class="input-group">' +
+                '    <span class="input-group-addon">2</span>' +
+                '    <input type="text" name="paymentDpPersen2" class="form-control text-right" placeholder="0">' +
+                '    <span class="input-group-addon">%</span>' +
+                '    <span class="input-group-addon">Rp.</span>' +
+                '    <input type="text" name="paymentDpValue2" class="form-control text-right" placeholder="0">' +
+                '</div>'
+
+        } else {
+            var html = ''
+        }
+        // console.log(html);
+        // document.querySelector('.payment_term tbody').append(html);
+        $('div.detailPayterm').html(html)
+
+    }
+
+
     $(".select2").select2({
         placeholder: "Choose An Option",
         allowClear: true,
