@@ -1,0 +1,73 @@
+thead{
+  background-color: #175477;
+  color: white;
+}
+
+.inSp{
+  text-align: center;
+  display: inline-block;
+  width: 100px;
+}
+.inSp2{
+  text-align: center;
+  display: inline-block;
+  width: 45%;
+}
+.inSpL{
+  text-align: left;
+}
+.vMid{
+  vertical-align: middle !important;
+}
+.w10{
+  display: inline-block;
+  width: 10% ;
+}
+.w15{
+  display: inline-block;
+  width: 15% ;
+}
+.w20{
+  display: inline-block;
+  width: 20% ;
+}
+.w30{
+  display: inline-block;
+  width: 30% ;
+}
+.w40{
+  display: inline-block;
+  width: 40% ;
+}
+.w50{
+  display: inline-block;
+  width: 50% ;
+}
+.w60{
+  display: inline-block;
+  width: 60% ;
+}
+.w70{
+  display: inline-block;
+  width: 70% !important;
+}
+.w80{
+  display: inline-block;
+  width: 80% ;
+}
+.w90{
+  display: inline-block;
+  width: 90% ;
+}
+.hideIt{
+  display: none !important;
+}
+.showIt{
+  display: inline-block;
+}
+.inline{
+  display: inline-block !important;
+}
+.mb-1{
+  margin-bottom: 1%;
+}
