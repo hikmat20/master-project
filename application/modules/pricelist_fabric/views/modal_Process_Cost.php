@@ -2,9 +2,25 @@
 
 if (!empty($this->uri->segment(3))) {
 
-  $getC  = $this->db->query("SELECT a.*,b.name_class from master_product_fabric a inner join master_product_class b on a.id_class = b.id_class where a.id_product = '$id'")->row();
+  $getC  = $this->db->query(
+    "SELECT
+	a.*,
+	b.pricelist,
+	b.buy_price,
+	c.name_class
+FROM
+	master_product_fabric a
+	INNER JOIN pricelist_fabric b ON a.id_product= b.id_product
+	left join master_product_class c ON b.id_class = c.id_class
+WHERE
+	a.id_product = '$id'"
+  )->row();
   $cost  = $this->db->query("SELECT * from pricelist_fabric where id_product = '$id' and activation ='aktif'")->row();
   // print_r($getC->id_product);
+  // echo "<pre>";
+  // print_r($getC);
+  // echo "<pre>";
+  // exit;
 }
 if ($this->uri->segment(4) == 'view') {
   $view = 'style="display:block"';

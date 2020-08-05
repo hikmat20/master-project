@@ -1104,7 +1104,7 @@ if ($this->uri->segment(4) == 'view') {
   getClass();
   getFeature();
   getCurs();
-  getContent();
+  // getContent();
   getUOM();
   getCursPricelist();
   getSimilar();
@@ -1383,8 +1383,8 @@ if ($this->uri->segment(4) == 'view') {
   }
 
   function getClass() {
-    if ('<?= ($getC->id_class) ?>' != null) {
-      var id_selected = '<?= $getC->id_class ?>';
+    if ('<?= (trim($getC->id_class)) ?>' != null) {
+      var id_selected = '<?= trim($getC->id_class) ?>';
     } else if ($('#id_class').val() != null || $('#id_class').val() != '') {
       var id_selected = $('#id_class').val();
     } else {
@@ -1540,44 +1540,44 @@ if ($this->uri->segment(4) == 'view') {
 
   }
 
-  function getContent() {
-    if ('<?= ($getC->id_content) ?>' != null) {
-      var id_selected = '<?= $getC->id_content ?>';
-    } else if ($('#id_content' + x).val() != null || $('#id_content' + x).val() != '') {
-      var id_selected = $('#id_content' + x).val();
-    } else {
-      var id_selected = '';
-    }
-    //console.log(id_selected);
-    var column = '';
-    var column_fill = '';
-    var column_name = 'name_content';
-    var table_name = 'master_product_content';
-    var key = 'id_content';
-    var act = '';
-    $.ajax({
-      url: siteurl + active_controller + "getOpt",
-      dataType: "json",
-      type: 'POST',
-      data: {
-        id_selected: id_selected,
-        column: column,
-        column_fill: column_fill,
-        column_name: column_name,
-        table_name: table_name,
-        key: key,
-        act: act
-      },
-      success: function(result) {
-        $('.id_content').html(result.html);
-      },
-      error: function(request, error) {
-        console.log(arguments);
-        alert(" Can't do because: " + error);
-      }
-    });
+  // function getContent() {
 
-  }
+  //     var id_selected = '';
+  //   } else if ($('#id_content' + x).val() != null || $('#id_content' + x).val() != '') {
+  //     var id_selected = $('#id_content' + x).val();
+  //   } else {
+  //     var id_selected = '';
+  //   }
+  //   //console.log(id_selected);
+  //   var column = '';
+  //   var column_fill = '';
+  //   var column_name = 'name_content';
+  //   var table_name = 'master_product_content';
+  //   var key = 'id_content';
+  //   var act = '';
+  //   $.ajax({
+  //     url: siteurl + active_controller + "getOpt",
+  //     dataType: "json",
+  //     type: 'POST',
+  //     data: {
+  //       id_selected: id_selected,
+  //       column: column,
+  //       column_fill: column_fill,
+  //       column_name: column_name,
+  //       table_name: table_name,
+  //       key: key,
+  //       act: act
+  //     },
+  //     success: function(result) {
+  //       $('.id_content').html(result.html);
+  //     },
+  //     error: function(request, error) {
+  //       console.log(arguments);
+  //       alert(" Can't do because: " + error);
+  //     }
+  //   });
+
+  // }
 
   function getCodeCountry() {
 

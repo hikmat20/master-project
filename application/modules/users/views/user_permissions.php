@@ -1,11 +1,11 @@
-<link rel="stylesheet" href="<?= base_url('assets/plugins/datatables/dataTables.bootstrap.css')?>">
+<link rel="stylesheet" href="<?= base_url('assets/plugins/datatables/dataTables.bootstrap.css') ?>">
 <div class="box box-primary">
   <!-- form start -->
-  <?= form_open($this->uri->uri_string(),array('id'=>'frm_users','name'=>'frm_users','role'=>'form','class'=>'form-horizontal')) ?>
+  <?= form_open($this->uri->uri_string(), array('id' => 'frm_users', 'name' => 'frm_users', 'role' => 'form', 'class' => 'form-horizontal')) ?>
   <div class="box-header">
     <input type="submit" name="save" value="<?= lang('users_btn_save') ?>" class="btn btn-primary" />
     <?php
-    echo anchor('users/setting', lang('users_btn_cancel'),array('class' => 'btn btn-danger'));
+    echo anchor('users/setting', lang('users_btn_cancel'), array('class' => 'btn btn-danger'));
     ?>
     <div class="form-group <?= form_error('username') ? ' has-error' : ''; ?>">
       <label for="username" class="col-md-2 control-label"><?= lang('users_username') ?></label>
@@ -32,7 +32,8 @@
               'checked'       => false,
               'class'         => 'input-sm'
             );
-            echo form_checkbox($data); echo "&nbsp; Check All";
+            echo form_checkbox($data);
+            echo "&nbsp; Check All";
             ?>
           </th>
         </tr>
@@ -48,13 +49,14 @@
         <?php
         $no = 1;
         foreach ($permissions as $key => $pr) :
-          ?>
+        ?>
           <tr>
             <td><?= $no ?></td>
-            <td><?php echo $pr['View']['nm']//print_r($pr) ?></td>
+            <td><?php echo $pr['View']['nm'] //print_r($pr) 
+                ?></td>
             <?php foreach ($pr as $key2 => $action) : ?>
-              <td class="text-center" >
-                <?php if($action == 0) : ?>
+              <td class="text-center">
+                <?php if ($action == 0) : ?>
                   -
                 <?php else : ?>
                   <input type="checkbox" name="id_permissions[]" value="<?= $action['perm_id'] ?>" title="<?= $action['action_name'] ?>" <?= ($action['value'] == 1) ? "checked='checked'" : '' ?> <?= ($action['is_role_permission'] == 1) ? "disabled='disabled'" : '' ?> />
@@ -62,60 +64,63 @@
               </td>
             <?php endforeach ?>
           </tr>
-          <?php $no++;endforeach ?>
-        </tbody>
-        <tfoot>
-          <tr>
-            <th>#</th>
-            <th><?= lang('users_facility_name') ?></th>
-            <?php foreach ($header as $key => $hd) : ?>
-              <th class="text-center"><?= $hd ?></th>
-            <?php endforeach ?>
-          </tr>
-        </tfoot>
-      </table>
-    </div>
-    <div class="box-footer">
-      <input type="submit" name="save" value="<?= lang('users_btn_save') ?>" class="btn btn-primary" />
-      <?php
-      echo anchor('users/setting', lang('users_btn_cancel'),array('class' => 'btn btn-danger'));
-      ?>
-    </div>
+        <?php $no++;
+        endforeach ?>
+      </tbody>
+      <tfoot>
+        <tr>
+          <th>#</th>
+          <th><?= lang('users_facility_name') ?></th>
+          <?php foreach ($header as $key => $hd) : ?>
+            <th class="text-center"><?= $hd ?></th>
+          <?php endforeach ?>
+        </tr>
+      </tfoot>
+    </table>
   </div>
-  <?= form_close() ?>
+  <div class="box-footer">
+    <input type="submit" name="save" value="<?= lang('users_btn_save') ?>" class="btn btn-primary" />
+    <?php
+    echo anchor('users/setting', lang('users_btn_cancel'), array('class' => 'btn btn-danger'));
+    ?>
+  </div>
+</div>
+<?= form_close() ?>
 </div><!-- /.box -->
 
 <!-- DataTables -->
 
-<script src="<?= base_url('assets/plugins/datatables/jquery.dataTables.min.js')?>"></script>
-<script src="<?= base_url('assets/plugins/datatables/dataTables.bootstrap.min.js')?>"></script>
+<script src="<?= base_url('assets/plugins/datatables/jquery.dataTables.min.js') ?>"></script>
+<script src="<?= base_url('assets/plugins/datatables/dataTables.bootstrap.min.js') ?>"></script>
 
 <!-- page script -->
 <script>
-	$(document).ready(function() {
-	    $('#example1').DataTable( {
-	        "lengthMenu": [[100, -1], [100, "All"]]
-	    } );
-      $("td").click(function(e) {
-    var chk = $(this).find("input:checkbox").get(0);
-    if(e.target != chk)
-    {
+  $(document).ready(function() {
+    $('#example1').DataTable({
+      "lengthMenu": [
+        [100, -1],
+        [100, "All"]
+      ]
+    });
+    $("td").click(function(e) {
+      var chk = $(this).find("input:checkbox").get(0);
+      if (e.target != chk) {
         chk.checked = !chk.checked;
-    }
+      }
     });
 
-	$('#chk_all').click(function(){
-			if($('#chk_all').is(':checked')){
-				$('#listDetail').find('input[type="checkbox"]').each(function(){
-					$(this).prop('checked',true);
-				});
-			}else{
-				$('#listDetail').find('input[type="checkbox"]').each(function(){
-					$(this).prop('checked',false);
-				});
-			}
-		});
+    $('#chk_all').click(function() {
+      if ($('#chk_all').is(':checked')) {
+        $('#listDetail').find('input[type="checkbox"]').each(function() {
+          $(this).prop('checked', true);
+        });
+      } else {
+        $('#listDetail').find('input[type="checkbox"]').each(function() {
+          $(this).prop('checked', false);
+        });
+      }
+    });
 
 
-	} );
+  });
 </script>

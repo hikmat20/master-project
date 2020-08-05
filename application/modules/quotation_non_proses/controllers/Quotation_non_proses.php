@@ -25,7 +25,7 @@ class Quotation_non_proses extends Admin_Controller
 
     $this->load->library(array('Mpdf', 'upload', 'Image_lib'));
     $this->load->model(array(
-      'Quotation_proses/Quotation_proses_model',
+      'QuotationNonProsesModel',
       'Aktifitas/aktifitas_model',
     ));
     $this->template->title('Quotation');
@@ -565,9 +565,16 @@ class Quotation_non_proses extends Admin_Controller
 
   public function addCurtain()
   {
-    // $no = $this->input->post('no');
-    // $this->template->set('no', $no);
+    $product = $this->QuotationNonProsesModel->getProduct();
+    // echo "<pre>";
+    // print_r($product);
+    // echo "<pre>";
+    // exit;
+    $data = [
+      'product' => $product
+    ];
 
+    $this->template->set($data);
     $this->template->render('form_curtain');
   }
 

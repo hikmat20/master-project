@@ -572,10 +572,10 @@ if (!empty($this->uri->segment(3))) {
 
 	$(document).ready(function() {
 
-		// getCustomer();
-		// getTypeProject();
-		// getKar();
-		// getDiscCat()
+		getCustomer();
+		getTypeProject();
+		getKar();
+		getDiscCat()
 
 		$(".datepicker").datepicker({
 			format: "yyyy-mm-dd",

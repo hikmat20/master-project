@@ -129,6 +129,12 @@
                         </tr>
                     </table>
                 </div>
+                <div class="col-md-6">
+                    <table class="table-striped payment_term" width="100%">
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
             </div>
             <hr>
             <div class="row">
@@ -216,6 +222,52 @@
                             </td>
                             <td>:
                                 <?= $dataMso->jenis_tagihan ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th width="30%">Payment Term</th>
+                            <td>
+                                <?php if ($dataMso->payment_term == 'CA') : ?>
+                                    <span>: Cash in Advance</span>
+                                <?php elseif ($dataMso->payment_term == 'DP') : ?>
+                                    <span>: Down Payment</span>
+                                <?php elseif ($dataMso->payment_term == 'TM') : ?>
+                                    <span>: Tempo</span>
+                                <?php endif ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <div class="detailPayterm">
+                                    <?php
+                                    if ($dataMso->payment_term == 'DP') { ?>
+                                        <ol>
+                                            <li>
+                                                <?= $dataMso->payment_percent_1 ?> /Rp. <?= $dataMso->payment_value_1 ?>
+                                            </li>
+                                            <li>
+                                                <?= $dataMso->payment_percent_2 ?> /Rp. <?= $dataMso->payment_value_2 ?>
+                                            </li>
+                                        </ol>
+                                        <div class="radio">
+                                            <?php if ($dataMso->type_payment == "BP") : ?>
+                                                <label style="margin-right:50px">
+                                                    <input type="radio" name="type_payment" id="type_payment" value="bp" <?= $dataMso->type_payment == "BP" ? 'checked' : '' ?> disabled>
+                                                    BP
+                                                </label>
+                                            <?php elseif ($dataMso->type_payment = "PROGRESS") : ?>
+                                                <label>
+                                                    <input type="radio" name="type_payment" id="type_payment" value="progress" <?= $dataMso->type_payment == "PROGRESS" ? 'checked' : '' ?> disabled>
+                                                    PROGRESS
+                                                </label>
+                                            <?php endif ?>
+                                        </div>
+                                    <?php } else if ($dataMso->payment_term == 'TM') { ?>
+                                        <span>: <?= $dataMso->tempo_week ?></span>&nbsp;&nbsp;
+                                        <span>Week</span>
+                                    <?php } ?>
+                                </div>
                             </td>
                         </tr>
                     </table>

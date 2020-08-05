@@ -4,7 +4,6 @@ $ENABLE_MANAGE  = has_permission('Quotation_proses.Manage');
 $ENABLE_VIEW    = has_permission('Quotation_proses.View');
 $ENABLE_DELETE  = has_permission('Quotation_proses.Delete');
 ?>
-
 <link rel="stylesheet" href="<?= base_url('assets/plugins/datatables/dataTables.bootstrap.css') ?>">
 
 <div class="nav-tabs-custom">

@@ -508,17 +508,17 @@ if (!empty($this->uri->segment(3))) {
 		$('.select2-search__field').css('width', '90% !important');
 		$('.select2-search__field').css('padding-right', '5%');
 
-		$(document).on('click change keyup paste blur', '#form-quotation .form-control', function(e) {
-			//console.log('AHAHAHAHA');
-			var val = $(this).val();
-			var id = $(this).attr('id');
-			if (val == '') {
-				//$('.'+id).addClass('hideIt');
-				$('.' + id).css('display', 'inline-block');
-			} else {
-				$('.' + id).css('display', 'none');
-			}
-		});
+		// $(document).on('click change keyup paste blur', '#form-quotation  .form-control', function(e) {
+		// 	//console.log('AHAHAHAHA');
+		// 	var val = $(this).val();
+		// 	var id = $(this).attr('id');
+		// 	if (val == '') {
+		// 		$('.' + id).addClass('hideIt');
+		// 		$('.' + id).css('display', 'inline-block');
+		// 	} else {
+		// 		$('.' + id).css('display', 'none');
+		// 	}
+		// });
 
 		if ('<?= $this->uri->segment(4) ?>' == 'view') {
 			$('.label_view').css("display", "block");
@@ -701,7 +701,7 @@ if (!empty($this->uri->segment(3))) {
 							width: '100%',
 							dropdownParent: $("#form-quotation")
 						});
-						getProduk();
+						// getProduk();
 						$('.curtain-box').removeClass('collapsed-box');
 					}
 				})
@@ -712,60 +712,93 @@ if (!empty($this->uri->segment(3))) {
 		}
 	});
 
-	function getProduk() {
-
-		if ('<?= $fabrics_curtain->id_product ?>' != '') {
-			var id_selected = '<?= $fabrics_curtain->id_product ?>';
-		} else {
-			var id_selected = '';
-		}
-		// alert(no)
-		// console.log(id_selected);
-		var column = 'activation';
-		var column_fill = 'aktif';
-		var filter_column = 'status';
-		var filter_val = '1';
-		var search_column = 'usages';
-		var search_value = 'curtain';
-		var column_name = 'name_product';
-		var table_name = 'pricelist_fabric_view';
-		var key = 'id_product';
-		var act = 'free';
-		$.ajax({
-			url: siteurl + active_controller + "getOpt",
-			dataType: "json",
-			type: 'POST',
-			data: {
-				id_selected: id_selected,
-				column: column,
-				column_fill: column_fill,
-				filter_column: filter_column,
-				filter_val: filter_val,
-				search_column: search_column,
-				search_value: search_value,
-				column_name: column_name,
-				table_name: table_name,
-				key: key,
-				act: act
-			},
-			success: function(result) {
-				$('#product_curtain').html(result.html);
-			},
-			error: function(request, error) {
-				console.log(arguments);
-				alert(" Can't do because: " + error);
-			}
+	$(document).on('click', '.addCurtain', function() {
+		var x = parseInt($('.list-curtain tbody tr').length + 1);
+		var html = '';
+		html =
+			'<tr>' +
+			'	<td>' + x + '</td>' +
+			'	<td>' +
+			'		<select name="product_curtain[' + x + '][nama]" data-id="' + x + '" class="select2 form-control product_curtain">' +
+			'			<option value=""></option>' +
+			'			<?php
+							$query = "SELECT a.id_product, a.name_product FROM master_product_fabric a left join pricelist_fabric b on a.id_product = b.id_product WHERE b.activation = 'aktif' and status = '1'";
+							$product = $this->db->query($query)->result();
+							foreach ($product as $pr) : ?>' +
+			'				<option value="<?= $pr->id_product ?>"><?= $pr->name_product ?></option>' +
+			'			<?php endforeach ?>' +
+			'		</select>' +
+			'	</td>' +
+			'	<td>' +
+			'		<input type="text" class="form-control cust_curtain_name" data-id="' + x + '" placeholder="Customer Product Name" name="product_curtain[' + x + '][cust_curtain_name]" id="cust_curtain_name' + x + '">' +
+			'	</td>' +
+			'	<td width="100px">' +
+			'		<input type="hidden" class="form-control width" data-id="' + x + '" name="product_curtain[' + x + '][width]" id="width_curtain' + x + '">' +
+			'		<input type="hidden" class="form-control price" data-id="' + x + '" name="product_curtain[' + x + '][price]" id="price_curtain' + x + '">' +
+			'		Width: <span id="width_text_curtain' + x + '"></span> <br>' +
+			'	    <strong> Rp. <span id="price_text_curtain' + x + '"></span></strong>' +
+			'	</td>' +
+			'	<td width="80px">' +
+			'		<input type="number" min="0" class="form-control qty_curtain" data-id="' + x + '" placeholder="0" name="product_curtain[' + x + '][qty]" id="qty_curtain' + x + '">' +
+			'	</td>' +
+			'	<td width="150px">' +
+			'		<input type="text" class="form-control subtotal text-right" readonly data-id="' + x + '" placeholder="0" name="product_curtain[' + x + '][subtotal]" id="subtotal_curtain' + x + '">' +
+			'	</td>' +
+			'	<td width="150px">' +
+			'		<input type="number" class="form-control diskon text-right" data-id="' + x + '" placeholder="0" name="product_curtain[' + x + '][diskon]" id="diskon_curtain' + x + '">' +
+			'	</td>' +
+			'	<td>' +
+			'		<input type="text" class="form-control total text-right" readonly data-id="' + x + '" placeholder="0" name="product_curtain[' + x + '][total]" id="total_curtain' + x + '">' +
+			'	</td>' +
+			'	<td>' +
+			'		<button type="button" class="btn btn-sm btn-danger hapus_curtain">x</button>' +
+			'	</td>' +
+			'</tr>'
+		$('.list-curtain tbody').append(html);
+		$(".select2").select2({
+			placeholder: "Choose An Option",
+			width: '100%'
 		});
-	}
+	})
 
+	$(document).on('change', '.qty_curtain', function() {
+		var no = $(this).data('id');
+		var qty = $(this).val() || 0;
+		var price = $('#price_curtain' + no).val() || 0;
+		var disc = $('#diskon_curtain' + no).val() || 0;
+		subtotal = parseInt(qty) * parseInt(price);
+		diskon = subtotal * parseInt(disc) / 100
+		console.log(diskon)
+		total = (subtotal - diskon);
+		console.log(subtotal + ", " + diskon + ", " + total)
+		$('#subtotal_curtain' + no).val(("" + subtotal).replace(/\B(?=(?:\d{3})+(?!\d))/g, ","));
+		$('#total_curtain' + no).val(("" + total).replace(/\B(?=(?:\d{3})+(?!\d))/g, ","));
+	})
 
-	$(document).on('change', '.product_curtain', function() {
-		var product = $(this).val();
-		changeCurtain(product);
+	$(document).on('change', '.diskon', function() {
+		var no = $(this).data('id');
+		var disc = $(this).val() || 0;
+		var subtotal = $('#subtotal_curtain' + no).val().replace(/,/g, '') || 0;
+		diskon = (parseInt(subtotal) * parseInt(disc)) / 100
+		console.log(subtotal);
+		total = (subtotal - diskon);
+		$('#total_curtain' + no).val(("" + total).replace(/\B(?=(?:\d{3})+(?!\d))/g, ","));
 
 	})
 
-	function changeCurtain(product) {
+	$(document).on('click', '.hapus_curtain', function() {
+		$(this).parents('tr').remove();
+	})
+
+	$(document).on('change', '.product_curtain', function() {
+		var product = $(this).val();
+		var no = $(this).data('id');
+		changeCurtain(product, no);
+
+	})
+
+	function changeCurtain(product, no) {
+
 		$.ajax({
 			type: 'POST',
 			url: siteurl + 'quotation_proses/dataProduct',
@@ -774,31 +807,34 @@ if (!empty($this->uri->segment(3))) {
 			},
 			dataType: 'json',
 			success: function(result) {
+				console.log(no);
 				if (result['product'] == '' || result['product'] == null) {
-					$('#lebar_kain').val('');
-					$('#harga_kain').val('');
-					$('#t_harga_kain').val('');
-					$('#t_disc_fab').val('');
-					$('#cust_curtain_name').val('');
+					$('#width_curtain' + no).val('');
+					$('#price_curtain' + no).val('');
+					$('#width_text_curtain' + no).text('');
+					$('#price_text_curtain' + no).text('');
+					$('#cust_curtain_name' + no).val('');
 					let harga_kain = 0;
 				} else {
 
-					total_hrg_kain = parseInt(result['product'].price);
-					$('#lebar_kain').val(result['product'].width);
-					$('#harga_kain').val(result['product'].price);
-					$('#t_harga_kain').val(("" + total_hrg_kain).replace(/\B(?=(?:\d{3})+(?!\d))/g, ","));
-					$('#cust_curtain_name').val(result['product'].name_product);
-					let harga_kain = total_hrg_kain;
-					let disc_fab = $('#disc_fab').val() || 0;
-					let val = countDisc();
-					if (val == false) {
-						$('#t_disc_fab').val('0');
-					} else {
-						t_disk = (parseInt(harga_kain) * (parseInt(disc_fab))) / 100;
-						$('#t_disc_fab').val(('' + t_disk).replace(/\B(?=(?:\d{3})+(?!\d))/g, ','));
-					}
-					lebarKain = $('#lebar_kain').val() || 0;
-					dataType = 'panel-curtain';
+					$('#cust_curtain_name' + no).val(result['product'].name_product);
+					$('#width_curtain' + no).val(result['product'].width);
+					$('#price_curtain' + no).val(result['product'].price);
+					$('#width_text_curtain' + no).text(result['product'].width);
+					$('#price_text_curtain' + no).text(("" + result['product'].price).replace(/\B(?=(?:\d{3})+(?!\d))/g, ","));
+
+
+					// let harga_kain = total_hrg_kain;
+					// let disc_fab = $('#disc_fab').val() || 0;
+					// let val = countDisc();
+					// if (val == false) {
+					// 	$('#t_disc_fab').val('0');
+					// } else {
+					// 	t_disk = (parseInt(harga_kain) * (parseInt(disc_fab))) / 100;
+					// 	$('#t_disc_fab').val(('' + t_disk).replace(/\B(?=(?:\d{3})+(?!\d))/g, ','));
+					// }
+					// lebarKain = $('#lebar_kain').val() || 0;
+					// dataType = 'panel-curtain';
 					// changedt_panel(, lebarKain);
 					// rumus_panel();
 
@@ -811,6 +847,7 @@ if (!empty($this->uri->segment(3))) {
 			}
 		})
 	}
+
 
 	// HASIL DISKON
 	// =======================//

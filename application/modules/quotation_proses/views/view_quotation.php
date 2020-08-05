@@ -590,206 +590,206 @@
   <br>
 
   <!-- ACCOMODATION -->
-  <div class="box box-success">
-    <div class="box-header with-border">
-      <h4 class="box-title"><strong>Detail accomodation <span class="text-red">*</span></strong></h4>
-    </div>
-    <div class="box-body">
-      <label for="">Meal & Pocket Money</label>
-      <table class="table-condensed table-bordered table-striped" id="meal_cost" width="100%">
-        <thead class="bg-blue">
-          <tr>
-            <th width="20%">Area</th>
-            <th>Qty MP</th>
-            <th>Total Day</th>
-            <th>Cost MP/Day</th>
-            <th class="text-right">Total</th>
-            <th>Notes</th>
-            <th>#</th>
-          </tr>
-        </thead>
-        <tbody>
-          <?php
-          $meal_cost = $this->db->get_where('qtt_meal_cost', ['id_quotation' => $data->id_quotation])->result();
-          if (!empty($meal_cost)) {
-            $no = 0;
-            foreach ($meal_cost as $meal) {
-              $no++;
-          ?>
-              <tr class="list_meal">
-                <td>
-                  <select class="form-control select2" name="meal_cost[<?= $no ?>][meal_area]" data-id="<?= $no ?>">
-                    <option value=""></option>
-                    <?php
-                    $areas = $this->db->get('kabupaten')->result();
-                    foreach ($areas as $area) {
-                    ?>
-                      <option value="<?= $area->id_kab ?>" <?= $area->id_kab == $meal->area ? 'selected' : '' ?>><?= $area->nama ?></option>
-                    <?php } ?>
-                  </select>
-                </td>
-                <td><input value="<?= $meal->qty_mp ?>" id="qty_mp_meal<?= $no ?>" class="form-control text-right qty_mp_meal" type="number" name="meal_cost[<?= $no ?>][qty_mp_meal]" data-id="<?= $no ?>"></td>
-                <td><input value="<?= $meal->total_day ?>" id="total_day<?= $no ?>" class="form-control text-right total_day" type="number" name="meal_cost[<?= $no ?>][total_day]" data-id="<?= $no ?>"></td>
-                <td><input value="<?= number_format($meal->cost_mp_day) ?>" id="cost_mp_day<?= $no ?>" class="form-control numberOnly nominal text-right cost_mp_day" type="text" name="meal_cost[<?= $no ?>][cost_mp_day]" data-id="<?= $no ?>"></td>
-                <td><input value="<?= number_format($meal->total) ?>" id="total_meal<?= $no ?>" readonly class="form-control total_meal text-right" type="text" name="meal_cost[<?= $no ?>][total_meal]" data-id="<?= $no ?>"></td>
-                <td><input value="<?= $meal->notes ?>" id="notes_meal<?= $no ?>" class="form-control" type="text" name="meal_cost[<?= $no ?>][notes_meal]" data-id="<?= $no ?>"></td>
-                <td><button type="button" class="hapus_meal_cost btn btn-sm btn-danger">X</button></td>
+  <?php
+  $meal_cost = $this->db->get_where('qtt_meal_cost', ['id_quotation' => $data->id_quotation])->result();
+  $transport = $this->db->get_where('qtt_transport_cost', ['id_quotation' => $data->id_quotation])->result();
+  $housing = $this->db->get_where('qtt_housing_cost', ['id_quotation' => $data->id_quotation])->result();
+  $other = $this->db->get_where('qtt_other_cost', ['id_quotation' => $data->id_quotation])->result();
 
-              </tr>
-          <?php
-            }
-          }
-          ?>
-        </tbody>
-      </table>
-      <button class="btn btn-success" style="margin-top:7px" type="button" id="add_meal">
-        <i class="fa fa-plus"></i> Add Meal & Pocket Money
-      </button>
-      <hr>
-      <label for="">Transportation</label>
-      <table class="table-condensed table-bordered table-striped" id="trans_cost" width="100%">
-        <thead class="bg-blue">
-          <tr>
-            <th width="20%">Item Cost</th>
-            <th width="15%">Transportation</th>
-            <th>Origin</th>
-            <th>Destination</th>
-            <th width="7%">Qty MP</th>
-            <th width="15%" class="text-right">Total</th>
-            <th>Notes</th>
-            <th>#</th>
-          </tr>
-        </thead>
-        <tbody>
-          <?php
-          $transport = $this->db->get_where('qtt_transport_cost', ['id_quotation' => $data->id_quotation])->result();
-          if (!empty($transport)) {
-            $no = 0;
-            foreach ($transport as $trans) {
-              $no++;
-          ?>
+  if (
+    !empty($meal_cost) ||
+    !empty($transport) ||
+    !empty($housing) ||
+    !empty($other)
+  ) :
+  ?>
+    <div class="box box-success">
+      <div class="box-header with-border">
+        <h4 class="box-title"><strong>Detail accomodation <span class="text-red">*</span></strong></h4>
+      </div>
+      <div class="box-body">
+        <?php
+        if (!empty($meal_cost)) :
+        ?>
+          <label for="">Meal & Pocket Money</label>
+          <table class="table-condensed table-bordered table-striped" id="meal_cost" width="100%">
+            <thead class="bg-blue">
               <tr>
-                <td>
-                  <select data-id="<?= $no ?>" name="trans_cost[<?= $no ?>][item_cost]" id="item_cost<?= $no ?>" class="form-control select2">
-                    <option value=""></option>
-                    <?php
-                    $transp = $this->db->get('transportasi')->result();
-                    foreach ($transp as $tr) { ?>
-                      <option value="<?= $tr->trans_code ?>" <?= $trans->item_cost == $tr->trans_code ? 'selected' : '' ?>><?= $tr->name_transportasi ?></option>
-                    <?php } ?>
-                  </select>
-                </td>
-                <td>
-                  <select data-id="<?= $no ?>" name="trans_cost[<?= $no ?>][transport]" id="transport<?= $no ?>" class="form-control select2">' +
-                    <option value="" <?= $trans->transportation == '' ? 'selected' : '' ?>></option>
-                    <option value="Kereta" <?= $trans->transportation == 'Kereta' ? 'selected' : '' ?>>Kereta</option>
-                    <option value="Pesawat" <?= $trans->transportation == 'Pesawat' ? 'selected' : '' ?>>Pesawat</option>
-                    <option value="Bus" <?= $trans->transportation == 'Bus' ? 'selected' : '' ?>>Bus</option>
-                    <option value="Mobil" <?= $trans->transportation == 'Mobil' ? 'selected' : '' ?>>Mobil</option>
-                    <option value="Minibus" <?= $trans->transportation == 'Minibus' ? 'selected' : '' ?>>Minibus</option>
-                    <option value="ELF" <?= $trans->transportation == 'ELF' ? 'selected' : '' ?>>ELF</option>
-                  </select>
-                </td>
-                <td><input value="<?= $trans->origin ?>" type="text" data-id="<?= $no ?>" name="trans_cost[<?= $no ?>][origin]" id="origin<?= $no ?>" class="form-control"></td>
-                <td><input value="<?= $trans->destination ?>" type="text" data-id="<?= $no ?>" name="trans_cost[<?= $no ?>][destination]" id="destination<?= $no ?>" class="form-control"></td>
-                <td><input value="<?= $trans->qty_mp ?>" type="number" data-id="<?= $no ?>" name="trans_cost[<?= $no ?>][qty_mp]" id="qty_mp_transport<?= $no ?>" class="qty_mp_transport form-control"></td>
-                <td><input value="<?= number_format($trans->total) ?>" type="text" data-id="<?= $no ?>" name="trans_cost[<?= $no ?>][total]" id="total_transport<?= $no ?>" class="total_transport form-control text-right numberOnly nominal"></td>
-                <td><input value="<?= $trans->notes ?>" type="text" data-id="<?= $no ?>" name="trans_cost[<?= $no ?>][notes]" id="notes_transport<?= $no ?>" class="form-control"></td>
-                <td><button type="button" class="hapus_trans_cost btn btn-sm btn-danger">X</button></td>
+                <th width="20%">Area</th>
+                <th>Qty MP</th>
+                <th>Total Day</th>
+                <th>Cost MP/Day</th>
+                <th class="text-right">Total</th>
+                <th>Notes</th>
+                <th>#</th>
               </tr>
+            </thead>
+            <tbody>
+              <?php
+              $no = 0;
+              foreach ($meal_cost as $meal) : $no++; ?>
+                <tr class="list_meal">
+                  <td>
+                    <select class="form-control select2" name="meal_cost[<?= $no ?>][meal_area]" data-id="<?= $no ?>">
+                      <option value=""></option>
+                      <?php
+                      $areas = $this->db->get('kabupaten')->result();
+                      foreach ($areas as $area) {
+                      ?>
+                        <option value="<?= $area->id_kab ?>" <?= $area->id_kab == $meal->area ? 'selected' : '' ?>><?= $area->nama ?></option>
+                      <?php } ?>
+                    </select>
+                  </td>
+                  <td><input value="<?= $meal->qty_mp ?>" id="qty_mp_meal<?= $no ?>" class="form-control text-right qty_mp_meal" type="number" name="meal_cost[<?= $no ?>][qty_mp_meal]" data-id="<?= $no ?>"></td>
+                  <td><input value="<?= $meal->total_day ?>" id="total_day<?= $no ?>" class="form-control text-right total_day" type="number" name="meal_cost[<?= $no ?>][total_day]" data-id="<?= $no ?>"></td>
+                  <td><input value="<?= number_format($meal->cost_mp_day) ?>" id="cost_mp_day<?= $no ?>" class="form-control numberOnly nominal text-right cost_mp_day" type="text" name="meal_cost[<?= $no ?>][cost_mp_day]" data-id="<?= $no ?>"></td>
+                  <td><input value="<?= number_format($meal->total) ?>" id="total_meal<?= $no ?>" readonly class="form-control total_meal text-right" type="text" name="meal_cost[<?= $no ?>][total_meal]" data-id="<?= $no ?>"></td>
+                  <td><input value="<?= $meal->notes ?>" id="notes_meal<?= $no ?>" class="form-control" type="text" name="meal_cost[<?= $no ?>][notes_meal]" data-id="<?= $no ?>"></td>
+                  <td><button type="button" class="hapus_meal_cost btn btn-sm btn-danger">X</button></td>
 
-          <?php }
-          } ?>
-        </tbody>
-      </table>
-      <button class="btn btn-success" style="margin-top:7px" id="add_transportation" type="button">
-        <i class="fa fa-plus"></i> Add Transportation
-      </button>
-      <hr>
-      <label for="">Housing & Transport Site</label>
-      <table class="table-condensed table-bordered table-striped" id="housing_cost" width="100%">
-        <thead class="bg-blue">
-          <tr>
-            <th width="20%">Area</th>
-            <th width="7%">Qty MP</th>
-            <th>Amount Day</th>
-            <th>Cost</th>
-            <th width="15%">Total</th>
-            <th>Notes</th>
-            <th>#</th>
-          </tr>
-        </thead>
-        <tbody>
-          <?php
-          $housing = $this->db->get_where('qtt_housing_cost', ['id_quotation' => $data->id_quotation])->result();
-          if (!empty($housing)) {
-            $no = 0;
-            foreach ($housing as $hous) {
-              $no++;
-          ?>
-              <tr class="list_housing">
-                <td>
-                  <select data-id="<?= $no ?>" class="form-control select2" name="housing_cost[<?= $no ?>][housing_area]">
-                    <option value=""></option>
-                    <?php $areas = $this->db->get('kabupaten')->result();
-                    foreach ($areas as $area) {
-                    ?>
-                      <option value="<?= $area->id_kab ?>" <?= $hous->area == $area->id_kab ? 'selected' : '' ?>><?= $area->nama ?></option>
-                    <?php }
-                    ?>
-                  </select>
-                </td>
-                <td><input value="<?= $hous->qty_mp ?>" type="number" min="0" data-id="<?= $no ?>" id="qty_mp_housing<?= $no ?>" name="housing_cost[<?= $no ?>][qty_mp_housing]" class="form-control text-right  qty_mp_housing"></td>
-                <td><input value="<?= $hous->amount_day ?>" type="number" min="0" data-id="<?= $no ?>" id="amount_day<?= $no ?>" name="housing_cost[<?= $no ?>][amount_day]" class="form-control text-right  amount_day"></td>
-                <td><input value="<?= number_format($hous->cost) ?>" type="text" data-id="<?= $no ?>" id="cost<?= $no ?>" name="housing_cost[<?= $no ?>][cost]" class="form-control nominal numberOnly  text-right cost"></td>
-                <td><input value="<?= number_format($hous->total) ?>" type="text" data-id="<?= $no ?>" id="total_housing_cost<?= $no ?>" name="housing_cost[<?= $no ?>][total_housing_cost]" readonly class="form-control nominal total_housing_cost text-right "></td>
-                <td><input value="<?= $hous->notes ?>" type="text" data-id="<?= $no ?>" id="notes_housing<?= $no ?>" name="housing_cost[<?= $no ?>][notes]" class="form-control"></td>
-                <td><button type="button" class="hapus_housing_cost btn btn-sm btn-danger">X</button></td>
+                </tr>
+              <?php endforeach; ?>
+            </tbody>
+          </table>
+          <button class="btn btn-success" style="margin-top:7px" type="button" id="add_meal">
+            <i class="fa fa-plus"></i> Add Meal & Pocket Money
+          </button>
+          <hr>
+        <?php endif; ?>
+        <?php
+        if (!empty($transport)) : ?>
+          <label for="">Transportation</label>
+          <table class="table-condensed table-bordered table-striped" id="trans_cost" width="100%">
+            <thead class="bg-blue">
+              <tr>
+                <th width="20%">Item Cost</th>
+                <th width="15%">Transportation</th>
+                <th>Origin</th>
+                <th>Destination</th>
+                <th width="7%">Qty MP</th>
+                <th width="15%" class="text-right">Total</th>
+                <th>Notes</th>
+                <th>#</th>
               </tr>
-          <?php
-            }
-          }
-          ?>
-        </tbody>
-      </table>
-      <button class="btn btn-success" style="margin-top:7px" id="add_housing" type="button">
-        <i class="fa fa-plus"></i> Add Housing & Transport Site
-      </button>
-      <hr>
-      <label for="">Other</label>
-      <table class="table-condensed table-bordered table-striped" id="other_cost" width="100%">
-        <thead class="bg-blue">
-          <tr>
-            <th>Item Name</th>
-            <th>Cost</th>
-            <th>#</th>
-          </tr>
-        </thead>
-        <tbody>
-          <?php
-          $other = $this->db->get_where('qtt_other_cost', ['id_quotation' => $data->id_quotation])->result();
-          if (!empty($other)) {
-            $no = 0;
-            foreach ($other as $oth) {
-              $no++;
-          ?>
-              <tr class="list_other">
-                <td><input value="<?= $oth->item ?>" type="text" name="other_cost[<?= $no ?>][other_item]" class="form-control"></td>
-                <td><input value="<?= number_format($oth->cost) ?>" type="text" name="other_cost[<?= $no ?>][other_cost]" class="form-control text-right other_cost nominal numberOnly"></td>
-                <td><button type="button" class="btn btn-sm btn-danger hapus_oth_cost">X</button></td>
-              </tr>
-          <?php
-            }
-          }
+            </thead>
+            <tbody>
+              <?php
+              $no = 0;
+              foreach ($transport as $trans) : $no++; ?>
+                <tr>
+                  <td>
+                    <select data-id="<?= $no ?>" name="trans_cost[<?= $no ?>][item_cost]" id="item_cost<?= $no ?>" class="form-control select2">
+                      <option value=""></option>
+                      <?php
+                      $transp = $this->db->get('transportasi')->result();
+                      foreach ($transp as $tr) { ?>
+                        <option value="<?= $tr->trans_code ?>" <?= $trans->item_cost == $tr->trans_code ? 'selected' : '' ?>><?= $tr->name_transportasi ?></option>
+                      <?php } ?>
+                    </select>
+                  </td>
+                  <td>
+                    <select data-id="<?= $no ?>" name="trans_cost[<?= $no ?>][transport]" id="transport<?= $no ?>" class="form-control select2">' +
+                      <option value="" <?= $trans->transportation == '' ? 'selected' : '' ?>></option>
+                      <option value="Kereta" <?= $trans->transportation == 'Kereta' ? 'selected' : '' ?>>Kereta</option>
+                      <option value="Pesawat" <?= $trans->transportation == 'Pesawat' ? 'selected' : '' ?>>Pesawat</option>
+                      <option value="Bus" <?= $trans->transportation == 'Bus' ? 'selected' : '' ?>>Bus</option>
+                      <option value="Mobil" <?= $trans->transportation == 'Mobil' ? 'selected' : '' ?>>Mobil</option>
+                      <option value="Minibus" <?= $trans->transportation == 'Minibus' ? 'selected' : '' ?>>Minibus</option>
+                      <option value="ELF" <?= $trans->transportation == 'ELF' ? 'selected' : '' ?>>ELF</option>
+                    </select>
+                  </td>
+                  <td><input value="<?= $trans->origin ?>" type="text" data-id="<?= $no ?>" name="trans_cost[<?= $no ?>][origin]" id="origin<?= $no ?>" class="form-control"></td>
+                  <td><input value="<?= $trans->destination ?>" type="text" data-id="<?= $no ?>" name="trans_cost[<?= $no ?>][destination]" id="destination<?= $no ?>" class="form-control"></td>
+                  <td><input value="<?= $trans->qty_mp ?>" type="number" data-id="<?= $no ?>" name="trans_cost[<?= $no ?>][qty_mp]" id="qty_mp_transport<?= $no ?>" class="qty_mp_transport form-control"></td>
+                  <td><input value="<?= number_format($trans->total) ?>" type="text" data-id="<?= $no ?>" name="trans_cost[<?= $no ?>][total]" id="total_transport<?= $no ?>" class="total_transport form-control text-right numberOnly nominal"></td>
+                  <td><input value="<?= $trans->notes ?>" type="text" data-id="<?= $no ?>" name="trans_cost[<?= $no ?>][notes]" id="notes_transport<?= $no ?>" class="form-control"></td>
+                  <td><button type="button" class="hapus_trans_cost btn btn-sm btn-danger">X</button></td>
+                </tr>
 
-          ?>
-        </tbody>
-      </table>
-      <button class="btn btn-success" style="margin-top:7px" id="add_other" type="button">
-        <i class="fa fa-plus"></i> Add Other
-      </button>
+              <?php endforeach ?>
+            </tbody>
+          </table>
+          <button class="btn btn-success" style="margin-top:7px" id="add_transportation" type="button">
+            <i class="fa fa-plus"></i> Add Transportation
+          </button>
+          <hr>
+        <?php endif ?>
+        <?php
+        if (!empty($housing)) : ?>
+          <label for="">Housing & Transport Site</label>
+          <table class="table-condensed table-bordered table-striped" id="housing_cost" width="100%">
+            <thead class="bg-blue">
+              <tr>
+                <th width="20%">Area</th>
+                <th width="7%">Qty MP</th>
+                <th>Amount Day</th>
+                <th>Cost</th>
+                <th width="15%">Total</th>
+                <th>Notes</th>
+                <th>#</th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php
+              $no = 0;
+              foreach ($housing as $hous) : $no++; ?>
+                <tr class="list_housing">
+                  <td>
+                    <select data-id="<?= $no ?>" class="form-control select2" name="housing_cost[<?= $no ?>][housing_area]">
+                      <option value=""></option>
+                      <?php $areas = $this->db->get('kabupaten')->result();
+                      foreach ($areas as $area) {
+                      ?>
+                        <option value="<?= $area->id_kab ?>" <?= $hous->area == $area->id_kab ? 'selected' : '' ?>><?= $area->nama ?></option>
+                      <?php }
+                      ?>
+                    </select>
+                  </td>
+                  <td><input value="<?= $hous->qty_mp ?>" type="number" min="0" data-id="<?= $no ?>" id="qty_mp_housing<?= $no ?>" name="housing_cost[<?= $no ?>][qty_mp_housing]" class="form-control text-right  qty_mp_housing"></td>
+                  <td><input value="<?= $hous->amount_day ?>" type="number" min="0" data-id="<?= $no ?>" id="amount_day<?= $no ?>" name="housing_cost[<?= $no ?>][amount_day]" class="form-control text-right  amount_day"></td>
+                  <td><input value="<?= number_format($hous->cost) ?>" type="text" data-id="<?= $no ?>" id="cost<?= $no ?>" name="housing_cost[<?= $no ?>][cost]" class="form-control nominal numberOnly  text-right cost"></td>
+                  <td><input value="<?= number_format($hous->total) ?>" type="text" data-id="<?= $no ?>" id="total_housing_cost<?= $no ?>" name="housing_cost[<?= $no ?>][total_housing_cost]" readonly class="form-control nominal total_housing_cost text-right "></td>
+                  <td><input value="<?= $hous->notes ?>" type="text" data-id="<?= $no ?>" id="notes_housing<?= $no ?>" name="housing_cost[<?= $no ?>][notes]" class="form-control"></td>
+                  <td><button type="button" class="hapus_housing_cost btn btn-sm btn-danger">X</button></td>
+                </tr>
+              <?php endforeach; ?>
+            </tbody>
+          </table>
+          <button class="btn btn-success" style="margin-top:7px" id="add_housing" type="button">
+            <i class="fa fa-plus"></i> Add Housing & Transport Site
+          </button>
+        <?php endif; ?>
+        <hr>
+        <?php
+        if (!empty($other)) : ?>
+          <label for="">Other</label>
+          <table class="table-condensed table-bordered table-striped" id="other_cost" width="100%">
+            <thead class="bg-blue">
+              <tr>
+                <th>Item Name</th>
+                <th>Cost</th>
+                <th>#</th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php
+              $no = 0;
+              foreach ($other as $oth) : $no++; ?>
+                <tr class="list_other">
+                  <td><input value="<?= $oth->item ?>" type="text" name="other_cost[<?= $no ?>][other_item]" class="form-control"></td>
+                  <td><input value="<?= number_format($oth->cost) ?>" type="text" name="other_cost[<?= $no ?>][other_cost]" class="form-control text-right other_cost nominal numberOnly"></td>
+                  <td><button type="button" class="btn btn-sm btn-danger hapus_oth_cost">X</button></td>
+                </tr>
+              <?php endforeach ?>
+            </tbody>
+          </table>
+          <button class="btn btn-success" style="margin-top:7px" id="add_other" type="button">
+            <i class="fa fa-plus"></i> Add Other
+          </button>
+        <?php endif ?>
+      </div>
     </div>
-  </div>
+  <?php endif ?>
   </div>
 
   <br>

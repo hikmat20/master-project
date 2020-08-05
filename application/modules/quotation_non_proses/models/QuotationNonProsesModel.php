@@ -7,7 +7,7 @@
  * This is model class for table "supplier"
  */
 
-class Quotation_proses_model extends BF_Model
+class QuotationNonProsesModel extends BF_Model
 {
 
     /**
@@ -61,8 +61,12 @@ class Quotation_proses_model extends BF_Model
      */
     public function getProduct()
     {
-        $query = "SELECT id_product, name_producr FROM master_product_fabric WHERE activation = '1'";
+        $query = "SELECT a.id_product, a.name_product FROM master_product_fabric a left join pricelist_fabric b on a.id_product = b.id_product WHERE b.activation = 'aktif' and status = '1'";
         $product = $this->db->query($query)->result();
+        // echo "<pre>";
+        // print_r($product);
+        // echo "<pre>";
+        // exit;
         return $product;
     }
 }
