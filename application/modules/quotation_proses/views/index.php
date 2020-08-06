@@ -32,7 +32,9 @@ $ENABLE_DELETE  = has_permission('Quotation_proses.Delete');
                 <th>Customer</th>
                 <th>Marketing</th>
                 <th width="10%" class="text-center">Total</th>
-                <th class="text-center">Status</th>
+                <th width="10%" class="text-center">Status</th>
+                <th width="10%" class="text-center">Last Edit By</th>
+                <th width="10%" class="text-center">Last Edit Date </th>
                 <?php if ($ENABLE_MANAGE) : ?>
                   <th width="15%">Action</th>
                 <?php endif; ?>
@@ -50,7 +52,9 @@ $ENABLE_DELETE  = has_permission('Quotation_proses.Delete');
                 <th>Customer</th>
                 <th>Marketing</th>
                 <th width="10%" class="text-center">Total</th>
-                <th class="text-center">Status</th>
+                <th width="10%" class="text-center">Status</th>
+                <th width="10%" class="text-center">Last Edit By</th>
+                <th width="10%" class="text-center">Last Edit Date </th>
                 <?php if ($ENABLE_MANAGE) : ?>
                   <th width="15%">Action</th>
                 <?php endif; ?>
@@ -624,4 +628,54 @@ $ENABLE_DELETE  = has_permission('Quotation_proses.Delete');
     window.location.href = siteurl + active_controller + 'addQuotation';
     // $("#ModalView").modal();
   }
+
+
+
+
+  function myFunction() {
+    const py = document.getElementById("paymentTerm").value;
+    // console.log(py);
+    var html = '';
+    if (py == 'TM') {
+      var html =
+        '  <table width="100%" class="table-condensed table-bordered">' +
+        '  <thead>' +
+        '    <tr class="bg-gray">' +
+        '      <th width="20px">No</th>' +
+        '      <th>Requirements</th>' +
+        '      <th width="150px" class="text-right">Value</th>' +
+        '      <th width="80px" class="text-right">%</th>' +
+        '      <th>Notes</th>' +
+        '      <th width="20px">#</th>' +
+        '    </tr>' +
+        '  </thead>' +
+        '  <tbody class="list-termin">' +
+        '  </tbody>' +
+        '</table>' +
+        '<button type="button" class="btn btn-sm addTermin btn-success" id="addTermin">Add Termin</button>'
+
+    } else {
+      var html = ''
+    }
+    $('.detailPayterm').html(html)
+  }
+
+  $(document).on('click', '#addTermin', function() {
+    let x = parseInt($('tbody.list-termin tr').length + 1);
+    console.log(x)
+    let html =
+      '    <tr>' +
+      '      <td>' + x + '</td>' +
+      '      <td><input type="text" class="form-control requirement required" id="requirement' + x + '" name="termin[' + x + '][requirement]" placeholder="Requirements"></td>' +
+      '      <td class="text-right"><input type="text" class="form-control nominal numberOnly text-right" name="termin[' + x + '][value]" placeholder="0"></td>' +
+      '      <td class="text-right"><input type="number" min="0" max="100" class="form-control text-right" name="termin[' + x + '][percent]" placeholder="0"></td>' +
+      '      <td><input type="text" class="form-control" name="termin[' + x + '][notes]" placeholder="Notes"></td>' +
+      '      <td><button type="button" class="btn btn-sm btn-danger hapusTermin">x</button></td>' +
+      '    </tr>'
+    $('tbody.list-termin').append(html);
+  })
+
+  $(document).on('click', '.hapusTermin', function() {
+    $(this).parents('tr').remove();
+  })
 </script>

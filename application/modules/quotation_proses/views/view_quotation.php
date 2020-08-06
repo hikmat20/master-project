@@ -101,58 +101,32 @@
     <hr>
     <div class="row">
       <div class="col-md-6">
-        <div class="col-md-6">
-          <table class="table-striped" width="100%">
-            <tr>
-              <th width="30%">Payment Term</th>
-              <td>
-                <?php if ($data->payment_term == 'CA') : ?>
-                  <span>: Cash in Advance</span>
-                <?php elseif ($data->payment_term == 'DP') : ?>
-                  <span>: Down Payment</span>
-                <?php elseif ($data->payment_term == 'TM') : ?>
-                  <span>: Tempo</span>
-                <?php endif ?>
-              </td>
-            </tr>
-
-            <?php
-            if ($data->payment_term == 'DP') { ?>
-              <tr>
-                <td></td>
-                <td>
-                  <ol>
-                    <li>
-                      <?= $data->payment_percent_1 ?> % (Rp. <?= $data->payment_value_1 ?>)
-                    </li>
-                    <li>
-                      <?= $data->payment_percent_2 ?> % (Rp. <?= $data->payment_value_2 ?>)
-                    </li>
-                  </ol>
-                </td>
+        <label for="">Payment Term : <?= $data->payment_term == "TM" ? "Termin" : "Cash in Advance" ?></label>
+        <?php if ($data->payment_term == 'TM') : ?>
+          <table width="100%" class="table-striped table-bordered">
+            <thead>
+              <tr class="bg-gray">
+                <th width="20px">No</th>
+                <th>Requirements</th>
+                <th width="150px" class="text-right">Value</th>
+                <th width="80px" class="text-center">%</th>
+                <th>Notes</th>
               </tr>
-              <?php if ($data->type_payment == "BP") : ?>
+            </thead>
+            <tbody class="list-termin">
+              <?php $no = 0;
+              foreach ($pay_term as $pt) : $no++ ?>
                 <tr>
-                  <td></td>
-                  <td> <span><?= $data->type_payment == "BP" ? 'BP' : '' ?></span></td>
+                  <td><?= $no ?></td>
+                  <td><?= $pt->requirement ?></td>
+                  <td class="text-right"><?= number_format($pt->value) ?></td>
+                  <td class="text-center"><?= $pt->percent ?></td>
+                  <td><?= $pt->notes ?></td>
                 </tr>
-              <?php elseif ($data->type_payment = "PROGRESS") : ?>
-                <tr>
-                  <td><label for="">Type</label></td>
-                  <td> : <span><?= $data->type_payment == "PROGRESS" ? 'PROGRESS' : '' ?></span></td>
-                </tr>
-              <?php endif ?>
-            <?php } else if ($data->payment_term == 'TM') { ?>
-              <tr>
-                <td></td>
-                <td>
-                  <span>: <?= $data->tempo_week ?></span>&nbsp;&nbsp;
-                  <span>Week</span>
-                </td>
-              </tr>
-            <?php } ?>
+              <?php endforeach ?>
+            </tbody>
           </table>
-        </div>
+        <?php endif ?>
       </div>
     </div>
     <hr>

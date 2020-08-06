@@ -93,6 +93,25 @@ $ENABLE_DELETE  = has_permission('Mso_proses.Delete');
 
 <script type="text/javascript">
   $(document).ready(function() {
+    DataTables('set');
+
+    $('#ModalView').on('hidden.bs.modal', function() {
+      $("#head_title").html("");
+      $("#view").html("");
+    });
+
+    $(".select2").select2({
+      placeholder: "Choose An Option",
+      allowClear: true,
+      width: '100%'
+    });
+
+    jQuery(document).on('keyup keypress blur', '.numberOnly', function() {
+      if ((event.which < 48 || event.which > 57) && (event.which < 46 || event.which > 46) && event.which != 43) {
+        event.preventDefault();
+      }
+    });
+
     jQuery(document).on('keyup', '.nominal', function() {
       var val = this.value;
       val = val.replace(/[^0-9\.]/g, '');
@@ -104,24 +123,6 @@ $ENABLE_DELETE  = has_permission('Mso_proses.Delete');
       }
 
       this.value = val;
-    });
-    //var table = $('#example1').DataTable();
-    DataTables('set');
-
-    $("#excel-report").on('click', function() {
-      if (document.getElementById("hide-click").classList.contains('hide_colly')) {
-        window.location.href = siteurl + "barang_wset/downloadExcel/hide";
-      } else {
-        window.location.href = siteurl + "barang_wset/downloadExcel/unhide";
-      }
-    });
-
-    $("#pdf-report").on('click', function() {
-      if (document.getElementById("hide-click").classList.contains('hide_colly')) {
-        window.open = siteurl + "barang_wset/print_rekap/hide";
-      } else {
-        window.open = siteurl + "barang_wset/print_rekap/unhide";
-      }
     });
 
     //Edit
@@ -177,15 +178,12 @@ $ENABLE_DELETE  = has_permission('Mso_proses.Delete');
       })
 
     });
-
     //DETAIL
     $(document).on('click', '.print', function(e) {
       var id = $(this).data('id_mso');
       id_mso = id.replace(/\//g, '-');
       window.open(siteurl + active_controller + 'print_mso/' + id_mso, '_blank');
     });
-    //--------------------------------------------------------------------------------------------
-
     //DELETE
     $(document).on('click', '.cencel', function(e) {
       var id_mso = $(this).data('id_mso');
@@ -252,46 +250,26 @@ $ENABLE_DELETE  = has_permission('Mso_proses.Delete');
         });
     });
 
-    //Modal1 Supplier
-    $('#ModalView3').on('hidden.bs.modal', function() {
-      $('body').addClass('modal-open');
-      $("#head_title3").html("");
-      $("#view3").html("");
-    });
-    $('#ModalView2').on('hidden.bs.modal', function() {
-      $('body').addClass('modal-open');
-      $("#head_title2").html("");
-      $("#view2").html("");
-    });
-    $('#ModalView').on('hidden.bs.modal', function() {
-      $("#head_title").html("");
-      $("#view").html("");
-    });
-
-    $(document).on('click', '#add_ProCat', function(e) {
-      $("#ModalView2 .modal-dialog").css('width', '30%');
-      $("#head_title2").html("<b>Add Product Category</b>");
-      $("#view2").load(siteurl + active_controller + '/modal_Process/ProductCategory/add/');
-      $("#ModalView2").modal();
-    });
 
 
-    jQuery(document).on('click', '#saveQuotation', function() {
+    //--------------------------------------------------------------------------------------------
+
+    jQuery(document).on('click', '#saveMso', function() {
       var valid = getValidation();
-      // console.log(valid);
+      // alert(valid)
       if (valid) {
-        var formdata = new FormData(document.getElementById("form-quotation")); //$("#form-supplier").serialize();
+        // var formdata = $("#form-quotation").serialize();
+        var formdata = new FormData(document.getElementById("form-modal"));
         // console.log(formdata);
-        // alert(formdata);
         // exit();
         $.ajax({
-          url: siteurl + active_controller + "saveQuotation",
+          url: siteurl + active_controller + "saveDataMso",
           dataType: "json",
           type: 'POST',
           data: formdata,
-          processData: false,
           contentType: false,
           cache: false,
+          processData: false,
           async: false,
           success: function(result) {
             if (result.status == '1') {
@@ -303,13 +281,7 @@ $ENABLE_DELETE  = has_permission('Mso_proses.Delete');
                 showConfirmButton: false
               });
               setTimeout(function() {
-                DataTables('set');
-                if (($("#ModalView3").data('bs.modal') || {}).isShown) {
-                  $("#ModalView3").modal('hide');
-                } else {
-                  $("#ModalView").modal('hide');
-                }
-
+                open(siteurl + active_controller, '_self');
               }, 1600);
             } else {
               swal({
@@ -335,16 +307,10 @@ $ENABLE_DELETE  = has_permission('Mso_proses.Delete');
           showConfirmButton: false
         });
       }
-
-      //$("#ModalView").modal('hide');
     });
 
   });
-  jQuery(document).on('keyup keypress blur', '.numberOnly', function() {
-    if ((event.which < 48 || event.which > 57) && (event.which < 46 || event.which > 46) && event.which != 43) {
-      event.preventDefault();
-    }
-  });
+
 
 
   function DataTables(set = null) {
@@ -395,59 +361,52 @@ $ENABLE_DELETE  = has_permission('Mso_proses.Delete');
       }
     });
 
-    var dataTable2 = $('#table-category').DataTable({
-      "serverSide": true,
-      "stateSave": true,
-      "bAutoWidth": true,
-      "destroy": true,
-      "responsive": true,
-      "oLanguage": {
-        "sSearch": "<b>Live Search : </b>",
-        "sLengthMenu": "_MENU_ &nbsp;&nbsp;<b>Records Per Page</b>&nbsp;&nbsp;",
-        "sInfo": "Showing _START_ to _END_ of _TOTAL_ entries",
-        "sInfoFiltered": "(filtered from _MAX_ total entries)",
-        "sZeroRecords": "No matching records found",
-        "sEmptyTable": "No data available in table",
-        "sLoadingRecords": "Please wait - loading...",
-        "oPaginate": {
-          "sPrevious": "Prev",
-          "sNext": "Next"
-        }
-      },
-      "aaSorting": [
-        [1, "asc"]
-      ],
-      "columnDefs": [{
-        "targets": 'no-sort',
-        "orderable": false,
-      }],
-      "sPaginationType": "simple_numbers",
-      "iDisplayLength": 10,
-      "aLengthMenu": [
-        [5, 10, 20, 50, 100, 150],
-        [5, 10, 20, 50, 100, 150]
-      ],
-      "ajax": {
-        url: siteurl + active_controller + 'getDataCategory',
-        type: "post",
-        data: function(d) {
-          d.activation = 'active'
-        },
-        cache: false,
-        error: function() {
-          $(".my-grid-error").html("");
-          $("#my-grid").append('<tbody class="my-grid-error"><tr><th colspan="3">No data found in the server</th></tr></tbody>');
-          $("#my-grid_processing").css("display", "none");
-        }
-      }
-    });
-
   }
 
-  // function add_data() {
-  //   // $(".modal-dialog").css('width','90%');
-  //   // $("#head_title").html("<b>Add Quotation</b>");
-  //   window.location.href = siteurl + active_controller + 'addQuotation';
-  //   // $("#ModalView").modal();
-  // }
+  function myFunction() {
+    const py = document.getElementById("paymentTerm").value;
+    // console.log(py);
+    var html = '';
+    if (py == 'TM') {
+      var html =
+        '  <table width="100%" class="table-condensed table-bordered">' +
+        '  <thead>' +
+        '    <tr class="bg-gray">' +
+        '      <th width="20px">No</th>' +
+        '      <th>Requirements</th>' +
+        '      <th width="150px" class="text-right">Value</th>' +
+        '      <th width="80px" class="text-right">%</th>' +
+        '      <th>Notes</th>' +
+        '      <th width="20px">#</th>' +
+        '    </tr>' +
+        '  </thead>' +
+        '  <tbody class="list-termin">' +
+        '  </tbody>' +
+        '</table>' +
+        '<button type="button" class="btn btn-sm addTermin btn-success" id="addTermin">Add Termin</button>'
+
+    } else {
+      var html = ''
+    }
+    $('.detailPayterm').html(html)
+  }
+
+  $(document).on('click', '#addTermin', function() {
+    let x = parseInt($('tbody.list-termin tr').length + 1);
+    console.log(x)
+    let html =
+      '    <tr>' +
+      '      <td>' + x + '</td>' +
+      '      <td><input type="text" class="form-control requirement required" id="requirement' + x + '" name="termin[' + x + '][requirement]" placeholder="Requirements"></td>' +
+      '      <td class="text-right"><input type="text" class="form-control nominal numberOnly text-right" name="termin[' + x + '][value]" placeholder="0"></td>' +
+      '      <td class="text-right"><input type="number" min="0" max="100" class="form-control text-right" name="termin[' + x + '][percent]" placeholder="0"></td>' +
+      '      <td><input type="text" class="form-control" name="termin[' + x + '][notes]" placeholder="Notes"></td>' +
+      '      <td><button type="button" class="btn btn-sm btn-danger hapusTermin">x</button></td>' +
+      '    </tr>'
+    $('tbody.list-termin').append(html);
+  })
+
+  $(document).on('click', '.hapusTermin', function() {
+    $(this).parents('tbody.list-termin tr').remove();
+  })
 </script>

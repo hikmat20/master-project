@@ -135,6 +135,8 @@ class Quotation_proses extends Admin_Controller
       $nestedData[]  = "<div align='left'>" . strtoupper($row['nama_karyawan']) . "</div>";
       $nestedData[]  = "<div align='right'>" . strtoupper(number_format($row['grand_total'])) . "</div>";
       $nestedData[]  = "<div align='center'>" . ($status) . "</div>";
+      $nestedData[]  = "<div align='center'>" . ($row['nm_lengkap']) . "</div>";
+      $nestedData[]  = "<div align='center'>" . ($row['modified_on']) . "</div>";
       if ($this->auth->restrict($this->viewPermission)) :
         $nestedData[]  = "<div>
         <a class='btn btn-sm btn-info view' href='javascript:void(0)' title='View Quotation' data-id_quotation='" . $row['id_quotation'] . "' style='width:30px; display:inline-block;margin:1px 0px'>
@@ -176,10 +178,12 @@ class Quotation_proses extends Admin_Controller
     }
 
     $sql = "SELECT
-				  a.id_quotation,a.date,b.name_customer,c.nama_karyawan, a.grand_total,a.status,a.activation
+				  a.id_quotation,a.date,b.name_customer,c.nama_karyawan, a.grand_total,a.status,a.activation,d.nm_lengkap,a.modified_on
 				FROM
 				  quotation_header a LEFT JOIN master_customer b ON a.id_customer = b.id_customer
-				   INNER JOIN karyawan c ON a.id_karyawan = c.id_karyawan WHERE 1=1 and a.status = '0'
+				   INNER JOIN karyawan c ON a.id_karyawan = c.id_karyawan
+           INNER JOIN users d ON d.id_user = a.modified_by WHERE 1=1 and a.status = '0'
+          
 				" . $where_activation . " 
 				AND (
   				a.id_quotation LIKE '%" . $this->db->escape_like_str($like_value) . "%'
@@ -197,7 +201,9 @@ class Quotation_proses extends Admin_Controller
       3 => 'name_customer',
       4 => 'nama_karyawan',
       5 => 'grand_total',
-      6 => 'status'
+      6 => 'status',
+      7 => 'nm_lengkap',
+      8 => 'modified_on'
     );
 
     $sql .= " ORDER BY a.id_quotation ASC, " . $columns_order_by[$column_order] . " " . $column_dir . " ";
@@ -565,6 +571,7 @@ class Quotation_proses extends Admin_Controller
     $pic_cust       = $this->db->get_where('child_customer_pic', array('id_customer' => $data->id_customer))->row();
     $karyawan       = $this->db->get_where('karyawan', array('id_karyawan' => $data->id_karyawan))->row();
     $rooms         = $this->db->get_where('quotation_room', array('id_quotation' => $data->id_quotation))->result();
+    $pay_term         = $this->db->get_where('payment_term', array('id_quotation' => $data->id_quotation))->result();
 
     // echo "<pre>";
     // print_r($customer);
@@ -577,7 +584,8 @@ class Quotation_proses extends Admin_Controller
       'disc_cat' => $disc_cat,
       'type_pro' => $type_pro,
       'karyawan' => $karyawan,
-      'rooms' => $rooms
+      'rooms' => $rooms,
+      'pay_term' => $pay_term
     ]);
     $this->template->render('modal_Process_Quotation');
   }
@@ -594,6 +602,7 @@ class Quotation_proses extends Admin_Controller
     $pic_cust       = $this->db->get_where('child_customer_pic', array('id_customer' => $data->id_customer))->row();
     $karyawan       = $this->db->get_where('karyawan', array('id_karyawan' => $data->id_karyawan))->row();
     $rooms         = $this->db->get_where('quotation_room', array('id_quotation' => $data->id_quotation))->result();
+    $pay_term         = $this->db->get_where('payment_term', array('id_quotation' => $data->id_quotation))->result();
 
     // echo "<pre>";
     // print_r($customer);
@@ -606,7 +615,8 @@ class Quotation_proses extends Admin_Controller
       'disc_cat' => $disc_cat,
       'type_pro' => $type_pro,
       'karyawan' => $karyawan,
-      'rooms' => $rooms
+      'rooms' => $rooms,
+      'pay_term' => $pay_term
     ]);
     $this->template->render('view_quotation');
   }
@@ -1878,9 +1888,21 @@ class Quotation_proses extends Admin_Controller
         foreach ($data['other_cost'] as $oth => $x) {
           $ArrOther[$oth]['id_quotation']   = $data['id_quotation'];
           $ArrOther[$oth]['item']           = $x['other_item'];
-          $ArrOther[$oth]['cost']          = str_replace(",", "", $x['other_cost']);
+          $ArrOther[$oth]['cost']           = str_replace(",", "", $x['other_cost']);
           $ArrOther[$oth]['updated_on']     = date('Y-m-d H:i:s');
           $ArrOther[$oth]['updated_by']     = $this->auth->user_id();
+        }
+      }
+
+      if (!empty($data['termin'])) {
+        $ArrTermin = [];
+        foreach ($data['termin'] as $tr => $x) {
+          $ArrTermin[$tr]['id_quotation']  = $data['id_quotation'];
+          $ArrTermin[$tr]['payment_term']  = $data['payment_term'];
+          $ArrTermin[$tr]['requirement']   = $x['requirement'];
+          $ArrTermin[$tr]['value']         =  str_replace(",", "", $x['value']);
+          $ArrTermin[$tr]['percent']       = $x['percent'];
+          $ArrTermin[$tr]['notes']         = $x['notes'];
         }
       }
 
@@ -1901,11 +1923,9 @@ class Quotation_proses extends Admin_Controller
         'rounding'          => str_replace(",", "", $data['rounding']),
         'grand_total'       => str_replace(",", "", $data['grand_total']),
         'payment_term'      => $data['payment_term'],
-        'payment_percent_1' => $data['paymentDpPersen1'],
-        'payment_value_1'   => str_replace(",", "", $data['paymentDpValue1']),
-        'payment_percent_2' => $data['paymentDpPersen2'],
-        'payment_value_2'   => str_replace(",", "", $data['paymentDpValue2']),
-        'type_payment'      => $data['type_payment']
+        'modified_by'       => $this->auth->user_id(),
+        'modified_on'       => date('Y-m-d H:i:s')
+
       ];
 
       $this->db->trans_begin();
@@ -1961,6 +1981,18 @@ class Quotation_proses extends Admin_Controller
       if (!empty($summary)) {
         $this->db->update('quotation_header', $summary, ['id_quotation' => $data['id_quotation']]);
       }
+
+      if ($data['type'] == 'add') {
+        if (!empty($ArrTermin)) {
+          $this->db->insert_batch('payment_term', $ArrTermin);
+        }
+      } else {
+        if (!empty($ArrTermin)) {
+          $this->db->delete('payment_term', ['id_quotation' => $data['id_quotation']]);
+          $this->db->insert_batch('payment_term', $ArrTermin);
+        }
+      }
+
 
       $this->db->trans_complete();
 
@@ -2520,6 +2552,7 @@ class Quotation_proses extends Admin_Controller
     $pic_cust       = $this->db->get_where('child_customer_pic', array('id_customer' => $data->id_customer))->row();
     $karyawan       = $this->db->get_where('karyawan', array('id_karyawan' => $data->id_karyawan))->row();
     $rooms         = $this->db->get_where('quotation_room', array('id_quotation' => $data->id_quotation))->result();
+    $pay_term         = $this->db->get_where('payment_term', array('id_quotation' => $data->id_quotation))->result();
 
     // echo "<pre>";
     // print_r($customer);
@@ -2532,15 +2565,43 @@ class Quotation_proses extends Admin_Controller
       'disc_cat' => $disc_cat,
       'type_pro' => $type_pro,
       'karyawan' => $karyawan,
+      'pay_term' => $pay_term,
       'rooms' => $rooms
     ]);
 
     $pengantar = $this->template->load_view('print_quotation1', $data);
     $quotation = $this->template->load_view('print_quotation', $data);
 
-    $this->mpdf->AddPage('P');
+    $header = '<div style="text-align:center;"><img src="' . base_url() . '/assets/images/importa.png" style="width: 230px; height: auto; margin: 0;text-align:center" /></div>';
+    $this->mpdf->SetHTMLHeader($header);
+    $this->mpdf->SetHTMLFooter('<div style="text-align:center;font-size:9px"><hr>Jl Mangga Besar Raya 59 C Jakarta 11180 - INDONESIA Telp: 62-21-6010551-3, website: www.idefabrics.com</div>');
+    $this->mpdf->AddPage(
+      'P',
+      '',
+      '',
+      '',
+      '',
+      15, // margin_left
+      15, // margin right
+      30, // margin top
+      15, // margin bottom
+      7, // margin header
+      3 // margin footer
+    );
     $this->mpdf->WriteHTML($pengantar);
-    $this->mpdf->AddPage('L');
+    $this->mpdf->AddPage(
+      'L',
+      '',
+      '',
+      '',
+      '',
+      15, // margin_left
+      15, // margin right
+      30, // margin top
+      15, // margin bottom
+      7, // margin header
+      3 // margin footer
+    );
     $this->mpdf->WriteHTML($quotation);
     $this->mpdf->Output();
   }

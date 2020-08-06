@@ -201,6 +201,8 @@ class Mso_proses extends Admin_Controller
     $pic_cust       = $this->db->get_where('child_customer_pic', array('id_customer' => $data->id_customer))->row();
     $karyawan       = $this->db->get_where('karyawan', array('id_karyawan' => $data->id_karyawan))->row();
     $rooms          = $this->db->get_where('quotation_room', array('id_quotation' => $data->id_quotation))->result();
+    $pay_term       = $this->db->get_where('payment_term', array('id_quotation' => $data->id_quotation))->result();
+    $pay_term_mso       = $this->db->get_where('payment_term_mso', array('id_quotation' => $data->id_quotation))->result();
 
     // echo "<pre>";
     // print_r($id_mso);
@@ -215,6 +217,8 @@ class Mso_proses extends Admin_Controller
       'type_pro' => $type_pro,
       'karyawan' => $karyawan,
       'rooms' => $rooms,
+      'pay_term' => $pay_term,
+      'pay_term_mso' => $pay_term_mso,
       'type' => $this->input->post('type')
     ]);
     $this->template->render('form_mso');
@@ -234,6 +238,8 @@ class Mso_proses extends Admin_Controller
     $pic_cust       = $this->db->get_where('child_customer_pic', array('id_customer' => $data->id_customer))->row();
     $karyawan       = $this->db->get_where('karyawan', array('id_karyawan' => $data->id_karyawan))->row();
     $rooms          = $this->db->get_where('quotation_room', array('id_quotation' => $data->id_quotation))->result();
+    $pay_term       = $this->db->get_where('payment_term', array('id_quotation' => $data->id_quotation))->result();
+    $pay_term_mso       = $this->db->get_where('payment_term_mso', array('id_quotation' => $data->id_quotation))->result();
 
     // echo "<pre>";
     // print_r($id_mso);
@@ -248,6 +254,8 @@ class Mso_proses extends Admin_Controller
       'type_pro' => $type_pro,
       'karyawan' => $karyawan,
       'rooms' => $rooms,
+      'pay_term' => $pay_term,
+      'pay_term_mso' => $pay_term_mso,
       'type' => $this->input->post('type')
     ]);
     $this->template->render('view_mso');
@@ -303,12 +311,10 @@ class Mso_proses extends Admin_Controller
     $type                 = $data['type'];
     // echo "<pre>";
     // print_r($data);
-    // print_r($type);
     // echo "</pre>";
     // exit;
 
     if (!empty($data)) {
-
       if (!empty($data['pemasangan'])) {
         $ArrPasang = array();
         foreach ($data['pemasangan'] as $ps => $pasang) {
@@ -321,6 +327,18 @@ class Mso_proses extends Admin_Controller
         }
       }
 
+      if (!empty($data['termin'])) {
+        $ArrTermin = [];
+        foreach ($data['termin'] as $tr => $x) {
+          $ArrTermin[$tr]['id_mso']        = $data['id_mso'];
+          $ArrTermin[$tr]['id_quotation']  = $data['id_quotation'];
+          $ArrTermin[$tr]['payment_term']  = $data['payment_term'];
+          $ArrTermin[$tr]['requirement']   = $x['requirement'];
+          $ArrTermin[$tr]['value']         =  str_replace(",", "", $x['value']);
+          $ArrTermin[$tr]['percent']       = $x['percent'];
+          $ArrTermin[$tr]['notes']         = $x['notes'];
+        }
+      }
 
       $insertData  = array(
         'date'                 => $data['date_mso'],
@@ -351,6 +369,8 @@ class Mso_proses extends Admin_Controller
         $this->db->where('id_mso', $data['id_mso'])->update('mso_proses_header', $insertData);
         $this->db->update_batch('quotation_room', $ArrPasang, 'id_ruangan');
         $this->db->update('quotation_header', ['id_mso' => $data['id_mso']], ['id_quotation' => $data['id_quotation']]);
+        $this->db->delete('payment_term_mso', ['id_quotation' => $data['id_quotation']]);
+        $this->db->insert_batch('payment_term_mso', $ArrTermin);
       } else {
         $insertData['id_mso'] = $data['id_mso'];
         $insertData['activation'] = '1';
@@ -360,14 +380,19 @@ class Mso_proses extends Admin_Controller
         $this->db->insert('mso_proses_header', $insertData);
         $this->db->update('quotation_header', ['id_mso' => $data['id_mso']], ['id_quotation' => $data['id_quotation']]);
         $this->db->update_batch('quotation_room', $ArrPasang, 'id_ruangan');
+        $this->db->insert_batch('payment_term_mso', $ArrTermin);
       }
 
       $this->db->trans_complete();
 
       if ($this->db->trans_status() === FALSE) {
         $this->db->trans_rollback();
+        echo "<pre>";
+        print_r($this->db->trans_status());
+        echo "<pre>";
+        exit;
         $Arr_Kembali  = array(
-          'pesan'    => 'Failed Add Changes. Please try again later ...',
+          'pesan'    => 'Failed. Please try again later ...',
           'status'  => 0
         );
         $keterangan = 'FAILED';
@@ -393,7 +418,7 @@ class Mso_proses extends Admin_Controller
       simpan_aktifitas($nm_hak_akses, $kode_universal, $keterangan, $jumlah, $sql, $status);
     } else {
       $Arr_Kembali  = array(
-        'pesan'    => 'Failed Add Changes. Please try again later ...',
+        'pesan'    => 'Failed Add. Please try again later ...',
         'status'  => 0
       );
     }
@@ -449,6 +474,8 @@ class Mso_proses extends Admin_Controller
     $pic_cust       = $this->db->get_where('child_customer_pic', array('id_customer' => $data->id_customer))->row();
     $karyawan       = $this->db->get_where('karyawan', array('id_karyawan' => $data->id_karyawan))->row();
     $rooms         = $this->db->get_where('quotation_room', array('id_quotation' => $data->id_quotation))->result();
+    $pay_term       = $this->db->get_where('payment_term', array('id_quotation' => $data->id_quotation))->result();
+    $pay_term_mso       = $this->db->get_where('payment_term_mso', array('id_quotation' => $data->id_quotation))->result();
 
     // echo "<pre>";
     // print_r($customer);
@@ -462,12 +489,27 @@ class Mso_proses extends Admin_Controller
       'disc_cat' => $disc_cat,
       'type_pro' => $type_pro,
       'karyawan' => $karyawan,
+      'pay_term' => $pay_term,
+      'pay_term_mso' => $pay_term_mso,
       'rooms' => $rooms
     ]);
-
+    $this->mpdf->showImageErrors = true;
     $show = $this->template->load_view('print_mso', $data);
-
-    $this->mpdf->AddPage('L');
+    $header = '<div style="text-align:center;"><img src="' . base_url() . '/assets/images/importa.png" style="width: 250px; height: auto; margin: 0;text-align:center" /></div>';
+    $this->mpdf->SetHTMLHeader($header);
+    $this->mpdf->AddPage(
+      'L',
+      '',
+      '',
+      '',
+      '',
+      15, // margin_left
+      15, // margin right
+      30, // margin top
+      15, // margin bottom
+      7, // margin header
+      0 // margin footer
+    );
     $this->mpdf->WriteHTML($show);
     $this->mpdf->Output();
   }

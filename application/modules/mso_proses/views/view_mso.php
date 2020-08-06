@@ -226,59 +226,50 @@
                         </tr>
                         <tr>
                             <th width="30%">Payment Term</th>
-                            <td>
+                            <td> <label for="">: <?= $dataMso->payment_term == "TM" ? "Termin" : "Cash in Advance" ?></label></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
                                 <?php
-                                if (!empty($dataMso->payment_term)) {
+                                if (!empty($dataMso)) {
                                     $payment = $dataMso;
                                 } else {
                                     $payment = $data;
                                 }
-                                ?>
-                                <?php if ($payment->payment_term == 'CA') : ?>
-                                    <span>: Cash in Advance</span>
-                                <?php elseif ($payment->payment_term == 'DP') : ?>
-                                    <span>: Down Payment</span>
-                                <?php elseif ($payment->payment_term == 'TM') : ?>
-                                    <span>: Tempo</span>
+                                if ($payment->payment_term == 'TM') : ?>
+                                    <table width="100%" class="table-striped table-bordered">
+                                        <thead>
+                                            <tr class="bg-gray">
+                                                <th width="20px">No</th>
+                                                <th>Requirements</th>
+                                                <th width="150px" class="text-right">Value</th>
+                                                <th width="80px" class="text-center">%</th>
+                                                <th>Notes</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="list-termin">
+                                            <?php
+                                            if (!empty($pay_term_mso)) {
+                                                $term = $pay_term_mso;
+                                            } else {
+                                                $term = $pay_term;
+                                            }
+                                            $no = 0;
+                                            foreach ($term as $pt) : $no++ ?>
+                                                <tr>
+                                                    <td><?= $no ?></td>
+                                                    <td><?= $pt->requirement ?></td>
+                                                    <td class="text-right"><?= number_format($pt->value) ?></td>
+                                                    <td class="text-center"><?= $pt->percent ?>%</td>
+                                                    <td><?= $pt->notes ?></td>
+                                                </tr>
+                                            <?php endforeach ?>
+                                        </tbody>
+                                    </table>
                                 <?php endif ?>
                             </td>
-                            </>
+                        </tr>
 
-                            <?php
-                            if ($payment->payment_term == 'DP') { ?>
-                        <tr>
-                            <td></td>
-                            <td>
-                                <ol>
-                                    <li>
-                                        <?= $payment->payment_percent_1 ?> % (Rp. <?= $payment->payment_value_1 ?>)
-                                    </li>
-                                    <li>
-                                        <?= $payment->payment_percent_2 ?> % (Rp. <?= $payment->payment_value_2 ?>)
-                                    </li>
-                                </ol>
-                            </td>
-                        </tr>
-                        <?php if ($payment->type_payment == "BP") : ?>
-                            <tr>
-                                <td></td>
-                                <td> <span><?= $payment->type_payment == "BP" ? 'BP' : '' ?></span></td>
-                            </tr>
-                        <?php elseif ($payment->type_payment = "PROGRESS") : ?>
-                            <tr>
-                                <td><label for="">Type</label></td>
-                                <td> : <span><?= $payment->type_payment == "PROGRESS" ? 'PROGRESS' : '' ?></span></td>
-                            </tr>
-                        <?php endif ?>
-                    <?php } else if ($payment->payment_term == 'TM') { ?>
-                        <tr>
-                            <td></td>
-                            <td>
-                                <span>: <?= $payment->tempo_week ?></span>&nbsp;&nbsp;
-                                <span>Week</span>
-                            </td>
-                        </tr>
-                    <?php } ?>
                     </table>
                 </div>
             </div>

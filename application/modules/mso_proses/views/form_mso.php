@@ -1,4 +1,4 @@
-<form class="" id="form-quotation" action="" method="post" enctype="multipart/form-data">
+<form class="" id="form-quotation" action="" method="post">
     <input type="hidden" name="type" class="form-control" value="<?= $type ?>">
 
     <div class=" box-solid">
@@ -249,52 +249,56 @@
                         <tr>
                             <th width="30%">Payment Term</th>
                             <td>
-                                <select name="payment_term" onchange="myFunction()" id="paymentTerm" class="select2 required form-control paymentTerm">
+                                <select name="payment_term" onchange="myFunction()" id="paymentTerm" class="select2 required form-control">
                                     <option value=""></option>
                                     <option value="CA" <?= $payment->payment_term == "CA" ? 'selected' : '' ?>>Cash in Advance</option>
-                                    <option value="DP" <?= $payment->payment_term == "DP" ? 'selected' : '' ?>>Down Payment</option>
-                                    <option value="TM" <?= $payment->payment_term == "TM" ? 'selected' : '' ?>>Tempo</option>
+                                    <option value="TM" <?= $payment->payment_term == "TM" ? 'selected' : '' ?>>Termin</option>
                                 </select>
                             </td>
                         </tr>
                         <tr>
-                            <td></td>
-                            <td>
+                            <td colspan="2">
                                 <div class="detailPayterm">
                                     <?php
-                                    if ($payment->payment_term == 'DP') { ?>
-                                        <div class="input-group">
-                                            <span class="input-group-addon">1</span>
-                                            <input type="number" name="paymentDpPersen1" value="<?= $payment->payment_percent_1 ?>" class="form-control required text-right" min="0" placeholder="0">
-                                            <span class="input-group-addon">%</span>
-                                            <span class="input-group-addon">Rp.</span>
-                                            <input type="text" name="paymentDpValue1" value="<?= $payment->payment_value_1 ?>" class="form-control numberOnly nominal text-right" placeholder="0">
-                                        </div>
-                                        <div class="input-group">
-                                            <span class="input-group-addon">2</span>
-                                            <input type="number" name="paymentDpPersen2" value="<?= $payment->payment_percent_2 ?>" class="form-control text-right" min="0" placeholder="0">
-                                            <span class="input-group-addon">%</span>
-                                            <span class="input-group-addon">Rp.</span>
-                                            <input type="text" name="paymentDpValue2" value="<?= $payment->payment_value_2 ?>" class="form-control numberOnly nominal text-right" placeholder="0">
-                                        </div>
-                                        <div class="radio">
-                                            <label style="margin-right:50px">
-                                                <input type="radio" name="type_payment" id="type_payment" value="BP" <?= $payment->type_payment == "BP" ? 'checked' : '' ?>>
-                                                BP
-                                            </label>
-                                            <label>
-                                                <input type="radio" name="type_payment" id="type_payment" value="PROGRESS" <?= $payment->type_payment == "PROGRESS" ? 'checked' : '' ?>>
-                                                PROGRESS
-                                            </label>
-                                        </div>
-                                    <?php } else if ($payment->payment_term == 'TM') { ?>
-                                        <div class="input-group col-sm-6">
-                                            <input type="number" class="form-control text-right required" value="<?= $payment->tempo_week ?>" name="tempo_week" id="weekTempo" min="0" placeholder="0">
-                                            <span class="input-group-addon">
-                                                <span>Week</span>
-                                            </span>
-                                        </div>
-                                    <?php } ?>
+                                    if (!empty($dataMso)) {
+                                        $payment = $dataMso;
+                                    } else {
+                                        $payment = $data;
+                                    }
+                                    if ($payment->payment_term == 'TM') : ?>
+                                        <table width="100%" class="table-condensed table-bordered">
+                                            <thead>
+                                                <tr class="bg-gray">
+                                                    <th width="20px">No</th>
+                                                    <th>Requirements</th>
+                                                    <th width="150px" class="text-right">Value</th>
+                                                    <th width="80px" class="text-right">%</th>
+                                                    <th>Notes</th>
+                                                    <th width="20px">#</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="list-termin">
+                                                <?php
+                                                if (!empty($pay_term_mso)) {
+                                                    $term = $pay_term_mso;
+                                                } else {
+                                                    $term = $pay_term;
+                                                }
+                                                $no = 0;
+                                                foreach ($term as $pt) : $no++ ?>
+                                                    <tr>
+                                                        <td><?= $no ?></td>
+                                                        <td><input type="text" value="<?= $pt->requirement ?>" class="form-control required" id="requirement<?= $no ?>" name="termin[<?= $no ?>][requirement]" placeholder="Requirements"></td>
+                                                        <td class="text-right"><input type="text " value="<?= number_format($pt->value) ?>" class="form-control nominal numberOnly text-right" name="termin[<?= $no ?>][value]" placeholder="0"></td>
+                                                        <td class="text-right"><input type="number" min="0" max="100" value="<?= $pt->percent ?>" class="form-control text-right" name="termin[<?= $no ?>][percent]" placeholder="0"></td>
+                                                        <td><input type="text" value="<?= $pt->notes ?>" class="form-control" name="termin[<?= $no ?>][notes]" placeholder="0"></td>
+                                                        <td><button type="button" class="btn btn-sm btn-danger hapusTermin">x</button></td>
+                                                    </tr>
+                                                <?php endforeach ?>
+                                            </tbody>
+                                        </table>
+                                        <button type="button" class="btn btn-sm addTermin btn-success" id="addTermin">Add Termin</button>
+                                    <?php endif ?>
                                 </div>
                             </td>
                         </tr>
@@ -355,116 +359,3 @@
             <button type="button" class="btn btn-md btn-primary pull-right" id="saveMso"><i class="fa fa-save"></i> Save</button>
         </div>
 </form>
-<script type="text/javascript">
-    function myFunction() {
-        const py = document.getElementById("paymentTerm").value;
-        console.log(py);
-        var html = '';
-        if (py == 'TM') {
-            var html =
-
-                '<div class="input-group col-sm-6">' +
-                '    <input type="number" class="form-control text-right required" name="tempo_week" id="weekTempo" min="0" placeholder="0">' +
-                '    <span class="input-group-addon">' +
-                '        <span >Week</span>' +
-                '    </span>' +
-
-                '</div>'
-        } else if (py == 'DP') {
-            var html =
-                '<div class="input-group">' +
-                '    <span class="input-group-addon">1</span>' +
-                '    <input type="number" name="paymentDpPersen1" class="form-control required text-right" min="0" placeholder="0">' +
-                '    <span class="input-group-addon">%</span>' +
-                '    <span class="input-group-addon">Rp.</span>' +
-                '    <input type="text" name="paymentDpValue1" class="form-control numberOnly nominal text-right" placeholder="0">' +
-                '</div>' +
-                '<div class="input-group">' +
-                '    <span class="input-group-addon">2</span>' +
-                '    <input type="number" name="paymentDpPersen2" class="form-control text-right" min="0" placeholder="0">' +
-                '    <span class="input-group-addon">%</span>' +
-                '    <span class="input-group-addon">Rp.</span>' +
-                '    <input type="text" name="paymentDpValue2" class="form-control numberOnly nominal text-right" placeholder="0">' +
-                '</div>' +
-                '<div class="radio">' +
-                '    <label style="margin-right:50px">' +
-                '        <input type="radio" name="type_payment" id="type_payment" value="bp" checked="checked">' +
-                '        BP' +
-                '    </label>' +
-                '    <label>' +
-                '        <input type="radio" name="type_payment" id="type_payment" value="progress">' +
-                '        PROGRESS' +
-                '    </label>' +
-                '</div>'
-
-
-        } else {
-            var html = ''
-        }
-        // console.log(html);
-        // document.querySelector('.payment_term tbody').append(html);
-        $('div.detailPayterm').html(html)
-
-    }
-
-
-    $(".select2").select2({
-        placeholder: "Choose An Option",
-        allowClear: true,
-        width: '100%'
-    });
-    jQuery(document).on('click', '#saveMso', function() {
-        var valid = getValidation();
-        // alert(valid)
-        if (valid) {
-            // var formdata = $("#form-quotation").serialize();
-            var formdata = new FormData($("#form-quotation")[0]);
-            // console.log(formdata);
-            // exit();
-            $.ajax({
-                url: siteurl + active_controller + "saveDataMso",
-                dataType: "json",
-                type: 'POST',
-                data: formdata,
-                contentType: false,
-                cache: false,
-                processData: false,
-                async: false,
-                success: function(result) {
-                    if (result.status == '1') {
-                        swal({
-                            title: "Sukses!",
-                            text: result['pesan'],
-                            type: "success",
-                            timer: 1500,
-                            showConfirmButton: false
-                        });
-                        setTimeout(function() {
-                            open(siteurl + active_controller, '_self');
-                        }, 1600);
-                    } else {
-                        swal({
-                            title: "Gagal!",
-                            text: result['pesan'],
-                            type: "error",
-                            timer: 1500,
-                            showConfirmButton: false
-                        });
-                    };
-                },
-                error: function(request, error) {
-                    console.log(arguments);
-                    alert(" Can't do because: " + error);
-                }
-            });
-        } else {
-            swal({
-                title: "Gagal!",
-                text: 'Please fill in the blank form!',
-                type: "error",
-                timer: 1500,
-                showConfirmButton: false
-            });
-        }
-    });
-</script>

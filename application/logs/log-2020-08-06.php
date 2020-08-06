@@ -220,3 +220,8 @@ ERROR - 2020-08-06 21:06:04 --> Query error: Table 'idefab_db.view_invoice_payme
 								view_invoice_payment
 							WHERE
 								 (hargajualtotal - jum_bayar) > 0 AND kdcab=''
+ERROR - 2020-08-06 22:53:46 --> Query error: Table 'idefab_db.payment_term' doesn't exist - Invalid query: DELETE FROM `payment_term`
+WHERE `id_quotation` = '00001/IDF/PR/06/20'
+ERROR - 2020-08-06 22:58:54 --> Query error: Table 'idefab_db.payment_term' doesn't exist - Invalid query: DELETE FROM `payment_term`
+WHERE `id_quotation` = '00001/IDF/PR/06/20'
+ERROR - 2020-08-06 23:37:13 --> Severity: Warning --> Invalid argument supplied for foreach() /home/ssc/idefab_dev/application/modules/quotation_proses/views/view_quotation.php 119

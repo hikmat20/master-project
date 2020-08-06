@@ -7,7 +7,7 @@
   <title>Document</title>
   <style>
     table th {
-      padding: 5px
+      padding: 1px
     }
 
     ul li {
@@ -53,15 +53,15 @@
 
     <p>
       <b>Syarat Pembayaran:</b> <br>
-      <?php if ($data->payment_term == 'DP') : ?>
+      <!-- <?= $data->payment_term ?> -->
+      <?php if ($data->payment_term == 'TM') : ?>
         <ul>
-          <li><?= $data->payment_term ?>
-            <ol>
-              <li><?= $data->payment_percent_1 ?> % (Rp. <?= $data->payment_value_1 ?>) sebagai uang muka, sebelum kain diproduksi</li>
-              <li><?= $data->payment_percent2 ?> % (Rp. <?= $data->payment_value_2 ?>) setelah barang terpasang / diterima</li>
-            </ol>
-          </li>
+          <?php foreach ($pay_term as $pt => $p) : ?>
+            <li><strong for=""><?= $p->requirement . " " . ($p->value ? 'Rp. ' . number_format($p->value) : $p->percent . '%'); ?></strong></li>
+          <?php endforeach ?>
         </ul>
+      <?php elseif ($data->payment_term == 'CA') : ?>
+        <strong>Full Payment 100%</strong>
       <?php endif ?>
 
     </p>
