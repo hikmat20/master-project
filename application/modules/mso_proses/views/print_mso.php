@@ -219,6 +219,61 @@
                         <?= $dataMso->jenis_tagihan ?>
                     </td>
                 </tr>
+                <tr>
+                    <td>Payment Term</td>
+                    <td>
+                        <?php
+                        if (!empty($dataMso->payment_term)) {
+                            $payment = $dataMso;
+                        } else {
+                            $payment = $data;
+                        }
+                        ?>
+                        <?php if ($payment->payment_term == 'CA') : ?>
+                            <span>: Cash in Advance</span>
+                        <?php elseif ($payment->payment_term == 'DP') : ?>
+                            <span>: Down Payment</span>
+                        <?php elseif ($payment->payment_term == 'TM') : ?>
+                            <span>: Tempo</span>
+                        <?php endif ?>
+                    </td>
+                    </>
+
+                    <?php
+                    if ($payment->payment_term == 'DP') { ?>
+                <tr>
+                    <td></td>
+                    <td>
+                        <ol>
+                            <li>
+                                <?= $payment->payment_percent_1 ?> % (Rp. <?= $payment->payment_value_1 ?>)
+                            </li>
+                            <li>
+                                <?= $payment->payment_percent_2 ?> % (Rp. <?= $payment->payment_value_2 ?>)
+                            </li>
+                        </ol>
+                    </td>
+                </tr>
+                <?php if ($payment->type_payment == "BP") : ?>
+                    <tr>
+                        <td></td>
+                        <td> <span><?= $payment->type_payment == "BP" ? 'BP' : '' ?></span></td>
+                    </tr>
+                <?php elseif ($payment->type_payment = "PROGRESS") : ?>
+                    <tr>
+                        <td><label for="">Type</label></td>
+                        <td> : <span><?= $payment->type_payment == "PROGRESS" ? 'PROGRESS' : '' ?></span></td>
+                    </tr>
+                <?php endif ?>
+            <?php } else if ($payment->payment_term == 'TM') { ?>
+                <tr>
+                    <td></td>
+                    <td>
+                        <span>: <?= $payment->tempo_week ?></span>&nbsp;&nbsp;
+                        <span>Week</span>
+                    </td>
+                </tr>
+            <?php } ?>
             </table>
         </td>
     </tr>

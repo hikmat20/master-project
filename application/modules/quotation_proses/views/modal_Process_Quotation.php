@@ -100,7 +100,67 @@
         </div>
       </div>
       <hr>
+      <div class="box-body">
+        <div class="row">
+          <div class="col-md-6">
+            <table width="100%" class="table-condensed">
+              <tr>
+                <th width="30%">Payment Term</th>
+                <td>
+                  <select name="payment_term" onchange="myFunction()" id="paymentTerm" class="select2 required form-control paymentTerm">
+                    <option value=""></option>
+                    <option value="CA" <?= $data->payment_term == "CA" ? 'selected' : '' ?>>Cash in Advance</option>
+                    <option value="TM" <?= $data->payment_term == "TM" ? 'selected' : '' ?>>Termin</option>
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td>
+                  <div class="detailPayterm">
+                    <?php
+                    if ($data->payment_term == 'DP') { ?>
+                      <div class="input-group">
+                        <span class="input-group-addon">1</span>
+                        <input type="number" name="paymentDpPersen1" value="<?= $data->payment_percent_1 ?>" class="form-control required text-right" min="0" placeholder="0">
+                        <span class="input-group-addon">%</span>
+                        <span class="input-group-addon">Rp.</span>
+                        <input type="text" name="paymentDpValue1" value="<?= $data->payment_value_1 ?>" class="form-control numberOnly nominal text-right" placeholder="0">
+                      </div>
+                      <div class="input-group">
+                        <span class="input-group-addon">2</span>
+                        <input type="number" name="paymentDpPersen2" value="<?= $data->payment_percent_2 ?>" class="form-control text-right" min="0" placeholder="0">
+                        <span class="input-group-addon">%</span>
+                        <span class="input-group-addon">Rp.</span>
+                        <input type="text" name="paymentDpValue2" value="<?= $data->payment_value_2 ?>" class="form-control numberOnly nominal text-right" placeholder="0">
+                      </div>
+                      <div class="radio">
+                        <label style="margin-right:50px">
+                          <input type="radio" name="type_payment" class="required" value="BP" <?= $data->type_payment == "BP" ? 'checked' : '' ?>>
+                          BP
+                        </label>
+                        <label>
+                          <input type="radio" name="type_payment" value="PROGRESS" <?= $data->type_payment == "PROGRESS" ? 'checked' : '' ?>>
+                          PROGRESS
+                        </label>
+                      </div>
+                    <?php } else if ($data->payment_term == 'TM') { ?>
+                      <div class="input-group col-sm-6">
+                        <input type="number" class="form-control text-right required" value="<?= $data->tempo_week ?>" name="tempo_week" id="weekTempo" min="0" placeholder="0">
+                        <span class="input-group-addon">
+                          <span>Week</span>
+                        </span>
+                      </div>
+                    <?php } ?>
+                  </div>
+                </td>
+              </tr>
+            </table>
 
+          </div>
+        </div>
+      </div>
+      <hr>
       <div class="box box-solid">
         <table id="my-grid3" class="table-condensed" width="100%">
           <thead>
@@ -1533,6 +1593,57 @@
         alert(" Can't do because: " + error);
       }
     });
+  }
+
+  function myFunction() {
+    const py = document.getElementById("paymentTerm").value;
+    console.log(py);
+    var html = '';
+    if (py == 'TM') {
+      var html =
+
+        '<div class="input-group col-sm-6">' +
+        '    <input type="number" class="form-control text-right required" name="tempo_week" id="weekTempo" min="0" placeholder="0">' +
+        '    <span class="input-group-addon">' +
+        '        <span >Week</span>' +
+        '    </span>' +
+
+        '</div>'
+    } else if (py == 'DP') {
+      var html =
+        '<div class="input-group">' +
+        '    <span class="input-group-addon">1</span>' +
+        '    <input type="number" name="paymentDpPersen1" class="form-control required text-right" min="0" placeholder="0">' +
+        '    <span class="input-group-addon">%</span>' +
+        '    <span class="input-group-addon">Rp.</span>' +
+        '    <input type="text" name="paymentDpValue1" class="form-control numberOnly nominal text-right" placeholder="0">' +
+        '</div>' +
+        '<div class="input-group">' +
+        '    <span class="input-group-addon">2</span>' +
+        '    <input type="number" name="paymentDpPersen2" class="form-control text-right" min="0" placeholder="0">' +
+        '    <span class="input-group-addon">%</span>' +
+        '    <span class="input-group-addon">Rp.</span>' +
+        '    <input type="text" name="paymentDpValue2" class="form-control numberOnly nominal text-right" placeholder="0">' +
+        '</div>' +
+        '<div class="radio">' +
+        '    <label style="margin-right:50px">' +
+        '        <input type="radio" name="type_payment" value="bp" checked="checked">' +
+        '        BP' +
+        '    </label>' +
+        '    <label>' +
+        '        <input type="radio" name="type_payment" value="progress">' +
+        '        PROGRESS' +
+        '    </label>' +
+        '</div>'
+
+
+    } else {
+      var html = ''
+    }
+    // console.log(html);
+    // document.querySelector('.payment_term tbody').append(html);
+    $('div.detailPayterm').html(html)
+
   }
 
   jQuery(document).on('click', '#saveQuotation2', function() {

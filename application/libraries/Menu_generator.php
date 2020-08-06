@@ -46,7 +46,7 @@ class Menu_generator
 							<li class='header'></li>
 	                        <li class='" . check_class('dashboard', TRUE) . "'>
 	                            <a href='" . site_url() . "'>
-	                                <i class='fa fa-dashboard'></i> <span>Dashboard</span>
+	                                <i class='fa fa-dashboard fa-size-25'></i>&nbsp <span>Dashboard</span>
 	                            </a>
 	                        </li>";
 
@@ -82,7 +82,7 @@ class Menu_generator
 							if (strpos($this->uri, '/' . $link . '/') !== FALSE) {
 								$active = "active";
 							}
-							$html .= "<li class='{$active}'><a href='" . ($link == '#' ? '#' : site_url($link)) . "' " . ($target == '_blank' ? "target='_blank'" : "") . "><i class='{$icon}'></i> <span>" . ucwords($title) . "</span></a></li>";
+							$html .= "<li class='{$active}'><a href='" . ($link == '#' ? '#' : site_url($link)) . "' " . ($target == '_blank' ? "target='_blank'" : "") . "><i class='{$icon} fa-size-25 text-center'></i> &nbsp <span>" . ucwords($title) . "</span></a></li>";
 						}
 						goto end_for;
 					}
@@ -97,7 +97,7 @@ class Menu_generator
 					$html .= "
             			  <li class='treeview {$active}'>
                       <a href='#'>
-                        <i class='" . $icon . "'></i>
+                        <i class='" . $icon . " fa-size-25 text-center'></i> &nbsp
                         <span>" . ucwords($title) . "</span>
                         <span class='pull-right-container'>
 						            	<i class='fa fa-angle-left pull-right'></i>
@@ -161,7 +161,7 @@ class Menu_generator
 						$html .= "
 	            			  <li class='treeview {$active}'>
 	                      <a href='#'>
-	                        <i class='" . $subicon . "'></i>" . ucwords($subtitle) . "
+	                        <i class='" . $subicon . " '></i>" . ucwords($subtitle) . "
 	                        <span class='pull-right-container'>
 							            	<i class='fa fa-angle-left pull-right'></i>
 							          	</span>
@@ -187,7 +187,7 @@ class Menu_generator
 							$html .= "
 							<li class='" . $active . "'>
 								<a href='" . ($sublinksub == '#' ? '#' : site_url($sublinksub)) . "'" . " " . $subtargetsub . ">
-									<i class='" . $subiconsub . "'></i>" . ucwords($subtitlesub) . "
+									<i class='" . $subiconsub . " '></i>" . ucwords($subtitlesub) . "
 								</a>
 							</li>";
 						}
@@ -297,7 +297,7 @@ class Menu_generator
 							if (strpos($this->uri, '/' . $link . '/') !== FALSE) {
 								$active = "active";
 							}
-							$html .= "<li class='{$active}'><a href='" . ($link == '#' ? '#' : site_url($link)) . "' " . ($target == '_blank' ? "target='_blank'" : "") . "><i class='{$icon}'></i> <span>" . ucwords($title) . "</span></a></li>";
+							$html .= "<li class='{$active}'><a href='" . ($link == '#' ? '#' : site_url($link)) . "' " . ($target == '_blank' ? "target='_blank'" : "") . "><i class='{$icon} '></i> <span>" . ucwords($title) . "</span></a></li>";
 						}
 						goto end_for;
 					}
@@ -311,7 +311,7 @@ class Menu_generator
 					$html .= "
             			  <li class='treeview {$active}'>
                       <a href='#'>
-                        <i class='" . $icon . "'></i>
+                        <i class='" . $icon . " '></i>
                         <span>" . ucwords($title) . "</span>
                         <span class='pull-right-container'>
 						            	<i class='fa fa-angle-left pull-right'></i>

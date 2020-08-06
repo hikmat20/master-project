@@ -14,21 +14,18 @@
 
 <body style="font-family:Arial">
   <h3 style="text-align:;">Ref.<?= $data->id_quotation ?></h3>
-  <?php 
-  if($data->status == '0'){
+  <?php
+  if ($data->status == '0') {
     $status = "Open";
   } else if ($data->status == "1") {
     $status = "Deal";
-    
   } else if ($data->status == "2") {
     $status = "Lost";
-    
   } else {
     $status = "Tidak ada status";
-
   }
   ?>
-  <h4 style="text-align: right;position:relative;margin:0px">Status : <?= $status?></h4>
+  <h4 style="text-align: right;position:relative;margin:0px">Status : <?= $status ?></h4>
   <hr>
 
   <table id="my-grid3" width="100%">
@@ -542,125 +539,110 @@
   </table>
 
   <!-- ACCOMODATION -->
-  <legend class="legend">
-    <h4>Detail Accomodation <span class="text-red">*</span></h4>
-  </legend>
-  <strong><small for="">Meal & Pocket Money</small></strong>
   <?php
-  $meals = $this->db->get_where('qtt_meal_cost', ['id_quotation' => $data->id_quotation])->result();
-  ?>
-  <table border="1" width="100%" style="font-size:12px;border-collapse: collapse">
-    <tr>
-      <th align="left">Area</th>
-      <th align="center">Qty MP</th>
-      <th align="center">Total Day</th>
-      <th align="right">Cost MP/Day</th>
-      <th align="right">Total</th>
-      <th align="left">Notes</th>
-    </tr>
-    <?php
-    foreach($meals as $meal){
-      $mealArea = $this->db->get_where('kabupaten', ['id_kab' => $meal->area])->row();
-      ?>
-    <tr>
-      <td><?= $mealArea->nama ?></td>
-      <td align="center"><?= $meal->qty_mp ?></td>
-      <td align="center"><?= $meal->total_day ?></td>
-      <td align="right"><?= number_format($meal->cost_mp_day) ?></td>
-      <td align="right"><?= number_format($meal->total) ?></td>
-      <td><?= $meal->notes?></td>
-    </tr>
-    <?
-    }
-    ?>
-  </table>
- <br>
-  <strong><small for="">Transportation</small></strong>
-  <?php
-  $transport = $this->db->get_where('qtt_transport_cost', ['id_quotation' => $data->id_quotation])->result();
-  ?>
-  <table border="1" width="100%" style="font-size:12px;border-collapse: collapse">
-    <tr>
-      <th align="">Item Cost</th>
-      <th align="">Transportation</th>
-      <th align="">Origin</th>
-      <th align="">Destination</th>
-      <th align="center">Qty MP</th>
-      <th align="right">Total</th>
-      <th align="left">Notes</th>
-    </tr>
-    <?php
-    foreach($transport as $trans){
-      $transportasi = $this->db->get_where('transportasi', ['trans_code' => $trans->item_cost])->row();
-      ?>
-    <tr>
-      <td><?= $transportasi->name_transportasi ?></td>
-      <td align=""><?= $trans->transportation ?></td>
-      <td align=""><?= $trans->origin ?></td>
-      <td align=""><?= $trans->destination ?></td>
-      <td align="center"><?= number_format($trans->qty_mp) ?></td>
-      <td align="right"><?= number_format($trans->total) ?></td>
-      <td><?= $meal->notes?></td>
-    </tr>
-    <?
-    }
-    ?>
-  </table>
-  <br>
+  $meals      = $this->db->get_where('qtt_meal_cost', ['id_quotation' => $data->id_quotation])->result();
+  $transport  = $this->db->get_where('qtt_transport_cost', ['id_quotation' => $data->id_quotation])->result();
+  $housing    = $this->db->get_where('qtt_housing_cost', ['id_quotation' => $data->id_quotation])->result();
+  $other      = $this->db->get_where('qtt_other_cost', ['id_quotation' => $data->id_quotation])->result();
 
-  <strong> <small for="">Housing & Transport Site</small></strong>
-  <?php
-  $housing = $this->db->get_where('qtt_housing_cost', ['id_quotation' => $data->id_quotation])->result();
-  ?>
-  <table border="1" width="100%" style="font-size:12px;border-collapse: collapse">
-    <tr>
-      <th align="left">Area</th>
-      <th align="center">Qty Mp</th>
-      <th align="center">Amount Day</th>
-      <th align="right">Cost</th>
-      <th align="right">Total</th>
-      <th align="left">Notes</th>
-    </tr>
-    <?php
-    foreach($housing as $house){
-      $areas = $this->db->get_where('kabupaten', ['id_kab' => $house->area])->row();
-      ?>
-    <tr>
-      <td><?= $areas->nama ?></td>
-      <td align="center"><?= $house->qty_mp ?></td>
-      <td align="center"><?= $house->amount_day ?></td>
-      <td align="right"><?= number_format($house->cost) ?></td>
-      <td align="right"><?= number_format($house->total) ?></td>
-      <td><?= $meal->notes?></td>
-    </tr>
-    <?
-    }
-    ?>
-  </table>
- <br>
+  if (!empty($meals) || !empty($transport) || !empty($housing) || !empty($other)) : ?>
+    <legend class="legend">
+      <h4>Detail Accomodation <span class="text-red">*</span></h4>
+    </legend>
+  <?php endif ?>
 
- <strong><small for="">Other Cost</small></strong>
- <?php
-  $other = $this->db->get_where('qtt_other_cost', ['id_quotation' => $data->id_quotation])->result();
-  ?>
-  <table border="1" width="100%" style="font-size:12px;border-collapse: collapse">
-    <tr>
-      <th align="left">Item Cost</th>
-      <th align="right">Total</th>
+  <?php if (!empty($meals)) : ?>
+    <strong><small for="">Meal & Pocket Money</small></strong>
+    <table border="1" width="100%" style="font-size:12px;border-collapse: collapse">
+      <tr>
+        <th align="left">Area</th>
+        <th align="center">Qty MP</th>
+        <th align="center">Total Day</th>
+        <th align="right">Cost MP/Day</th>
+        <th align="right">Total</th>
+        <th align="left">Notes</th>
+      </tr>
+      <?php foreach ($meals as $meal) : $mealArea = $this->db->get_where('kabupaten', ['id_kab' => $meal->area])->row(); ?>
+        <tr>
+          <td><?= $mealArea->nama ?></td>
+          <td align="center"><?= $meal->qty_mp ?></td>
+          <td align="center"><?= $meal->total_day ?></td>
+          <td align="right"><?= number_format($meal->cost_mp_day) ?></td>
+          <td align="right"><?= number_format($meal->total) ?></td>
+          <td><?= $meal->notes ?></td>
+        </tr>
+      <?php endforeach ?>
+    </table>
+    <br>
+  <?php endif ?>
 
-    </tr>
-    <?php
-    foreach($other as $oth){
-      ?>
-    <tr>
-      <td><?= $oth->item ?></td>
-      <td align="right"><?= number_format($oth->cost) ?></td>
-    </tr>
-    <?
-    }
-    ?>
-  </table>
-  </div>
+  <?php if (!empty($transport)) : ?>
+    <strong><small for="">Transportation</small></strong>
+    <table border="1" width="100%" style="font-size:12px;border-collapse: collapse">
+      <tr>
+        <th align="">Item Cost</th>
+        <th align="">Transportation</th>
+        <th align="">Origin</th>
+        <th align="">Destination</th>
+        <th align="center">Qty MP</th>
+        <th align="right">Total</th>
+        <th align="left">Notes</th>
+      </tr>
+      <?php foreach ($transport as $trans) : $transportasi = $this->db->get_where('transportasi', ['trans_code' => $trans->item_cost])->row(); ?>
+        <tr>
+          <td><?= $transportasi->name_transportasi ?></td>
+          <td align=""><?= $trans->transportation ?></td>
+          <td align=""><?= $trans->origin ?></td>
+          <td align=""><?= $trans->destination ?></td>
+          <td align="center"><?= number_format($trans->qty_mp) ?></td>
+          <td align="right"><?= number_format($trans->total) ?></td>
+          <td><?= $meal->notes ?></td>
+        </tr>
+      <?php endforeach ?>
+    </table>
+    <br>
+  <?php endif ?>
+
+  <?php if (!empty($housing)) : ?>
+    <strong> <small for="">Housing & Transport Site</small></strong>
+    <table border="1" width="100%" style="font-size:12px;border-collapse: collapse">
+      <tr>
+        <th align="left">Area</th>
+        <th align="center">Qty Mp</th>
+        <th align="center">Amount Day</th>
+        <th align="right">Cost</th>
+        <th align="right">Total</th>
+        <th align="left">Notes</th>
+      </tr>
+      <?php foreach ($housing as $house) : $areas = $this->db->get_where('kabupaten', ['id_kab' => $house->area])->row(); ?>
+        <tr>
+          <td><?= $areas->nama ?></td>
+          <td align="center"><?= $house->qty_mp ?></td>
+          <td align="center"><?= $house->amount_day ?></td>
+          <td align="right"><?= number_format($house->cost) ?></td>
+          <td align="right"><?= number_format($house->total) ?></td>
+          <td><?= $meal->notes ?></td>
+        </tr>
+      <?php endforeach ?>
+    </table>
+    <br>
+  <?php endif ?>
+
+  <?php if (!empty($other)) : ?>
+    <strong><small for="">Other Cost</small></strong>
+    <table border="1" width="100%" style="font-size:12px;border-collapse: collapse">
+      <tr>
+        <th align="left">Item Cost</th>
+        <th align="right">Total</th>
+      </tr>
+      <?php foreach ($other as $oth) : ?>
+        <tr>
+          <td><?= $oth->item ?></td>
+          <td align="right"><?= number_format($oth->cost) ?></td>
+        </tr>
+      <?php endforeach ?>
+    </table>
+  <?php endif ?>
 </body>
 
 </html>

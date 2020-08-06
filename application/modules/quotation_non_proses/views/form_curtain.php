@@ -1,15 +1,15 @@
-<table class="table-condensed table-striped list-curtain" width="100%">
+<table class="table-condensed table-striped list-curtain table-bordered" width="100%">
 	<thead>
 		<tr class="bg-primary">
-			<th>No.</th>
+			<th width="20px">No.</th>
 			<th>Curtain Material</th>
 			<th>Customer Product Name</th>
-			<th>Spesifikasi</th>
-			<th>Qty</th>
-			<th class="text-right">Subtotal</th>
-			<th class="text-right">Diskon</th>
-			<th class="text-right">Total</th>
-			<th>#</th>
+			<th width="100px">Spesifikasi</th>
+			<th width="80px">Qty</th>
+			<th width="150px" class="text-right">Subtotal</th>
+			<th width="80px" class="text-right">Diskon</th>
+			<th width="200px" class="text-right">Total</th>
+			<th width="20px">#</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -51,5 +51,19 @@
 			</td>
 		</tr> -->
 	</tbody>
+	<tfoot>
+		<tr>
+			<td colspan="5">
+				<textarea name="keterangan" id="keterangan" class="form-control" placeholder="Notes"></textarea>
+			</td>
+			<td colspan="2">
+				<label class="control-label">Grand Total Curtain</label>
+			</td>
+			<td>
+				<input type="text" name="grand_total_curtain" id="grand_total_curtain" placeholder="0" class="form-control text-right pull-right" readonly>
+			</td>
+			<td></td>
+		</tr>
+	</tfoot>
 </table>
 <button type="button" class="btn btn-sm btn-success addCurtain" style="margin-top: 10px;"><i class="fa fa-plus"></i> Add Curtain</button>

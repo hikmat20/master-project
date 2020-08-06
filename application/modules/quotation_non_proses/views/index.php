@@ -366,68 +366,7 @@ $ENABLE_DELETE  = has_permission('Quotation_proses.Delete');
       //$("#ModalView").modal('hide');
     });
 
-    jQuery(document).on('click', '#saveQuotation', function() {
-      var valid = getValidation();
-      // console.log(valid);
-      if (valid) {
-        var formdata = new FormData(document.getElementById("form-quotation")); //$("#form-supplier").serialize();
-        // console.log(formdata);
-        // alert(formdata);
-        // exit();
-        $.ajax({
-          url: siteurl + active_controller + "saveQuotation",
-          dataType: "json",
-          type: 'POST',
-          data: formdata,
-          processData: false,
-          contentType: false,
-          cache: false,
-          async: false,
-          success: function(result) {
-            if (result.status == '1') {
-              swal({
-                title: "Sukses!",
-                text: result['pesan'],
-                type: "success",
-                timer: 1500,
-                showConfirmButton: false
-              });
-              setTimeout(function() {
-                DataTables('set');
-                if (($("#ModalView3").data('bs.modal') || {}).isShown) {
-                  $("#ModalView3").modal('hide');
-                } else {
-                  $("#ModalView").modal('hide');
-                }
 
-              }, 1600);
-            } else {
-              swal({
-                title: "Gagal!",
-                text: result['pesan'],
-                type: "error",
-                timer: 1500,
-                showConfirmButton: false
-              });
-            };
-          },
-          error: function(request, error) {
-            console.log(arguments);
-            alert(" Can't do because: " + error);
-          }
-        });
-      } else {
-        swal({
-          title: "Gagal!",
-          text: 'Please fill in the blank form!',
-          type: "error",
-          timer: 1500,
-          showConfirmButton: false
-        });
-      }
-
-      //$("#ModalView").modal('hide');
-    });
 
   });
   jQuery(document).on('keyup keypress blur', '.numberOnly', function() {

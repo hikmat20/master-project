@@ -37,47 +37,47 @@ if (!empty($this->uri->segment(3))) {
 						<strong>
 							<input type="text" class="form-control input input-sm required" name="id_quotation" id="id_quotation" value="<?= $getData->id_quotation;
 																																			empty($getData->id_quotation) ? '' : $getData->id_quotation ?>" readonly>
-							<label class="label label-danger id_quotation hideIt">Quotation Number Can't be empty!</label>
 						</strong>
+						<small class="text-red id_quotation hideIt">Quotation Number Can't be empty!</small>
 					</div>
 					<div class="form-group">
 						<div><label>Customer <span class='text-red'>*</span></label></div>
 						<strong>
-							<select class="form-control input-sm required select2" name="id_cuctomer" id="id_cuctomer"></select>
-							<label class="label label-danger id_cuctomer hideIt">Customer Can't be empty!</label>
+							<select class="form-control input-sm required select2 is_valid" name="id_cuctomer" id="id_cuctomer"></select>
 							<input type="hidden" id="id_cust" value="<?= $customer ? $customer->id_customer : '' ?>">
 						</strong>
+						<small class="text-red id_cuctomer hideIt">Customer Can't be empty!</small>
 					</div>
 					<div class="form-group">
 						<div><label>PIC </label></div>
 						<strong>
 							<input type="hidden" class="form-control input input-sm required w50" name="id_pic" id="id_pic">
 							<input type="text" class="form-control input" name="nm_pic" id="nm_pic" placeholder="Name PIC" value="<?= $pic_cust ? $pic_cust->name_pic : '' ?>" readonly>
-							<label class="label label-danger nm_pic hideIt">PIC Can't be empty!</label>
 						</strong>
+						<small class="text-red nm_pic hideIt">PIC Can't be empty!</small>
 					</div>
 					<div class="form-group">
 						<div><label>Address</label></div>
 						<strong>
 							<textarea type="text" class="form-control input " name="address" id="address" placeholder="Address" readonly><?= $customer ? $customer->address_office : '' ?></textarea>
-							<label class="label label-danger address hideIt">Address Can't be empty!</label>
 						</strong>
+						<small class="text-red address hideIt">Address Can't be empty!</small>
 					</div>
 					<div class="form-group">
 						<div><label>Category Customer</label></div>
 						<strong>
 							<input type="hidden" class="form-control input" placeholder="Category Customer" name="id_cust_cut" id="id_cust_cut" value="<?= $cat_cust ? $cat_cust->id_category_customer : '' ?>" readonly>
 							<input type="text" class="form-control input" placeholder="Category Customer" name="nm_cust_cut" id="nm_cust_cut" value="<?= $cat_cust ? $cat_cust->name_category_customer : '' ?>" readonly>
-							<label class="label label-danger id_cust_cut hideIt">Category Customer Can't be empty!</label></label>
 						</strong>
+						<small class="text-red id_cust_cut hideIt">Category Customer Can't be empty!</small>
 					</div>
 					<div class="form-group row">
 						<div class="col-md-12"><label>Discount Category <span class='text-red'>*</span></label></div>
 						<div class="col-xs-8 col-md-8">
 							<strong>
 								<select class="form-control required select2" name="id_disc_cat" id="id_disc_cat"></select>
-								<label class="label label-danger id_disc_cat hideIt">Discount Category Can't be empty!</label>
 							</strong>
+							<small class="text-red id_disc_cat hideIt">Discount Category Can't be empty!</small>
 						</div>
 						<div class="col-xs-4 col-md-4 ">
 							<strong>
@@ -93,8 +93,8 @@ if (!empty($this->uri->segment(3))) {
 						<div><label>Date <span class='text-red'>*</span></label></div>
 						<strong>
 							<input type="date" class="form-control input required " placeholder="yyy-mm-dd" name="date" id="date" value="<?= date('Y-m-d') ?>" autocomplete="off">
-							<label class="label label-danger date hideIt">Date Can't be empty!</label>
 						</strong>
+						<small class="text-red date hideIt">Date Can't be empty!</small>
 					</div>
 					<div class="form-group">
 						<div><label>Category Sales <span class='text-red'>*</span></label></div>
@@ -104,22 +104,22 @@ if (!empty($this->uri->segment(3))) {
 								<option value="project" <?= $getData->sales_category == 'project' ? 'selected' : '' ?>>Project</option>
 								<option value="wholesale" <?= $getData->sales_category == 'wholesale' ? 'selected' : '' ?>>Wholesale</option>
 							</select>
-							<label class="label label-danger cat hideIt">Category Can't be empty!</label>
 						</strong>
+						<small class="text-red cat hideIt">Category Can't be empty!</small>
 					</div>
 					<div class="form-group">
 						<div><label>Type Project <span class='text-red'>*</span></label></div>
 						<strong>
 							<select class="form-control required select2" name="type_project" id="type_project"></select>
-							<label class="label label-danger type_project hideIt">Type Project Can't be empty!</label>
 						</strong>
+						<small class="text-red type_project hideIt">Type Project Can't be empty!</small>
 					</div>
 					<div class="form-group">
 						<div><label>Marketing <span class='text-red'>*</span></label></div>
 						<strong>
 							<select class="form-control input-sm input required select2" name="id_karyawan" id="id_karyawan"></select>
-							<label class="label label-danger id_karyawan hideIt">Marketing Can't be empty!</label></label>
 						</strong>
+						<small class="text-red id_karyawan hideIt">Marketing Can't be empty!</small>
 					</div>
 					<div class="form-group">
 						<label style="width:70px">Net Price </label>
@@ -129,8 +129,8 @@ if (!empty($this->uri->segment(3))) {
 						<label style="margin-left:20px">
 							<input type="radio" name="net" class="net" value="1" <?= $getData->net == '1' ? 'checked' : '' ?>> Yes
 						</label>
-						<label class="label label-danger net hideIt">Category Can't be empty!</label>
 					</div>
+					<small class="text-red net hideIt">Category Can't be empty!</small>
 					<div class="form-group">
 						<?php
 						if ($getData->ppn == '0') {
@@ -153,19 +153,18 @@ if (!empty($this->uri->segment(3))) {
 						</label>
 						<label style="margin-left:20px">
 							<input type="radio" name="ppn" class="ppn" value="1" <?= $Yes . $default ?>> Yes </label>
-						<label class="label label-danger ppn hideIt">PPN Can't be empty!</label>
 					</div>
+					<small class="text-red ppn hideIt">PPN Can't be empty!</small>
 					<div class="form-group">
 						<div><label>Project Name <span class='text-red'>*</span></label></div>
 						<strong>
 							<input type="text" class="form-control input required" placeholder="Project Name" name="pr_name" id="pr_name" value="<?= empty($getData->project_name) ? '' : $getData->project_name ?>">
-							<label class="label label-danger pr_name hideIt">Date Can't be empty!</label>
 						</strong>
+						<small class="text-red pr_name hideIt">Project Name Can't be empty!</small>
 					</div>
 				</div>
 			</div>
 		</div>
-
 
 		<hr>
 		<div class="box-body">
@@ -353,8 +352,7 @@ if (!empty($this->uri->segment(3))) {
 		border-radius: 50%;
 	}
 </style>
-<script src="<?= base_url('assets/plugins/datatables/jquery.dataTables.min.js') ?>"></script>
-<script src="<?= base_url('assets/plugins/datatables/dataTables.bootstrap.min.js') ?>"></script>
+
 
 <script type="text/javascript">
 	$(document).on('change', '#id_cuctomer', function() {
@@ -434,13 +432,6 @@ if (!empty($this->uri->segment(3))) {
 
 	})
 
-	$('#dtDetail').DataTable({
-		"paging": false,
-		"searching": false,
-		"lengthChange": false,
-		"ordering": false
-
-	});
 
 
 	jQuery(document).on('keyup keypress blur', '.numberOnly', function() {
@@ -462,7 +453,7 @@ if (!empty($this->uri->segment(3))) {
 		this.value = val;
 	});
 
-	//========================================================================
+	//===================================================================================================================
 	var id = $('#id_quotation').val();
 	if (id == '') {
 		$.ajax({
@@ -508,17 +499,6 @@ if (!empty($this->uri->segment(3))) {
 		$('.select2-search__field').css('width', '90% !important');
 		$('.select2-search__field').css('padding-right', '5%');
 
-		// $(document).on('click change keyup paste blur', '#form-quotation  .form-control', function(e) {
-		// 	//console.log('AHAHAHAHA');
-		// 	var val = $(this).val();
-		// 	var id = $(this).attr('id');
-		// 	if (val == '') {
-		// 		$('.' + id).addClass('hideIt');
-		// 		$('.' + id).css('display', 'inline-block');
-		// 	} else {
-		// 		$('.' + id).css('display', 'none');
-		// 	}
-		// });
 
 		if ('<?= $this->uri->segment(4) ?>' == 'view') {
 			$('.label_view').css("display", "block");
@@ -719,7 +699,7 @@ if (!empty($this->uri->segment(3))) {
 			'<tr>' +
 			'	<td>' + x + '</td>' +
 			'	<td>' +
-			'		<select name="product_curtain[' + x + '][nama]" data-id="' + x + '" class="select2 form-control product_curtain">' +
+			'		<select name="product_curtain[' + x + '][nama]" data-id="' + x + '" class="select2 required form-control product_curtain">' +
 			'			<option value=""></option>' +
 			'			<?php
 							$query = "SELECT a.id_product, a.name_product FROM master_product_fabric a left join pricelist_fabric b on a.id_product = b.id_product WHERE b.activation = 'aktif' and status = '1'";
@@ -732,23 +712,23 @@ if (!empty($this->uri->segment(3))) {
 			'	<td>' +
 			'		<input type="text" class="form-control cust_curtain_name" data-id="' + x + '" placeholder="Customer Product Name" name="product_curtain[' + x + '][cust_curtain_name]" id="cust_curtain_name' + x + '">' +
 			'	</td>' +
-			'	<td width="100px">' +
+			'	<td>' +
 			'		<input type="hidden" class="form-control width" data-id="' + x + '" name="product_curtain[' + x + '][width]" id="width_curtain' + x + '">' +
 			'		<input type="hidden" class="form-control price" data-id="' + x + '" name="product_curtain[' + x + '][price]" id="price_curtain' + x + '">' +
 			'		Width: <span id="width_text_curtain' + x + '"></span> <br>' +
 			'	    <strong> Rp. <span id="price_text_curtain' + x + '"></span></strong>' +
 			'	</td>' +
-			'	<td width="80px">' +
-			'		<input type="number" min="0" class="form-control qty_curtain" data-id="' + x + '" placeholder="0" name="product_curtain[' + x + '][qty]" id="qty_curtain' + x + '">' +
-			'	</td>' +
-			'	<td width="150px">' +
-			'		<input type="text" class="form-control subtotal text-right" readonly data-id="' + x + '" placeholder="0" name="product_curtain[' + x + '][subtotal]" id="subtotal_curtain' + x + '">' +
-			'	</td>' +
-			'	<td width="150px">' +
-			'		<input type="number" class="form-control diskon text-right" data-id="' + x + '" placeholder="0" name="product_curtain[' + x + '][diskon]" id="diskon_curtain' + x + '">' +
+			'	<td>' +
+			'		<input type="number" min="0" class="form-control required qty_curtain" data-id="' + x + '" placeholder="0" name="product_curtain[' + x + '][qty]" id="qty_curtain' + x + '">' +
 			'	</td>' +
 			'	<td>' +
-			'		<input type="text" class="form-control total text-right" readonly data-id="' + x + '" placeholder="0" name="product_curtain[' + x + '][total]" id="total_curtain' + x + '">' +
+			'		<input type="text" class="form-control subtotal text-right" readonly data-id="' + x + '" placeholder="0" name="product_curtain[' + x + '][subtotal]" id="subtotal_curtain' + x + '">' +
+			'	</td>' +
+			'	<td>' +
+			'		<input type="number" min="0" class="form-control diskon text-right" data-id="' + x + '" placeholder="0" name="product_curtain[' + x + '][diskon]" id="diskon_curtain' + x + '">' +
+			'	</td>' +
+			'	<td>' +
+			'		<input type="text" class="form-control total_curtain text-right" readonly data-id="' + x + '" placeholder="0" name="product_curtain[' + x + '][total]" id="total_curtain' + x + '">' +
 			'	</td>' +
 			'	<td>' +
 			'		<button type="button" class="btn btn-sm btn-danger hapus_curtain">x</button>' +
@@ -768,11 +748,12 @@ if (!empty($this->uri->segment(3))) {
 		var disc = $('#diskon_curtain' + no).val() || 0;
 		subtotal = parseInt(qty) * parseInt(price);
 		diskon = subtotal * parseInt(disc) / 100
-		console.log(diskon)
+		// console.log(diskon)
 		total = (subtotal - diskon);
-		console.log(subtotal + ", " + diskon + ", " + total)
+		// console.log(subtotal + ", " + diskon + ", " + total)
 		$('#subtotal_curtain' + no).val(("" + subtotal).replace(/\B(?=(?:\d{3})+(?!\d))/g, ","));
 		$('#total_curtain' + no).val(("" + total).replace(/\B(?=(?:\d{3})+(?!\d))/g, ","));
+		grandTotalCurtain(no)
 	})
 
 	$(document).on('change', '.diskon', function() {
@@ -780,11 +761,20 @@ if (!empty($this->uri->segment(3))) {
 		var disc = $(this).val() || 0;
 		var subtotal = $('#subtotal_curtain' + no).val().replace(/,/g, '') || 0;
 		diskon = (parseInt(subtotal) * parseInt(disc)) / 100
-		console.log(subtotal);
+		// console.log(subtotal);
 		total = (subtotal - diskon);
 		$('#total_curtain' + no).val(("" + total).replace(/\B(?=(?:\d{3})+(?!\d))/g, ","));
-
+		grandTotalCurtain(no)
 	})
+
+	function grandTotalCurtain(no) {
+		let grand_total = 0;
+		$('.total_curtain').each(function() {
+			grand_total += parseInt($(this).val().replace(/,/g, '') || 0);
+		})
+		$('#grand_total_curtain').val(("" + grand_total).replace(/\B(?=(?:\d{3})+(?!\d))/g, ","))
+		// console.log(grand_total);
+	}
 
 	$(document).on('click', '.hapus_curtain', function() {
 		$(this).parents('tr').remove();
@@ -807,7 +797,7 @@ if (!empty($this->uri->segment(3))) {
 			},
 			dataType: 'json',
 			success: function(result) {
-				console.log(no);
+				// console.log(no);
 				if (result['product'] == '' || result['product'] == null) {
 					$('#width_curtain' + no).val('');
 					$('#price_curtain' + no).val('');
@@ -822,24 +812,6 @@ if (!empty($this->uri->segment(3))) {
 					$('#price_curtain' + no).val(result['product'].price);
 					$('#width_text_curtain' + no).text(result['product'].width);
 					$('#price_text_curtain' + no).text(("" + result['product'].price).replace(/\B(?=(?:\d{3})+(?!\d))/g, ","));
-
-
-					// let harga_kain = total_hrg_kain;
-					// let disc_fab = $('#disc_fab').val() || 0;
-					// let val = countDisc();
-					// if (val == false) {
-					// 	$('#t_disc_fab').val('0');
-					// } else {
-					// 	t_disk = (parseInt(harga_kain) * (parseInt(disc_fab))) / 100;
-					// 	$('#t_disc_fab').val(('' + t_disk).replace(/\B(?=(?:\d{3})+(?!\d))/g, ','));
-					// }
-					// lebarKain = $('#lebar_kain').val() || 0;
-					// dataType = 'panel-curtain';
-					// changedt_panel(, lebarKain);
-					// rumus_panel();
-
-
-
 				}
 			},
 			error: function() {
@@ -848,30 +820,64 @@ if (!empty($this->uri->segment(3))) {
 		})
 	}
 
+	jQuery(document).on('click', '#saveQuotation', function() {
+		var valid = getValidation();
+		// console.log(valid);
+		if (valid) {
+			var formdata = new FormData(document.getElementById("form-quotation")); //$("#form-supplier").serialize();
+			// console.log(formdata);
+			$.ajax({
+				url: siteurl + active_controller + "saveQuotation",
+				dataType: "json",
+				type: 'POST',
+				data: formdata,
+				processData: false,
+				contentType: false,
+				cache: false,
+				async: false,
+				success: function(result) {
+					if (result.status == '1') {
+						swal({
+							title: "Sukses!",
+							text: result['pesan'],
+							type: "success",
+							timer: 1500,
+							showConfirmButton: false
+						});
+						setTimeout(function() {
+							// DataTables('set');
+							// if (($("#ModalView3").data('bs.modal') || {}).isShown) {
+							// 	$("#ModalView3").modal('hide');
+							// } else {
+							// 	$("#ModalView").modal('hide');
+							// }
 
-	// HASIL DISKON
-	// =======================//
-	function countDisc() {
-		let disk = $('#disc_cat').val();
-		let disk2 = disk.replace(/%/g, '');
-		let disc_fab = $('#disc_fab').val() || 0;
-		let disMnt = $('#disc_mnt').val() || 0;
-		let fee_pic = $('#fee_pic').val() || 0;
-
-		sumDisk = parseInt(disc_fab) + parseInt(disMnt) + parseInt(fee_pic);
-		// $('#act_disk').val(sumDisk);
-		$('#curtain_disk').val(sumDisk);
-		if ($('#product_curtain').val() == '' || $('#product_curtain').val() == null) {
-			alert('Pilih bahan curtain terlebih dahulu!');
-			return false;
-		} else if (disk2 == 0 || disk2 == '') {
-			alert('Discount Category tidak boleh 0.');
-			return false;
-		} else if (parseInt(sumDisk) > parseInt(disk2)) {
-			alert('Diskon melebihi batas.');
-			return false;
+						}, 1600);
+					} else {
+						swal({
+							title: "Gagal!",
+							text: result['pesan'],
+							type: "error",
+							timer: 1500,
+							showConfirmButton: false
+						});
+					};
+				},
+				error: function(request, error) {
+					console.log(arguments);
+					alert(" Can't do because: " + error);
+				}
+			});
 		} else {
-			return true;
+			swal({
+				title: "Gagal!",
+				text: 'Please fill in the blank form!',
+				type: "error",
+				timer: 1500,
+				showConfirmButton: false
+			});
 		}
-	}
+
+		//$("#ModalView").modal('hide');
+	});
 </script>

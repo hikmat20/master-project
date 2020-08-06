@@ -37,7 +37,7 @@ class Mso_proses extends Admin_Controller
   public function index()
   {
     $this->auth->restrict($this->viewPermission);
-    $this->template->title('Quotation Process');
+    $this->template->title('Master Sales Order');
     $this->template->render('index');
   }
 
@@ -339,6 +339,7 @@ class Mso_proses extends Admin_Controller
         'payment_value_1'      => $data['paymentDpValue1'],
         'payment_percent_2'    => $data['paymentDpPersen2'],
         'payment_value_2'      => $data['paymentDpValue2'],
+        'type_payment'         => $data['type_payment'],
         'tempo_week'           => $data['tempo_week'],
         'status'               => $data['status']
       );

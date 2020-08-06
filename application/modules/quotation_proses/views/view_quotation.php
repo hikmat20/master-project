@@ -99,6 +99,63 @@
       </div>
     </div>
     <hr>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="col-md-6">
+          <table class="table-striped" width="100%">
+            <tr>
+              <th width="30%">Payment Term</th>
+              <td>
+                <?php if ($data->payment_term == 'CA') : ?>
+                  <span>: Cash in Advance</span>
+                <?php elseif ($data->payment_term == 'DP') : ?>
+                  <span>: Down Payment</span>
+                <?php elseif ($data->payment_term == 'TM') : ?>
+                  <span>: Tempo</span>
+                <?php endif ?>
+              </td>
+            </tr>
+
+            <?php
+            if ($data->payment_term == 'DP') { ?>
+              <tr>
+                <td></td>
+                <td>
+                  <ol>
+                    <li>
+                      <?= $data->payment_percent_1 ?> % (Rp. <?= $data->payment_value_1 ?>)
+                    </li>
+                    <li>
+                      <?= $data->payment_percent_2 ?> % (Rp. <?= $data->payment_value_2 ?>)
+                    </li>
+                  </ol>
+                </td>
+              </tr>
+              <?php if ($data->type_payment == "BP") : ?>
+                <tr>
+                  <td></td>
+                  <td> <span><?= $data->type_payment == "BP" ? 'BP' : '' ?></span></td>
+                </tr>
+              <?php elseif ($data->type_payment = "PROGRESS") : ?>
+                <tr>
+                  <td><label for="">Type</label></td>
+                  <td> : <span><?= $data->type_payment == "PROGRESS" ? 'PROGRESS' : '' ?></span></td>
+                </tr>
+              <?php endif ?>
+            <?php } else if ($data->payment_term == 'TM') { ?>
+              <tr>
+                <td></td>
+                <td>
+                  <span>: <?= $data->tempo_week ?></span>&nbsp;&nbsp;
+                  <span>Week</span>
+                </td>
+              </tr>
+            <?php } ?>
+          </table>
+        </div>
+      </div>
+    </div>
+    <hr>
   </div>
 
   <div class="box box-solid">

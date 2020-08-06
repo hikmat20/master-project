@@ -239,14 +239,21 @@
                                 </div>
                             </td>
                         </tr>
+                        <?php
+                        if (!empty($dataMso->payment_term)) {
+                            $payment = $dataMso;
+                        } else {
+                            $payment = $data;
+                        }
+                        ?>
                         <tr>
                             <th width="30%">Payment Term</th>
                             <td>
                                 <select name="payment_term" onchange="myFunction()" id="paymentTerm" class="select2 required form-control paymentTerm">
                                     <option value=""></option>
-                                    <option value="CA" <?= $dataMso->payment_term == "CA" ? 'selected' : '' ?>>Cash in Advance</option>
-                                    <option value="DP" <?= $dataMso->payment_term == "DP" ? 'selected' : '' ?>>Down Payment</option>
-                                    <option value="TM" <?= $dataMso->payment_term == "TM" ? 'selected' : '' ?>>Tempo</option>
+                                    <option value="CA" <?= $payment->payment_term == "CA" ? 'selected' : '' ?>>Cash in Advance</option>
+                                    <option value="DP" <?= $payment->payment_term == "DP" ? 'selected' : '' ?>>Down Payment</option>
+                                    <option value="TM" <?= $payment->payment_term == "TM" ? 'selected' : '' ?>>Tempo</option>
                                 </select>
                             </td>
                         </tr>
@@ -255,34 +262,34 @@
                             <td>
                                 <div class="detailPayterm">
                                     <?php
-                                    if ($dataMso->payment_term == 'DP') { ?>
+                                    if ($payment->payment_term == 'DP') { ?>
                                         <div class="input-group">
                                             <span class="input-group-addon">1</span>
-                                            <input type="number" name="paymentDpPersen1" value="<?= $dataMso->payment_percent_1 ?>" class="form-control required text-right" min="0" placeholder="0">
+                                            <input type="number" name="paymentDpPersen1" value="<?= $payment->payment_percent_1 ?>" class="form-control required text-right" min="0" placeholder="0">
                                             <span class="input-group-addon">%</span>
                                             <span class="input-group-addon">Rp.</span>
-                                            <input type="text" name="paymentDpValue1" value="<?= $dataMso->payment_value_1 ?>" class="form-control numberOnly nominal text-right" placeholder="0">
+                                            <input type="text" name="paymentDpValue1" value="<?= $payment->payment_value_1 ?>" class="form-control numberOnly nominal text-right" placeholder="0">
                                         </div>
                                         <div class="input-group">
                                             <span class="input-group-addon">2</span>
-                                            <input type="number" name="paymentDpPersen2" value="<?= $dataMso->payment_percent_2 ?>" class="form-control text-right" min="0" placeholder="0">
+                                            <input type="number" name="paymentDpPersen2" value="<?= $payment->payment_percent_2 ?>" class="form-control text-right" min="0" placeholder="0">
                                             <span class="input-group-addon">%</span>
                                             <span class="input-group-addon">Rp.</span>
-                                            <input type="text" name="paymentDpValue2" value="<?= $dataMso->payment_value_2 ?>" class="form-control numberOnly nominal text-right" placeholder="0">
+                                            <input type="text" name="paymentDpValue2" value="<?= $payment->payment_value_2 ?>" class="form-control numberOnly nominal text-right" placeholder="0">
                                         </div>
                                         <div class="radio">
                                             <label style="margin-right:50px">
-                                                <input type="radio" name="type_payment" id="type_payment" value="BP" <?= $dataMso->type_payment == "BP" ? 'checked' : '' ?>>
+                                                <input type="radio" name="type_payment" id="type_payment" value="BP" <?= $payment->type_payment == "BP" ? 'checked' : '' ?>>
                                                 BP
                                             </label>
                                             <label>
-                                                <input type="radio" name="type_payment" id="type_payment" value="PROGRESS" <?= $dataMso->type_payment == "PROGRESS" ? 'checked' : '' ?>>
+                                                <input type="radio" name="type_payment" id="type_payment" value="PROGRESS" <?= $payment->type_payment == "PROGRESS" ? 'checked' : '' ?>>
                                                 PROGRESS
                                             </label>
                                         </div>
-                                    <?php } else if ($dataMso->payment_term == 'TM') { ?>
+                                    <?php } else if ($payment->payment_term == 'TM') { ?>
                                         <div class="input-group col-sm-6">
-                                            <input type="number" class="form-control text-right required" value="<?= $dataMso->tempo_week ?>" name="tempo_week" id="weekTempo" min="0" placeholder="0">
+                                            <input type="number" class="form-control text-right required" value="<?= $payment->tempo_week ?>" name="tempo_week" id="weekTempo" min="0" placeholder="0">
                                             <span class="input-group-addon">
                                                 <span>Week</span>
                                             </span>

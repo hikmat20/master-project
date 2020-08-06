@@ -193,6 +193,52 @@
       /* background: inherit; */
       left: 20px;
     }
+
+
+    @media (min-width: 768px) {
+      .sidebar-mini.sidebar-collapse .sidebar-menu>li:hover>.treeview-menu {
+        top: 45px
+      }
+
+      .sidebar-mini.sidebar-collapse .sidebar-menu>li:hover>a>span {
+        height: 50px;
+      }
+
+      .sidebar-mini.sidebar-collapse .main-sidebar {
+        -webkit-transform: translate(0, 0);
+        -ms-transform: translate(0, 0);
+        -o-transform: translate(0, 0);
+        transform: translate(0, 0);
+        width: 55px !important;
+      }
+
+      .sidebar-mini.sidebar-collapse .main-header .navbar {
+        margin-left: 55px !important;
+      }
+
+      .sidebar-mini.sidebar-collapse .main-header .logo {
+        width: 55px;
+      }
+    }
+
+    /* always show scrollbars */
+
+    ::-webkit-scrollbar {
+      -webkit-appearance: none;
+      width: 10px;
+      right: -80px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      border-radius: 5px;
+      background-color: silver;
+      box-shadow: 0 0 1px rgba(0, 0, 0, .5);
+    }
+
+    .fa-size-25 {
+      font-size: 20px;
+    }
+    }
   </style>
   <script type="text/javascript">
     var baseurl = "<?= base_url(); ?>";
@@ -203,7 +249,7 @@
   </script>
 </head>
 
-<body class="hold-transition skin-blue sidebar-mini fixed">
+<body class="hold-transition skin-blue sidebar-mini sidebar-collapse">
   <div class="ajax_loader">
     <img src="<?php echo base_url('assets/images/ajax_loader.gif'); ?>">
   </div>
@@ -215,7 +261,7 @@
       <!-- Logo -->
       <a href="<?= site_url(); ?>" class="logo">
         <!-- mini logo for sidebar mini 50x50 pixels -->
-        <span class="logo-mini"><b>I</b></span>
+        <span class="logo-mini"><b>IDF</b></span>
         <!-- logo for regular state and mobile devices -->
         <span class="logo-lg"><b><?= isset($idt->nm_perusahaan) ? $idt->nm_perusahaan : 'not-set'; ?></b></span>
       </a>

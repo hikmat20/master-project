@@ -227,49 +227,58 @@
                         <tr>
                             <th width="30%">Payment Term</th>
                             <td>
-                                <?php if ($dataMso->payment_term == 'CA') : ?>
+                                <?php
+                                if (!empty($dataMso->payment_term)) {
+                                    $payment = $dataMso;
+                                } else {
+                                    $payment = $data;
+                                }
+                                ?>
+                                <?php if ($payment->payment_term == 'CA') : ?>
                                     <span>: Cash in Advance</span>
-                                <?php elseif ($dataMso->payment_term == 'DP') : ?>
+                                <?php elseif ($payment->payment_term == 'DP') : ?>
                                     <span>: Down Payment</span>
-                                <?php elseif ($dataMso->payment_term == 'TM') : ?>
+                                <?php elseif ($payment->payment_term == 'TM') : ?>
                                     <span>: Tempo</span>
                                 <?php endif ?>
                             </td>
-                        </tr>
+                            </>
+
+                            <?php
+                            if ($payment->payment_term == 'DP') { ?>
                         <tr>
                             <td></td>
                             <td>
-                                <div class="detailPayterm">
-                                    <?php
-                                    if ($dataMso->payment_term == 'DP') { ?>
-                                        <ol>
-                                            <li>
-                                                <?= $dataMso->payment_percent_1 ?> /Rp. <?= $dataMso->payment_value_1 ?>
-                                            </li>
-                                            <li>
-                                                <?= $dataMso->payment_percent_2 ?> /Rp. <?= $dataMso->payment_value_2 ?>
-                                            </li>
-                                        </ol>
-                                        <div class="radio">
-                                            <?php if ($dataMso->type_payment == "BP") : ?>
-                                                <label style="margin-right:50px">
-                                                    <input type="radio" name="type_payment" id="type_payment" value="bp" <?= $dataMso->type_payment == "BP" ? 'checked' : '' ?> disabled>
-                                                    BP
-                                                </label>
-                                            <?php elseif ($dataMso->type_payment = "PROGRESS") : ?>
-                                                <label>
-                                                    <input type="radio" name="type_payment" id="type_payment" value="progress" <?= $dataMso->type_payment == "PROGRESS" ? 'checked' : '' ?> disabled>
-                                                    PROGRESS
-                                                </label>
-                                            <?php endif ?>
-                                        </div>
-                                    <?php } else if ($dataMso->payment_term == 'TM') { ?>
-                                        <span>: <?= $dataMso->tempo_week ?></span>&nbsp;&nbsp;
-                                        <span>Week</span>
-                                    <?php } ?>
-                                </div>
+                                <ol>
+                                    <li>
+                                        <?= $payment->payment_percent_1 ?> % (Rp. <?= $payment->payment_value_1 ?>)
+                                    </li>
+                                    <li>
+                                        <?= $payment->payment_percent_2 ?> % (Rp. <?= $payment->payment_value_2 ?>)
+                                    </li>
+                                </ol>
                             </td>
                         </tr>
+                        <?php if ($payment->type_payment == "BP") : ?>
+                            <tr>
+                                <td></td>
+                                <td> <span><?= $payment->type_payment == "BP" ? 'BP' : '' ?></span></td>
+                            </tr>
+                        <?php elseif ($payment->type_payment = "PROGRESS") : ?>
+                            <tr>
+                                <td><label for="">Type</label></td>
+                                <td> : <span><?= $payment->type_payment == "PROGRESS" ? 'PROGRESS' : '' ?></span></td>
+                            </tr>
+                        <?php endif ?>
+                    <?php } else if ($payment->payment_term == 'TM') { ?>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <span>: <?= $payment->tempo_week ?></span>&nbsp;&nbsp;
+                                <span>Week</span>
+                            </td>
+                        </tr>
+                    <?php } ?>
                     </table>
                 </div>
             </div>

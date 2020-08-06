@@ -426,102 +426,115 @@ class Quotation_non_proses extends Admin_Controller
   public function saveQuotation()
   {
     $data                 = $this->input->post();
-    $type                 = $data['type'];
+    // echo "<pre>";
+    // print_r($data);
+    // echo "<pre>";
+    // exit;
 
 
-    if (!empty($data['ruang'])) {
-      // $arr_ruang = array();
-      // foreach ($data['ruang'] as $ruang => $x) {
-      //   $arr_ruang[$ruang]['id_quotation']   = $data['id_quotation'];
-      //   $arr_ruang[$ruang]['section_room']   = $ruang;
-      //   $arr_ruang[$ruang]['name_room']   = $x['nm_ruang'];
-      //   $arr_ruang[$ruang]['floor']     = $x['lantai'];
-      //   $arr_ruang[$ruang]['window']     = $x['jendela'];
-      //   $arr_ruang[$ruang]['width_window']   = $x['lebar'];
-      //   $arr_ruang[$ruang]['height_window'] = $x['tinggi'];
-      //   $arr_ruang[$ruang]['installation']   = $x['installation'];
-      // }
+
+    // $ArrCurtain = [];
+    // if (!empty($data['product_curtain'])) {
+    //   foreach ($$data['product_curtain'] as $curtain => $x) {
+    //     $ArrCurtain[$curtain]['id_quotation'] = $data['id_quotation'];
+    //     $ArrCurtain[$curtain]['item'] = 'curtain';
+    //     // $ArrCurtain[$curtain]['subtotal'] = $data['id_quotation'];
+    //     // $ArrCurtain[$curtain]['disc_persen'] = $data['id_quotation'];
+    //     // $ArrCurtain[$curtain]['disc_value'] = $data['id_quotation'];
+    //     $ArrCurtain[$curtain]['grand_total'] = $data['id_quotation'];
+    //   }
+    // }
+    $this->db->trans_begin();
+    //SUPPLIER DATA
+    if ($data['type'] === 'edit') {
+
+      $insertData  = array(
+        // 'id_quotation'   => $data['id_quotation'],
+        'id_customer'    => $data['id_cuctomer'],
+        'id_pic'         => $data['id_pic'],
+        'address'        => $data['address'],
+        'id_cust_cut'    => $data['id_cust_cut'],
+        'id_disc_cat'    => $data['id_disc_cat'],
+        'date'           => $data['date'],
+        'sales_category' => $data['cat'],
+        'id_type_project' => $data['type_project'],
+        'id_karyawan'    => $data['id_karyawan'],
+        'net'            => $data['net'],
+        'ppn'            => $data['ppn']
+
+      );
+
+      $detailQuotation = [
+        // 'id_quotation' => $data['id_quotation'],
+        'item' => 'curtain',
+        'grand_total' => str_replace(",", "", $data['grand_total_curtain'])
+      ];
+      $this->db->where('id_quotation', $data['id_quotation'])->update($insertData);
+      $this->QuotationNonProsesModel->update($data['id_quotation'], $insertData);
     } else {
-      $this->db->trans_begin();
 
-      //SUPPLIER DATA
-      if ($data['type'] === 'edit') {
+      $insertData  = array(
+        'id_quotation'   => $data['id_quotation'],
+        'id_customer'    => $data['id_cuctomer'],
+        'id_pic'         => $data['id_pic'],
+        'address'        => $data['address'],
+        'id_cust_cut'    => $data['id_cust_cut'],
+        'id_disc_cat'    => $data['id_disc_cat'],
+        'date'           => $data['date'],
+        'sales_category' => $data['cat'],
+        'id_type_project' => $data['type_project'],
+        'id_karyawan'    => $data['id_karyawan'],
+        'net'            => $data['net'],
+        'ppn'            => $data['ppn'],
+        'activation'     => 'aktif',
+      );
 
-        $insertData  = array(
-          // 'id_quotation'   => $data['id_quotation'],
-          'id_customer'    => $data['id_cuctomer'],
-          'id_pic'         => $data['id_pic'],
-          'address'        => $data['address'],
-          'id_cust_cut'    => $data['id_cust_cut'],
-          'id_disc_cat'    => $data['id_disc_cat'],
-          'date'           => $data['date'],
-          'sales_category' => $data['cat'],
-          'id_type_project' => $data['type_project'],
-          'id_karyawan'    => $data['id_karyawan'],
-          'net'            => $data['net'],
-          'ppn'            => $data['ppn'],
-          'modified_on'   => date('Y-m-d H:i:s'),
-          'modified_by'   => $this->auth->user_id()
-        );
-        $this->db->where('id_quotation', $data['id_quotation'])->update('quotation_np_header', $insertData);
-      } else {
+      $detailQuotation = [
+        'id_quotation' => $data['id_quotation'],
+        'item' => 'curtain',
+        'grand_total' => str_replace(",", "", $data['grand_total_curtain'] || 0)
+      ];
 
-        $insertData  = array(
-          'id_quotation'   => $data['id_quotation'],
-          'id_customer'    => $data['id_cuctomer'],
-          'id_pic'         => $data['id_pic'],
-          'address'        => $data['address'],
-          'id_cust_cut'    => $data['id_cust_cut'],
-          'id_disc_cat'    => $data['id_disc_cat'],
-          'date'           => $data['date'],
-          'sales_category' => $data['cat'],
-          'id_type_project' => $data['type_project'],
-          'id_karyawan'    => $data['id_karyawan'],
-          'net'            => $data['net'],
-          'ppn'            => $data['ppn'],
-          'activation'     => 'aktif',
-          'created_on'     => date('Y-m-d H:i:s'),
-          'created_by'     => $this->auth->user_id()
-        );
-        $insert = $this->db->insert('quotation_np_header', $insertData);
-      }
-      $this->db->trans_complete();
-
-      if ($this->db->trans_status() === FALSE) {
-
-
-        $this->db->trans_rollback();
-        $Arr_Kembali  = array(
-          'pesan'    => 'Failed Add Changes. Please try again later ...',
-          'status'  => 0
-        );
-        $keterangan = 'FAILED';
-        $status = 0;
-        $nm_hak_akses = $this->addPermission;
-        $kode_universal = $this->auth->user_id();
-        $jumlah = 1;
-        $sql = $this->db->last_query();
-      } else {
-        $this->db->trans_commit();
-        $Arr_Kembali  = array(
-          'pesan'    => 'Success Save Item. Thanks ...',
-          'status'  => 1
-        );
-
-        $keterangan = 'SUCCESS';
-        $status = 1;
-        $nm_hak_akses = $this->addPermission;
-        $kode_universal = $this->auth->user_id();
-        $jumlah = 1;
-        $sql = $this->db->last_query();
-      }
-      simpan_aktifitas($nm_hak_akses, $kode_universal, $keterangan, $jumlah, $sql, $status);
-
-      // $Arr_Kembali  = array(
-      //   'pesan'    => 'Failed Add Changes. Please try again later ...',
-      //   'status'  => 0
-      // );
+      $this->QuotationNonProsesModel->insert($insertData);
+      $this->db->insert('quotation_np_detail', $detailQuotation);
     }
+    $this->db->trans_complete();
+
+    if ($this->db->trans_status() === FALSE) {
+
+
+      $this->db->trans_rollback();
+      $Arr_Kembali  = array(
+        'pesan'    => 'Failed Add Changes. Please try again later ...',
+        'status'  => 0
+      );
+      $keterangan = 'FAILED';
+      $status = 0;
+      $nm_hak_akses = $this->addPermission;
+      $kode_universal = $this->auth->user_id();
+      $jumlah = 1;
+      $sql = $this->db->last_query();
+    } else {
+      $this->db->trans_commit();
+      $Arr_Kembali  = array(
+        'pesan'    => 'Success Save Item. Thanks ...',
+        'status'  => 1
+      );
+
+      $keterangan = 'SUCCESS';
+      $status = 1;
+      $nm_hak_akses = $this->addPermission;
+      $kode_universal = $this->auth->user_id();
+      $jumlah = 1;
+      $sql = $this->db->last_query();
+    }
+    simpan_aktifitas($nm_hak_akses, $kode_universal, $keterangan, $jumlah, $sql, $status);
+
+    // $Arr_Kembali  = array(
+    //   'pesan'    => 'Failed Add Changes. Please try again later ...',
+    //   'status'  => 0
+    // );
+
     echo json_encode($Arr_Kembali);
   }
 

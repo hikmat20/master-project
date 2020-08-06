@@ -1113,15 +1113,10 @@ class Quotation_proses extends Admin_Controller
   {
     $data                 = $this->input->post();
     $type                 = $data['type'];
-    // echo "<pre>";
-    // print_r($data);
-    // echo "</pre>";
-    // exit;
+
 
     if (!empty($data)) {
-
       if (!empty($data['ruang'])) {
-
         $arr_ruang = array();
         foreach ($data['ruang'] as $ruang => $x) {
           $arr_ruang[$ruang]['id_quotation']   = $data['id_quotation'];
@@ -1754,7 +1749,6 @@ class Quotation_proses extends Admin_Controller
     // exit;
 
     if (!empty($data)) {
-
       if (!empty($data['curtain'])) {
         $af_curtain = array();
         foreach ($data['curtain'] as $curtain => $x) {
@@ -1813,7 +1807,8 @@ class Quotation_proses extends Admin_Controller
           'disc' => $data['disc_delivery'],
           'val_disc' => $val_disc,
           'total' => str_replace(",", "", $data['price_aft_disc']),
-          'keterangan' => $data['ket_delivery']
+          'keterangan' => $data['ket_delivery'],
+
         ];
 
       $accomodation = array();
@@ -1904,7 +1899,13 @@ class Quotation_proses extends Admin_Controller
         'ppn'               => str_replace(",", "", $data['ppn']),
         'total'             => str_replace(",", "", $data['total']),
         'rounding'          => str_replace(",", "", $data['rounding']),
-        'grand_total'       => str_replace(",", "", $data['grand_total'])
+        'grand_total'       => str_replace(",", "", $data['grand_total']),
+        'payment_term'      => $data['payment_term'],
+        'payment_percent_1' => $data['paymentDpPersen1'],
+        'payment_value_1'   => str_replace(",", "", $data['paymentDpValue1']),
+        'payment_percent_2' => $data['paymentDpPersen2'],
+        'payment_value_2'   => str_replace(",", "", $data['paymentDpValue2']),
+        'type_payment'      => $data['type_payment']
       ];
 
       $this->db->trans_begin();

@@ -51,11 +51,12 @@
       $('#' + id).css('border-color', 'red');
     } else {
       $('#' + id).css('border-color', '');
+      $('span[aria-labelledby=select2-' + id + '-container].select2-selection').css('border-color', '');
       // $('.' + id).css('display', 'none');
     }
   });
   $(document).ready(function() {
-    jQuery(document).on('click change keyup paste blur', '.form-active .required', function(e) {
+    jQuery(document).on('click change keyup paste blur', '.required', function(e) {
       //console.log('AHAHAHAHA');
       var val = $(this).val();
       //console.log(val);
@@ -159,6 +160,7 @@
           $('.' + id).removeClass('hideIt');
           $('.' + id).css('display', 'inline-block');
           $('#' + id).css('border-color', 'red');
+          $('span[aria-labelledby=select2-' + id + '-container].select2-selection').css('border-color', 'red');
 
           //console.log(name);
           count = count + 1;

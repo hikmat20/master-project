@@ -53,8 +53,17 @@
 
     <p>
       <b>Syarat Pembayaran:</b> <br>
-      - 80% sebagai uang muka, sebelum kain diproduksi <br>
-      - 20% setelah barang terpasang / diterima
+      <?php if ($data->payment_term == 'DP') : ?>
+        <ul>
+          <li><?= $data->payment_term ?>
+            <ol>
+              <li><?= $data->payment_percent_1 ?> % (Rp. <?= $data->payment_value_1 ?>) sebagai uang muka, sebelum kain diproduksi</li>
+              <li><?= $data->payment_percent2 ?> % (Rp. <?= $data->payment_value_2 ?>) setelah barang terpasang / diterima</li>
+            </ol>
+          </li>
+        </ul>
+      <?php endif ?>
+
     </p>
     <p><b>
         Pembayaran dapat dilakukan via transfer atau debet BCA
