@@ -114,15 +114,15 @@
 						</thead>
 						<tbody>
 							<?php
-							$this->db->select('*,c.name_component');
+							$this->db->select('a.*,c.name_component');
 							$this->db->from('qtt_basic_comp_rail a');
 							$this->db->join('mp_rail_basic b', 'a.id_basic_comp = b.id_rail_basic');
 							$this->db->join('master_component c', 'b.id_component = c.id');
-							$this->db->where(['a.id_quotation' => $fabrics_vitrage->id_quotation, 'item' => 'vitrage', 'section' => $no]);
+							$this->db->where(['a.id_quotation' => $fabrics_vitrage->id_quotation, 'a.item' => 'vitrage', 'a.section' => $no]);
 							$bsRailComponent = $this->db->get()->result();
 
 							// echo "<pre>";
-							// print_r($bsRailComponent);	
+							// print_r($bsRailComponent);
 							// echo "</pre>";
 
 							foreach ($bsRailComponent as $bs => $component) {
@@ -179,31 +179,35 @@
 					</thead>
 					<tbody>
 						<?php
-						$this->db->select('*,c.name_component');
+						$this->db->select('a.*,c.name_component');
 						$this->db->from('qtt_additional_comp_rail a');
 						$this->db->join('mp_rail_additional b', 'a.id_additional_comp = b.id_rail_add');
 						$this->db->join('master_component c', 'b.id_component = c.id');
-						$this->db->where(['a.id_quotation' => $fabrics_vitrage->id_quotation, 'item' => 'vitrage', 'section' => $no]);
+						$this->db->where(['a.id_quotation' => $fabrics_vitrage->id_quotation, 'a.item' => 'vitrage', 'a.section' => $no]);
 						$adtRailComponent = $this->db->get()->result();
+						// echo "<pre>";
+						// print_r($adtRailComponent);
+						// echo "<pre>";
+						// exit;
 						foreach ($adtRailComponent as $addt => $component) { ?>
 							<tr>
 								<td>
 									<?= $component ? $component->name_component : '-' ?>
-									<input type="hidden" name="addt_comp-vitrage[<?= $no ?>][<?= $addt ?>][id_comp]" value="<?= $component ? $component->id_basic_comp : '-' ?>">
+									<input type="hidden" id="id_<?= $component->id_additional_comp ?>" name="addt_comp-vitrage[<?= $no ?>][<?= $addt ?>][id_comp]" value="<?= $component ? $component->id_additional_comp : '-' ?>">
 								</td>
 								<td>
-									<input type="number" style="width:100%" name="addt_comp-vitrage[<?= $no ?>][<?= $addt ?>][qty]" data-id="<?= $component->id_basic_comp ?>" value="<?= $component ? $component->qty : '0' ?>" class="qty_add_comp-vitrage form-control text-right" placeholder="0" maxlength="3" min="0" max="100">
+									<input type="number" id="qty_<?= $component->id_additional_comp ?>" style="width:100%" name="addt_comp-vitrage[<?= $no ?>][<?= $addt ?>][qty]" data-id="<?= $component->id_additional_comp ?>" value="<?= $component ? $component->qty : '0' ?>" class="qty_add_comp-vitrage form-control text-right" placeholder="0" maxlength="3" min="0" max="100">
 								</td>
 								<td>
 									<?= $component ? $component->uom : '-' ?>
-									<input type="hidden" style="width:100%" name="addt_comp-vitrage[<?= $no ?>][<?= $addt ?>][uom]" value="<?= $component ? $component->uom : '-' ?>" class="form-control text-right" placeholder="0">
+									<input type="hidden" id="uom_<?= $component->id_additional_comp ?>" style="width:100%" name="addt_comp-vitrage[<?= $no ?>][<?= $addt ?>][uom]" value="<?= $component ? $component->uom : '-' ?>" class="form-control text-right" placeholder="0">
 								</td>
 								<td>
 									<?= $component ? number_format($component->selling_price) : '0' ?>
-									<input type="hidden" style="width:100%" name="addt_comp-vitrage[<?= $no ?>][<?= $addt ?>][price]" id="price_vitrage<?= $component->id_basic_comp ?>" value="<?= $component ? $component->selling_price : '0' ?>" class="form-control text-right" placeholder="0">
+									<input type="hidden" id="price_<?= $component->id_additional_comp ?>" style="width:100%" name="addt_comp-vitrage[<?= $no ?>][<?= $addt ?>][price]" id="price_vitrage<?= $component->id_additional_comp ?>" value="<?= $component ? $component->selling_price : '0' ?>" class="form-control text-right" placeholder="0">
 								</td>
 								<td>
-									<input type="text" readonly style="width:100%" name="addt_comp-vitrage[<?= $no ?>][<?= $addt ?>][t_price]" id="t_price_vitrage<?= $component->id_basic_comp ?>" value="<?= $component ? number_format($component->selling_price * $component->qty) : '0' ?>" class="form-control text-right" placeholder="0">
+									<input type="text" id="t_price_<?= $component->id_additional_comp ?>" readonly style="width:100%" name="addt_comp-vitrage[<?= $no ?>][<?= $addt ?>][t_price]" id="t_price_vitrage<?= $component->id_additional_comp ?>" value="<?= $component ? number_format($component->selling_price * $component->qty) : '0' ?>" class="form-control text-right" placeholder="0">
 								</td>
 								<td>
 									<a class="text-red hapus" href="javascript:void(0)" title="Hapus Item"><i class="fa fa-times"></i></a>

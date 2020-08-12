@@ -1,7 +1,5 @@
 <?php
-
 $dataPanel = $this->db->get_where('qtt_product_fabric', ['id_ruangan' => $id_ruangan, 'item' => 'curtain', 'panel' => 'yes'])->row();
-
 ?>
 
 
@@ -259,7 +257,7 @@ $dataPanel = $this->db->get_where('qtt_product_fabric', ['id_ruangan' => $id_rua
 								$this->db->select('a.*,b.name_pic');
 								$this->db->from('qtt_ext_commission a');
 								$this->db->join('child_customer_pic b', 'a.id_pic = b.id_pic');
-								$this->db->where(['a.id_pic' => $comm->id_pic, 'id_quotation' => $comm->id_quotation, 'item' => 'curtain']);
+								$this->db->where(['a.id_pic' => $comm->id_pic, 'id_quotation' => $comm->id_quotation, 'a.item' => 'curtain', 'a.section' => $no]);
 								$Commissi = $this->db->get()->result();
 								foreach ($Commissi as $Commission) {
 						?>

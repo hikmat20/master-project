@@ -112,15 +112,15 @@ class Quotation_proses extends Admin_Controller
         $btn_lost = '';
       } else {
         $btn_print = "
-            <a class='btn btn-sm btn-default print' href='javascript:void(0)' title='Print Quotation' data-id_quotation='" . $row['id_quotation'] . "' style='width:30px; display:inline-block'>
+            <a class='btn btn-sm btn-default print' href='javascript:void(0)' title='Print Quotation' data-id_quotation='" . $row['id'] . "' style='width:30px; display:inline-block'>
             <span class='fa fa-print'></span> 
             </a>";
         $btn_upload = "
-            <a class='btn btn-sm btn-success upload' href='javascript:void(0)' title='Upload PO' data-id_quotation='" . $row['id_quotation'] . "' style='width:30px; display:inline-block'>
+            <a class='btn btn-sm btn-success upload' href='javascript:void(0)' title='Upload PO' data-id_quotation='" . $row['id'] . "' style='width:30px; display:inline-block'>
             <span class='fa fa-upload'></span>
             </a>";
         $btn_lost = "
-            <a class='btn btn-sm btn-danger lost' href='javascript:void(0)' title='Quotation Lost' data-id_quotation='" . $row['id_quotation'] . "' style='width:30px; display:inline-block'>
+            <a class='btn btn-sm btn-danger lost' href='javascript:void(0)' title='Quotation Lost' data-id_quotation='" . $row['id'] . "' style='width:30px; display:inline-block'>
             <span class='fa fa-close'></span>
             </a>";
       }
@@ -129,7 +129,7 @@ class Quotation_proses extends Admin_Controller
       $nestedData   = array();
       $detail = "";
       $nestedData[]  = "<div align='center'>" . $nomor . "</div>";
-      $nestedData[]  = "<div align='left'>" . strtoupper($row['id_quotation']) . "</div>";
+      $nestedData[]  = "<div align='left'>" . strtoupper($row['nomor']) . "</div>";
       $nestedData[]  = "<div align='left'>" . strtoupper($row['date']) . "</div>";
       $nestedData[]  = "<div align='left'>" . strtoupper($row['name_customer']) . "</div>";
       $nestedData[]  = "<div align='left'>" . strtoupper($row['nama_karyawan']) . "</div>";
@@ -139,13 +139,13 @@ class Quotation_proses extends Admin_Controller
       $nestedData[]  = "<div align='center'>" . ($row['modified_on']) . "</div>";
       if ($this->auth->restrict($this->viewPermission)) :
         $nestedData[]  = "<div>
-        <a class='btn btn-sm btn-info view' href='javascript:void(0)' title='View Quotation' data-id_quotation='" . $row['id_quotation'] . "' style='width:30px; display:inline-block;margin:1px 0px'>
+        <a class='btn btn-sm btn-info view' href='javascript:void(0)' title='View Quotation' data-id_quotation='" . $row['id'] . "' style='width:30px; display:inline-block;margin:1px 0px'>
         <span class='fa fa-search'></span> 
         </a>
-        <a class='btn btn-sm btn-warning edit' href='javascript:void(0)' title='Edit Quotation' data-id_quotation='" . $row['id_quotation'] . "' style='width:30px; display:inline-block;margin:1px 0px'>
+        <a class='btn btn-sm btn-warning edit' href='javascript:void(0)' title='Edit Quotation' data-id_quotation='" . $row['id'] . "' style='width:30px; display:inline-block;margin:1px 0px'>
         <span class='fa fa-edit'></span>
         </a>
-        <a class='btn btn-sm btn-primary detail' href='javascript:void(0)' title='Detail Quotation' data-id_quotation='" . $row['id_quotation'] . "' style='width:30px; display:inline-block;margin:1px 0px'>
+        <a class='btn btn-sm btn-primary detail' href='javascript:void(0)' title='Detail Quotation' data-id_quotation='" . $row['id'] . "' style='width:30px; display:inline-block;margin:1px 0px'>
         <span class='fa fa-quote-right'></span>
         </a>"
           . $btn_upload . $btn_lost . $btn_print .
@@ -178,7 +178,7 @@ class Quotation_proses extends Admin_Controller
     }
 
     $sql = "SELECT
-				  a.id_quotation,a.date,b.name_customer,c.nama_karyawan, a.grand_total,a.status,a.activation,d.nm_lengkap,a.modified_on
+				  a.id,a.nomor,a.date,b.name_customer,c.nama_karyawan, a.grand_total,a.status,a.activation,d.nm_lengkap,a.modified_on
 				FROM
 				  quotation_header a LEFT JOIN master_customer b ON a.id_customer = b.id_customer
 				   INNER JOIN karyawan c ON a.id_karyawan = c.id_karyawan
@@ -186,7 +186,7 @@ class Quotation_proses extends Admin_Controller
           
 				" . $where_activation . " 
 				AND (
-  				a.id_quotation LIKE '%" . $this->db->escape_like_str($like_value) . "%'
+  				a.id LIKE '%" . $this->db->escape_like_str($like_value) . "%'
 				OR b.name_customer LIKE '%" . $this->db->escape_like_str($like_value) . "%'
 				OR c.nama_karyawan LIKE '%" . $this->db->escape_like_str($like_value) . "%'
   	        )
@@ -196,7 +196,7 @@ class Quotation_proses extends Admin_Controller
     $data['totalFiltered'] = $this->db->query($sql)->num_rows();
     $columns_order_by = array(
       0 => 'nomor',
-      1 => 'id_quotation',
+      1 => 'id',
       2 => 'date',
       3 => 'name_customer',
       4 => 'nama_karyawan',
@@ -206,7 +206,7 @@ class Quotation_proses extends Admin_Controller
       8 => 'modified_on'
     );
 
-    $sql .= " ORDER BY a.id_quotation ASC, " . $columns_order_by[$column_order] . " " . $column_dir . " ";
+    $sql .= " ORDER BY a.id ASC, " . $columns_order_by[$column_order] . " " . $column_dir . " ";
     $sql .= " LIMIT " . $limit_start . " ," . $limit_length . " ";
 
     $data['query'] = $this->db->query($sql);
@@ -259,7 +259,7 @@ class Quotation_proses extends Admin_Controller
       $nestedData   = array();
       $detail = "";
       $nestedData[]  = "<div align='center'>" . $nomor . "</div>";
-      $nestedData[]  = "<div align='left'>" . strtoupper($row['id_quotation']) . "</div>";
+      $nestedData[]  = "<div align='left'>" . strtoupper($row['nomor']) . "</div>";
       $nestedData[]  = "<div align='left'>" . strtoupper($row['date']) . "</div>";
       $nestedData[]  = "<div align='left'>" . strtoupper($row['name_customer']) . "</div>";
       $nestedData[]  = "<div align='left'>" . strtoupper($row['nama_karyawan']) . "</div>";
@@ -267,13 +267,13 @@ class Quotation_proses extends Admin_Controller
       $nestedData[]  = "<div align='center'>" . ($status) . "</div>";
       if ($this->auth->restrict($this->viewPermission)) :
         $nestedData[]  = "<div style='text-align:center'>
-              <a class='btn btn-sm btn-warning print' href='javascript:void(0)' data-toggle='tooltip' title='View PO' data-id_quotation='" . $row['id_quotation'] . "' style='width:30px; display:inline-block'>
+              <a class='btn btn-sm btn-warning print' href='javascript:void(0)' data-toggle='tooltip' title='View PO' data-id_quotation='" . $row['nomor'] . "' style='width:30px; display:inline-block'>
                 <span class='fa fa-search'></span> 
               </a>
-              <a class='btn btn-sm btn-success reopen_po' href='javascript:void(0)' data-toggle='tooltip' title='Re-open PO' data-id_quotation='" . $row['id_quotation'] . "' style='width:30px; display:inline-block'>
+              <a class='btn btn-sm btn-success reopen_po' href='javascript:void(0)' data-toggle='tooltip' title='Re-open PO' data-id_quotation='" . $row['nomor'] . "' style='width:30px; display:inline-block'>
                 <span class='fa fa-folder-open'></span>
               </a>
-              <a class='btn btn-sm btn-danger change_po' href='javascript:void(0)' data-toggle='tooltip' title='Change PO' data-id_quotation='" . $row['id_quotation'] . "' style='width:30px; display:inline-block'>
+              <a class='btn btn-sm btn-danger change_po' href='javascript:void(0)' data-toggle='tooltip' title='Change PO' data-id_quotation='" . $row['nomor'] . "' style='width:30px; display:inline-block'>
                 <span class='fa fa-refresh'></span>
               </a>
   
@@ -308,13 +308,13 @@ class Quotation_proses extends Admin_Controller
     }
 
     $sql = "SELECT
-				  a.id_quotation,a.date,b.name_customer,c.nama_karyawan, a.grand_total,a.status,a.activation
+				  a.id,a.nomor,a.date,b.name_customer,c.nama_karyawan, a.grand_total,a.status,a.activation
 				FROM
 				  quotation_header a LEFT JOIN master_customer b ON a.id_customer = b.id_customer
 				   INNER JOIN karyawan c ON a.id_karyawan = c.id_karyawan WHERE 1=1 and a.status = '1'
 				" . $where_activation . " 
 				AND (
-  				a.id_quotation LIKE '%" . $this->db->escape_like_str($like_value) . "%'
+  				a.id LIKE '%" . $this->db->escape_like_str($like_value) . "%'
 				OR b.name_customer LIKE '%" . $this->db->escape_like_str($like_value) . "%'
 				OR c.nama_karyawan LIKE '%" . $this->db->escape_like_str($like_value) . "%'
   	        )
@@ -324,7 +324,7 @@ class Quotation_proses extends Admin_Controller
     $data['totalFiltered'] = $this->db->query($sql)->num_rows();
     $columns_order_by = array(
       0 => 'nomor',
-      1 => 'id_quotation',
+      1 => 'id',
       2 => 'date',
       3 => 'name_customer',
       4 => 'nama_karyawan',
@@ -332,7 +332,7 @@ class Quotation_proses extends Admin_Controller
       6 => 'status'
     );
 
-    $sql .= " ORDER BY a.id_quotation ASC, " . $columns_order_by[$column_order] . " " . $column_dir . " ";
+    $sql .= " ORDER BY a.id ASC, " . $columns_order_by[$column_order] . " " . $column_dir . " ";
     $sql .= " LIMIT " . $limit_start . " ," . $limit_length . " ";
 
     $data['query'] = $this->db->query($sql);
@@ -386,7 +386,7 @@ class Quotation_proses extends Admin_Controller
       $nestedData   = array();
       $detail = "";
       $nestedData[]  = "<div align='center'>" . $nomor . "</div>";
-      $nestedData[]  = "<div align='left'>" . strtoupper($row['id_quotation']) . "</div>";
+      $nestedData[]  = "<div align='left'>" . strtoupper($row['nomor']) . "</div>";
       $nestedData[]  = "<div align='left'>" . strtoupper($row['date']) . "</div>";
       $nestedData[]  = "<div align='left'>" . strtoupper($row['name_customer']) . "</div>";
       $nestedData[]  = "<div align='left'>" . strtoupper($row['nama_karyawan']) . "</div>";
@@ -395,10 +395,9 @@ class Quotation_proses extends Admin_Controller
       $nestedData[]  = "<div align=''>" . $row['reason'] . "</div>";
       if ($this->auth->restrict($this->viewPermission)) :
         $nestedData[]  = "<div style='text-align:center'>
-              <a class='btn btn-sm btn-warning print' href='javascript:void(0)' data-toggle='tooltip' title='View PO' data-id_quotation='" . $row['id_quotation'] . "' style='width:30px; display:inline-block'>
+              <a class='btn btn-sm btn-warning print' href='javascript:void(0)' data-toggle='tooltip' title='View PO' data-id_quotation='" . $row['id'] . "' style='width:30px; display:inline-block'>
                 <span class='fa fa-search'></span> 
               </a>
-  
               </div>
       		      ";
       endif;
@@ -430,13 +429,13 @@ class Quotation_proses extends Admin_Controller
     }
 
     $sql = "SELECT
-				  a.id_quotation,a.date,b.name_customer,c.nama_karyawan, a.grand_total,a.status,a.reason,a.activation
+				  a.id,a.nomor,a.date,b.name_customer,c.nama_karyawan, a.grand_total,a.status,a.reason,a.activation
 				FROM
 				  quotation_header a LEFT JOIN master_customer b ON a.id_customer = b.id_customer
 				   INNER JOIN karyawan c ON a.id_karyawan = c.id_karyawan WHERE 1=1 and a.status = '2'
 				" . $where_activation . " 
 				AND (
-  				a.id_quotation LIKE '%" . $this->db->escape_like_str($like_value) . "%'
+  				a.id LIKE '%" . $this->db->escape_like_str($like_value) . "%'
 				OR b.name_customer LIKE '%" . $this->db->escape_like_str($like_value) . "%'
 				OR c.nama_karyawan LIKE '%" . $this->db->escape_like_str($like_value) . "%'
   	        )
@@ -446,7 +445,7 @@ class Quotation_proses extends Admin_Controller
     $data['totalFiltered'] = $this->db->query($sql)->num_rows();
     $columns_order_by = array(
       0 => 'nomor',
-      1 => 'id_quotation',
+      1 => 'id',
       2 => 'date',
       3 => 'name_customer',
       4 => 'nama_karyawan',
@@ -455,7 +454,7 @@ class Quotation_proses extends Admin_Controller
       7 => 'reason'
     );
 
-    $sql .= " ORDER BY a.id_quotation ASC, " . $columns_order_by[$column_order] . " " . $column_dir . " ";
+    $sql .= " ORDER BY a.id ASC, " . $columns_order_by[$column_order] . " " . $column_dir . " ";
     $sql .= " LIMIT " . $limit_start . " ," . $limit_length . " ";
 
     $data['query'] = $this->db->query($sql);
@@ -467,7 +466,7 @@ class Quotation_proses extends Admin_Controller
   {
     // $id				= $this->input->post('id');
     // $first_letter 	= strtoupper(substr($id, 0, 5));
-    $getId         = $this->db->query("SELECT max(LEFT(id_quotation,5)) idQ FROM quotation_header ORDER BY id_quotation DESC LIMIT 1")->row();
+    $getId         = $this->db->query("SELECT max(LEFT(nomor,5)) idQ FROM quotation_header where SUBSTRING(nomor, 17, 2) = SUBSTR(YEAR(CURDATE()),3,2) ORDER BY nomor DESC LIMIT 1")->row();
     $code = 'PR';
     $num = $getId->idQ + 1;
     $nomor = str_pad($num, 5, "0", STR_PAD_LEFT);
@@ -562,19 +561,23 @@ class Quotation_proses extends Admin_Controller
   public function modal_view()
   {
     $id = $this->input->post('id');
-    $newId = str_replace('-', '/', $id);
-    $data           = $this->db->get_where('quotation_header', array('id_quotation' => $newId))->row();
+    // echo "<pre>";
+    // print_r($id);
+    // echo "<pre>";
+    // exit;
+    // $newId = str_replace('-', '/', $id);
+    $data           = $this->db->get_where('quotation_header', array('id' => $id))->row();
     $customer       = $this->db->get_where('master_customer', array('id_customer' => $data->id_customer))->row();
     $cat_cust       = $this->db->get_where('child_customer_category', array('id_category_customer' => $data->id_cust_cut))->row();
     $disc_cat       = $this->db->get_where('discount_category', array('id_category' => $data->id_disc_cat))->row();
     $type_pro       = $this->db->get_where('type_project', array('id_type_project' => $data->id_type_project))->row();
     $pic_cust       = $this->db->get_where('child_customer_pic', array('id_customer' => $data->id_customer))->row();
     $karyawan       = $this->db->get_where('karyawan', array('id_karyawan' => $data->id_karyawan))->row();
-    $rooms         = $this->db->get_where('quotation_room', array('id_quotation' => $data->id_quotation))->result();
-    $pay_term         = $this->db->get_where('payment_term', array('id_quotation' => $data->id_quotation))->result();
+    $rooms         = $this->db->get_where('quotation_room', array('id_quotation' => $data->id))->result();
+    $pay_term         = $this->db->get_where('payment_term', array('id_quotation' => $data->id))->result();
 
     // echo "<pre>";
-    // print_r($customer);
+    // print_r($rooms);
     // echo "</pre>";
     $this->template->set([
       'data' => $data,
@@ -593,16 +596,16 @@ class Quotation_proses extends Admin_Controller
   public function view_quotation()
   {
     $id = $this->input->post('id');
-    $newId = str_replace('-', '/', $id);
-    $data           = $this->db->get_where('quotation_header', array('id_quotation' => $newId))->row();
+    // $newId = str_replace('-', '/', $id);
+    $data           = $this->db->get_where('quotation_header', array('id' => $id))->row();
     $customer       = $this->db->get_where('master_customer', array('id_customer' => $data->id_customer))->row();
     $cat_cust       = $this->db->get_where('child_customer_category', array('id_category_customer' => $data->id_cust_cut))->row();
     $disc_cat       = $this->db->get_where('discount_category', array('id_category' => $data->id_disc_cat))->row();
     $type_pro       = $this->db->get_where('type_project', array('id_type_project' => $data->id_type_project))->row();
     $pic_cust       = $this->db->get_where('child_customer_pic', array('id_customer' => $data->id_customer))->row();
     $karyawan       = $this->db->get_where('karyawan', array('id_karyawan' => $data->id_karyawan))->row();
-    $rooms         = $this->db->get_where('quotation_room', array('id_quotation' => $data->id_quotation))->result();
-    $pay_term         = $this->db->get_where('payment_term', array('id_quotation' => $data->id_quotation))->result();
+    $rooms         = $this->db->get_where('quotation_room', array('id_quotation' => $data->id))->result();
+    $pay_term         = $this->db->get_where('payment_term', array('id_quotation' => $data->id))->result();
 
     // echo "<pre>";
     // print_r($customer);
@@ -624,15 +627,15 @@ class Quotation_proses extends Admin_Controller
   public function quotation_lost()
   {
     $id = $this->input->post('id');
-    $newId = str_replace('-', '/', $id);
-    $data           = $this->db->get_where('quotation_header', array('id_quotation' => $newId))->row();
+    // $newId = str_replace('-', '/', $id);
+    $data           = $this->db->get_where('quotation_header', array('id' => $id))->row();
     $customer       = $this->db->get_where('master_customer', array('id_customer' => $data->id_customer))->row();
     $cat_cust       = $this->db->get_where('child_customer_category', array('id_category_customer' => $data->id_cust_cut))->row();
     $disc_cat       = $this->db->get_where('discount_category', array('id_category' => $data->id_disc_cat))->row();
     $type_pro       = $this->db->get_where('type_project', array('id_type_project' => $data->id_type_project))->row();
     $pic_cust       = $this->db->get_where('child_customer_pic', array('id_customer' => $data->id_customer))->row();
     $karyawan       = $this->db->get_where('karyawan', array('id_karyawan' => $data->id_karyawan))->row();
-    $rooms          = $this->db->get_where('quotation_room', array('id_quotation' => $data->id_quotation))->result();
+    $rooms          = $this->db->get_where('quotation_room', array('id_quotation' => $data->id))->result();
 
 
     // echo "<pre>";
@@ -654,15 +657,15 @@ class Quotation_proses extends Admin_Controller
   public function upload_po()
   {
     $id = $this->input->post('id');
-    $newId = str_replace('-', '/', $id);
-    $data           = $this->db->get_where('quotation_header', array('id_quotation' => $newId))->row();
+    // $newId = str_replace('-', '/', $id);
+    $data           = $this->db->get_where('quotation_header', array('id' => $id))->row();
     $customer       = $this->db->get_where('master_customer', array('id_customer' => $data->id_customer))->row();
     $cat_cust       = $this->db->get_where('child_customer_category', array('id_category_customer' => $data->id_cust_cut))->row();
     $disc_cat       = $this->db->get_where('discount_category', array('id_category' => $data->id_disc_cat))->row();
     $type_pro       = $this->db->get_where('type_project', array('id_type_project' => $data->id_type_project))->row();
     $pic_cust       = $this->db->get_where('child_customer_pic', array('id_customer' => $data->id_customer))->row();
     $karyawan       = $this->db->get_where('karyawan', array('id_karyawan' => $data->id_karyawan))->row();
-    $rooms          = $this->db->get_where('quotation_room', array('id_quotation' => $data->id_quotation))->result();
+    $rooms          = $this->db->get_where('quotation_room', array('id_quotation' => $data->id))->result();
 
 
     // echo "<pre>";
@@ -920,8 +923,8 @@ class Quotation_proses extends Admin_Controller
   public function editQuotation()
   {
     $id = $this->uri->segment(3);
-    $new_id = str_replace('-', '/', $id);
-    $this->template->set('id', $new_id);
+    // $new_id = str_replace('-', '/', $id);
+    $this->template->set('id', $id);
     $this->template->title('Edit New Quotation');
     $this->template->render('form_add_quotation');
   }
@@ -1119,17 +1122,32 @@ class Quotation_proses extends Admin_Controller
     $this->template->render('modal_Helper');
   }
 
+  public function getIdQuotation()
+  {
+    // QU08 - F120 - 00001
+    $getId         = $this->db->query("SELECT max(RIGHT(id,5)) idQ FROM quotation_header where SUBSTRING(id, 8, 2) = SUBSTR(YEAR(CURDATE()),3,2) ORDER BY id DESC LIMIT 1")->row();
+    $code = 'QU';
+    $num = $getId->idQ + 1;
+    $nomor = str_pad($num, 5, "0", STR_PAD_LEFT);
+    $idQuotation =  $code . date('m') . '-F1' . date('y') . '-' . $nomor;
+    return $idQuotation;
+  }
+
   public function saveQuotation()
   {
     $data                 = $this->input->post();
     $type                 = $data['type'];
-
+    $idQuotation          = $this->getIdQuotation();
+    // echo "<pre>";
+    // print_r($rev);
+    // echo "<pre>";
+    // exit;
 
     if (!empty($data)) {
       if (!empty($data['ruang'])) {
         $arr_ruang = array();
         foreach ($data['ruang'] as $ruang => $x) {
-          $arr_ruang[$ruang]['id_quotation']   = $data['id_quotation'];
+          $arr_ruang[$ruang]['id_quotation']   = $idQuotation;
           $arr_ruang[$ruang]['section_room']   = $ruang;
           $arr_ruang[$ruang]['id_ruangan']     = $x['id_ruangan'];
           $arr_ruang[$ruang]['name_room']      = $x['nm_ruang'];
@@ -1149,7 +1167,7 @@ class Quotation_proses extends Admin_Controller
       if (!empty($data['product_curtain'])) {
         $ArrCurtain = array();
         foreach ($data['product_curtain'] as $curtain => $x) {
-          $ArrCurtain[$curtain]['id_quotation']         = $data['id_quotation'];
+          $ArrCurtain[$curtain]['id_quotation']         = $idQuotation;
           $ArrCurtain[$curtain]['section']              = $curtain;
           $ArrCurtain[$curtain]['item']                 = 'curtain';
           $ArrCurtain[$curtain]['id_ruangan']           = $data['ruang'][$curtain]['id_ruangan'];
@@ -1205,7 +1223,7 @@ class Quotation_proses extends Admin_Controller
         foreach ($data['book_roll'] as $roll) {
           $no++;
           foreach ($roll as $key => $x) {
-            $ArrBookRoll[$no . $key]['id_quotation']  = $data['id_quotation'];
+            $ArrBookRoll[$no . $key]['id_quotation']  = $idQuotation;
             $ArrBookRoll[$no . $key]['section']       = $no;
             $ArrBookRoll[$no . $key]['item']          = 'curtain';
             $ArrBookRoll[$no . $key]['panel']         = $x['panel'];
@@ -1222,7 +1240,7 @@ class Quotation_proses extends Admin_Controller
         foreach ($data['ext_comm'] as $commission) {
           $no++;
           foreach ($commission as $key => $x) {
-            $ArrComm[$no . $key]['id_quotation']  = $data['id_quotation'];
+            $ArrComm[$no . $key]['id_quotation']  = $idQuotation;
             $ArrComm[$no . $key]['section']       = $no;
             $ArrComm[$no . $key]['item']          = 'curtain';
             $ArrComm[$no . $key]['panel']         = $x['panel'];
@@ -1240,7 +1258,7 @@ class Quotation_proses extends Admin_Controller
         foreach ($data['ext_comm_rail'] as $commRail) {
           $no++;
           foreach ($commRail as $key => $x) {
-            $ArrCommRail[$no . $key]['id_quotation']  = $data['id_quotation'];
+            $ArrCommRail[$no . $key]['id_quotation']  = $idQuotation;
             $ArrCommRail[$no . $key]['section']       = $no;
             $ArrCommRail[$no . $key]['item']          = 'rail-curtain';
             $ArrCommRail[$no . $key]['id_pic']        = $x['id_pic'];
@@ -1257,7 +1275,7 @@ class Quotation_proses extends Admin_Controller
         foreach ($data['bc_comp'] as $basicComp) {
           $no++;
           foreach ($basicComp as $key => $x) {
-            $BasicCompRail[$no . $key]['id_quotation']   = $data['id_quotation'];
+            $BasicCompRail[$no . $key]['id_quotation']   = $idQuotation;
             $BasicCompRail[$no . $key]['section']        = $no;
             $BasicCompRail[$no . $key]['item']           = 'curtain';
             $BasicCompRail[$no . $key]['id_basic_comp']  = $x['id_rail_basic'];
@@ -1274,7 +1292,7 @@ class Quotation_proses extends Admin_Controller
         foreach ($data['addt_comp'] as $addtComp) {
           $no++;
           foreach ($addtComp as $key => $x) {
-            $AddtCompRail[$no . $key]['id_quotation']   = $data['id_quotation'];
+            $AddtCompRail[$no . $key]['id_quotation']   = $idQuotation;
             $AddtCompRail[$no . $key]['section']        = $no;
             $AddtCompRail[$no . $key]['item']           = 'curtain';
             $AddtCompRail[$no . $key]['id_additional_comp']  = $x['id_comp'];
@@ -1293,7 +1311,7 @@ class Quotation_proses extends Admin_Controller
       if (!empty($data['product_lining'])) {
         $ArrLining = array();
         foreach ($data['product_lining'] as $lining => $x) {
-          $ArrLining[$lining]['id_quotation']         = $data['id_quotation'];
+          $ArrLining[$lining]['id_quotation']         = $idQuotation;
           $ArrLining[$lining]['section']              = $lining;
           $ArrLining[$lining]['item']                 = 'lining';
           $ArrLining[$lining]['id_ruangan']           = $data['ruang'][$lining]['id_ruangan'];
@@ -1349,7 +1367,7 @@ class Quotation_proses extends Admin_Controller
         foreach ($data['book_roll_lining'] as $roll) {
           $no++;
           foreach ($roll as $key => $x) {
-            $ArrBookRollLining[$no . $key]['id_quotation']  = $data['id_quotation'];
+            $ArrBookRollLining[$no . $key]['id_quotation']  = $idQuotation;
             $ArrBookRollLining[$no . $key]['section']       = $no;
             $ArrBookRollLining[$no . $key]['item']          = 'lining';
             $ArrBookRollLining[$no . $key]['panel']       = $x['panel'];
@@ -1366,7 +1384,7 @@ class Quotation_proses extends Admin_Controller
         foreach ($data['ext_comm_lining'] as $commission) {
           $no++;
           foreach ($commission as $key => $x) {
-            $ArrCommLining[$no . $key]['id_quotation']  = $data['id_quotation'];
+            $ArrCommLining[$no . $key]['id_quotation']  = $idQuotation;
             $ArrCommLining[$no . $key]['section']       = $no;
             $ArrCommLining[$no . $key]['item']          = 'lining';
             $ArrCommLining[$no . $key]['panel']        = $x['panel'];
@@ -1384,7 +1402,7 @@ class Quotation_proses extends Admin_Controller
         foreach ($data['ext_comm_rail_lining'] as $commRail) {
           $no++;
           foreach ($commRail as $key => $x) {
-            $ArrCommRailLining[$no . $key]['id_quotation']  = $data['id_quotation'];
+            $ArrCommRailLining[$no . $key]['id_quotation']  = $idQuotation;
             $ArrCommRailLining[$no . $key]['section']       = $no;
             $ArrCommRailLining[$no . $key]['item']           = 'rail-lining';
             $ArrCommRailLining[$no . $key]['id_pic']        = $x['id_pic'];
@@ -1401,7 +1419,7 @@ class Quotation_proses extends Admin_Controller
         foreach ($data['bc_comp-lining'] as $basicComp) {
           $no++;
           foreach ($basicComp as $key => $x) {
-            $BasicCompRailLining[$no . $key]['id_quotation']   = $data['id_quotation'];
+            $BasicCompRailLining[$no . $key]['id_quotation']   = $idQuotation;
             $BasicCompRailLining[$no . $key]['section']        = $no;
             $BasicCompRailLining[$no . $key]['item']            = 'lining';
             $BasicCompRailLining[$no . $key]['id_basic_comp']  = $x['id_rail_basic'];
@@ -1418,7 +1436,7 @@ class Quotation_proses extends Admin_Controller
         foreach ($data['addt_comp-lining'] as $addtComp) {
           $no++;
           foreach ($addtComp as $key => $x) {
-            $AddtCompRailLining[$no . $key]['id_quotation']   = $data['id_quotation'];
+            $AddtCompRailLining[$no . $key]['id_quotation']   = $idQuotation;
             $AddtCompRailLining[$no . $key]['section']        = $no;
             $AddtCompRailLining[$no . $key]['item']            = 'lining';
             $AddtCompRailLining[$no . $key]['id_additional_comp']  = $x['id_comp'];
@@ -1437,7 +1455,7 @@ class Quotation_proses extends Admin_Controller
       if (!empty($data['product_vitrage'])) {
         $ArrVitrage = array();
         foreach ($data['product_vitrage'] as $vitrage => $x) {
-          $ArrVitrage[$vitrage]['id_quotation']               = $data['id_quotation'];
+          $ArrVitrage[$vitrage]['id_quotation']               = $idQuotation;
           $ArrVitrage[$vitrage]['section']                    = $vitrage;
           $ArrVitrage[$vitrage]['item']                       = 'vitrage';
           $ArrVitrage[$vitrage]['id_ruangan']                 = $data['ruang'][$vitrage]['id_ruangan'];
@@ -1493,7 +1511,7 @@ class Quotation_proses extends Admin_Controller
         foreach ($data['book_roll_vitrage'] as $roll) {
           $no++;
           foreach ($roll as $key => $x) {
-            $ArrBookRollVitrage[$no . $key]['id_quotation']  = $data['id_quotation'];
+            $ArrBookRollVitrage[$no . $key]['id_quotation']  = $idQuotation;
             $ArrBookRollVitrage[$no . $key]['section']       = $no;
             $ArrBookRollVitrage[$no . $key]['item']          = 'vitrage';
             $ArrBookRollVitrage[$no . $key]['panel']       = $x['panel'];
@@ -1510,7 +1528,7 @@ class Quotation_proses extends Admin_Controller
         foreach ($data['ext_comm_vitrage'] as $commission) {
           $no++;
           foreach ($commission as $key => $x) {
-            $ArrCommVitrage[$no . $key]['id_quotation']  = $data['id_quotation'];
+            $ArrCommVitrage[$no . $key]['id_quotation']  = $idQuotation;
             $ArrCommVitrage[$no . $key]['section']       = $no;
             $ArrCommVitrage[$no . $key]['item']          = 'vitrage';
             $ArrCommVitrage[$no . $key]['panel']        = $x['panel'];
@@ -1522,13 +1540,14 @@ class Quotation_proses extends Admin_Controller
         }
       }
 
+
       if (!empty($data['ext_comm_rail_vitrage'])) {
         $ArrCommRailVitrage = array();
         $no = 0;
         foreach ($data['ext_comm_rail_vitrage'] as $commRail) {
           $no++;
           foreach ($commRail as $key => $x) {
-            $ArrCommRailVitrage[$no . $key]['id_quotation']  = $data['id_quotation'];
+            $ArrCommRailVitrage[$no . $key]['id_quotation']  = $idQuotation;
             $ArrCommRailVitrage[$no . $key]['section']       = $no;
             $ArrCommRailVitrage[$no . $key]['item']          = 'rail-vitrage';
             $ArrCommRailVitrage[$no . $key]['id_pic']        = $x['id_pic'];
@@ -1538,6 +1557,11 @@ class Quotation_proses extends Admin_Controller
           }
         }
       }
+      // echo "<pre>";
+      // print_r($ArrCommRailVitrage);
+      // print_r($ArrCommVitrage);
+      // echo "<pre>";
+      // exit;
 
       if (!empty($data['bc_comp-vitrage'])) {
         $BasicCompRailVitrage = array();
@@ -1545,7 +1569,7 @@ class Quotation_proses extends Admin_Controller
         foreach ($data['bc_comp-vitrage'] as $basicComp) {
           $no++;
           foreach ($basicComp as $key => $x) {
-            $BasicCompRailVitrage[$no . $key]['id_quotation']   = $data['id_quotation'];
+            $BasicCompRailVitrage[$no . $key]['id_quotation']   = $idQuotation;
             $BasicCompRailVitrage[$no . $key]['section']        = $no;
             $BasicCompRailVitrage[$no . $key]['item']           = 'vitrage';
             $BasicCompRailVitrage[$no . $key]['id_basic_comp']  = $x['id_rail_basic'];
@@ -1556,13 +1580,14 @@ class Quotation_proses extends Admin_Controller
         }
       }
 
+
       if (!empty($data['addt_comp-vitrage'])) {
         $AddtCompRailVitrage = array();
         $no = 0;
         foreach ($data['addt_comp-vitrage'] as $addtComp) {
           $no++;
           foreach ($addtComp as $key => $x) {
-            $AddtCompRailVitrage[$no . $key]['id_quotation']   = $data['id_quotation'];
+            $AddtCompRailVitrage[$no . $key]['id_quotation']   = $idQuotation;
             $AddtCompRailVitrage[$no . $key]['section']        = $no;
             $AddtCompRailVitrage[$no . $key]['item']           = 'vitrage';
             $AddtCompRailVitrage[$no . $key]['id_additional_comp']  = $x['id_comp'];
@@ -1574,6 +1599,10 @@ class Quotation_proses extends Admin_Controller
           }
         }
       }
+      // echo "<pre>";
+      // print_r($BasicCompRailVitrage);
+      // echo "<pre>";
+      // exit;
 
       // ACCESSORIES
       //=================================================================================================
@@ -1584,7 +1613,7 @@ class Quotation_proses extends Admin_Controller
         foreach ($data['product_acc'] as $acc) {
           $no++;
           foreach ($acc as $key => $x) {
-            $ArrAccessories[$no . $key]['id_quotation']     = $data['id_quotation'];
+            $ArrAccessories[$no . $key]['id_quotation']     = $idQuotation;
             $ArrAccessories[$no . $key]['section']          = $no;
             $ArrAccessories[$no . $key]['item']             = 'accessoriess';
             $ArrAccessories[$no . $key]['id_ruangan']       = $data['ruang'][$no]['id_ruangan'];
@@ -1602,6 +1631,10 @@ class Quotation_proses extends Admin_Controller
         }
       }
 
+      // echo "<pre>";
+      // print_r($ArrAccessories);
+      // echo "<pre>";
+      // exit;
       $this->db->trans_begin();
 
       //SUPPLIER DATA
@@ -1621,22 +1654,42 @@ class Quotation_proses extends Admin_Controller
         'project_name'   => $data['pr_name'],
       );
 
+      // echo "<pre>";
+      // print_r($AddtCompRailVitrage);
+      // echo "<pre>";
+      // exit;
       if ($type == 'edit') {
-        $insertData['modified_on'] = date('Y-m-d H:i:s');
-        $insertData['modified_by'] = $this->auth->user_id();
-
-        $this->db->where('id_quotation', $data['id_quotation'])->update('quotation_header', $insertData);
-        $this->db->delete('quotation_room', ['id_quotation' => $data['id_quotation']]);
-
+        if (strlen($data['nomor']) === 18) {
+          $count = 1;
+          $num = str_pad($count, 2, "0", STR_PAD_LEFT);
+          $rev = '/Rev-' . $num;
+        } else {
+          $no = substr($data['nomor'], -2);
+          $count = $no + 1;
+          $num = str_pad($count, 2, "0", STR_PAD_LEFT);
+          $rev = '/Rev-' . $num;
+        }
+        $insertData['id']             = $idQuotation;
+        $insertData['nomor']          = substr($data['nomor'], 0, 18) . $rev;
+        $insertData['modified_on']    = date('Y-m-d H:i:s');
+        $insertData['modified_by']    = $this->auth->user_id();
+        $insertData['activation']     = 'aktif';
+        // echo "<pre>";
+        // print_r($insertData);
+        // echo "<pre>";
+        // exit;
+        $this->db->insert('quotation_header', $insertData);
+        // $this->db->where('id', $idQuotation)->update('quotation_header', $insertData);
         // curtain
-        $this->db->delete('qtt_product_fabric', ['id_quotation' => $data['id_quotation']]);
-        $this->db->delete('qtt_booking_roll', ['id_quotation' => $data['id_quotation']]);
-        $this->db->delete('qtt_ext_commission', ['id_quotation' => $data['id_quotation']]);
-        $this->db->delete('qtt_basic_comp_rail', ['id_quotation' => $data['id_quotation']]);
-        $this->db->delete('qtt_additional_comp_rail', ['id_quotation' => $data['id_quotation']]);
-        $this->db->delete('qtt_accessoriess', ['id_quotation' => $data['id_quotation']]);
+        // $this->db->delete('quotation_room', ['id_quotation' => $idQuotation]);
+        // $this->db->delete('qtt_product_fabric', ['id_quotation' => $idQuotation]);
+        // $this->db->delete('qtt_booking_roll', ['id_quotation' => $idQuotation]);
+        // $this->db->delete('qtt_ext_commission', ['id_quotation' => $idQuotation]);
+        // $this->db->delete('qtt_basic_comp_rail', ['id_quotation' => $idQuotation]);
+        // $this->db->delete('qtt_additional_comp_rail', ['id_quotation' => $idQuotation]);
+        // $this->db->delete('qtt_accessoriess', ['id_quotation' => $idQuotation]);
       } else {
-        $insertData['id_quotation'] = $data['id_quotation'];
+        $insertData['id'] = $idQuotation;
         $insertData['activation'] = 'aktif';
         $insertData['created_on'] = date('Y-m-d H:i:s');
         $insertData['created_by'] = $this->auth->user_id();
@@ -2259,11 +2312,10 @@ class Quotation_proses extends Admin_Controller
   {
     $no = $this->input->post('no');
     $id_ruangan = $this->input->post('id_ruangan');
-    $curtain = $this->db->get_where('qtt_product_fabric', ['id_ruangan' => $id_ruangan, 'item' => 'curtain'])->result();
+    $id_quotation = $this->input->post('id_quotation');
+    $curtain = $this->db->get_where('qtt_product_fabric', ['id_ruangan' => $id_ruangan, 'id_quotation' => $id_quotation, 'item' => 'curtain'])->row();
 
-    // echo "<pre>";
-    // print_r($no);
-    // echo "</pre>";
+
     $this->template->set('no', $no);
     $this->template->set('id_ruangan', $id_ruangan);
     $this->template->set('curtain', $curtain);
@@ -2274,11 +2326,9 @@ class Quotation_proses extends Admin_Controller
   {
     $no = $this->input->post('no');
     $id_ruangan = $this->input->post('id_ruangan');
-    $lining = $this->db->get_where('qtt_product_fabric', ['id_ruangan' => $id_ruangan, 'item' => 'lining'])->row();
+    $id_quotation = $this->input->post('id_quotation');
+    $lining = $this->db->get_where('qtt_product_fabric', ['id_ruangan' => $id_ruangan, 'id_quotation' => $id_quotation, 'item' => 'lining'])->row();
 
-    // echo "<pre>";
-    // print_r($id_ruangan);
-    // echo "</pre>";
     $this->template->set('no', $no);
     $this->template->set('id_ruangan', $id_ruangan);
     $this->template->set('lining', $lining);
@@ -2304,7 +2354,8 @@ class Quotation_proses extends Admin_Controller
   {
     $no = $this->input->post('no');
     $id_ruangan = $this->input->post('id_ruangan');
-    $accessoriess = $this->db->get_where('qtt_accessoriess', ['id_ruangan' => $id_ruangan,  'section' => $no])->result();
+    $id_quotation = $this->input->post('id_quotation');
+    $accessoriess = $this->db->get_where('qtt_accessoriess', ['id_ruangan' => $id_ruangan, 'id_quotation' => $id_quotation, 'section' => $no])->result();
 
     // echo "<pre>";
     // print_r($no);
@@ -2326,6 +2377,7 @@ class Quotation_proses extends Admin_Controller
     $dataType = $this->input->post('dataType');
     $id_product = $this->input->post('id_product');
     $id_ruangan = $this->input->post('id_ruangan');
+    $id_quotation = $this->input->post('id_quotation');
 
     $this->template->set('no', $no);
     $this->template->set('id_product', $id_product);
@@ -2335,9 +2387,11 @@ class Quotation_proses extends Admin_Controller
       if ($dataType == 'panel-curtain') {
         $this->template->render('form_curtain_panel');
       } else if ($dataType == 'panel-lining') {
+        $dataPanel = $this->db->get_where('qtt_product_fabric', ['id_ruangan' => $id_ruangan, 'id_quotation' => $id_quotation, 'item' => 'lining', 'section' => $no, 'panel' => 'yes'])->row();
+        $this->template->set('dataPanel', $dataPanel);
         $this->template->render('form_lining_panel');
       } else if ($dataType == 'panel-vitrage') {
-        $dataPanel = $this->db->get_where('qtt_product_fabric', ['id_ruangan' => $id_ruangan, 'item' => 'vitrage', 'section' => $no, 'panel' => 'yes'])->row();
+        $dataPanel = $this->db->get_where('qtt_product_fabric', ['id_ruangan' => $id_ruangan, 'id_quotation' => $id_quotation, 'item' => 'vitrage', 'section' => $no, 'panel' => 'yes'])->row();
         $this->template->set('dataPanel', $dataPanel);
         $this->template->render('form_vitrage_panel');
       } else {
@@ -2347,11 +2401,11 @@ class Quotation_proses extends Admin_Controller
       if ($dataType == 'panel-curtain') {
         $this->template->render('form_curtain_nonpanel');
       } else if ($dataType == 'panel-lining') {
-        $dataPanel = $this->db->get_where('qtt_product_fabric', ['id_ruangan' => $id_ruangan, 'item' => 'lining', 'section' => $no, 'panel' => 'no'])->row();
+        $dataPanel = $this->db->get_where('qtt_product_fabric', ['id_ruangan' => $id_ruangan, 'item' => 'lining', 'id_quotation' => $id_quotation,  'section' => $no, 'panel' => 'no'])->row();
         $this->template->set('dataPanel', $dataPanel);
         $this->template->render('form_lining_nonpanel');
       } else if ($dataType == 'panel-vitrage') {
-        $dataPanel = $this->db->get_where('qtt_product_fabric', ['id_ruangan' => $id_ruangan, 'item' => 'vitrage', 'section' => $no, 'panel' => 'no'])->row();
+        $dataPanel = $this->db->get_where('qtt_product_fabric', ['id_ruangan' => $id_ruangan, 'item' => 'vitrage', 'id_quotation' => $id_quotation,  'section' => $no, 'panel' => 'no'])->row();
         $this->template->set('dataPanel', $dataPanel);
         $this->template->render('form_vitrage_nonpanel');
       } else {
@@ -2369,12 +2423,14 @@ class Quotation_proses extends Admin_Controller
     $type = $this->input->post('type');
     $id_jahitan = $this->input->post('id_jahitan');
     $id_ruangan = $this->input->post('id_ruangan');
+    $id_quotation = $this->input->post('id_quotation');
     // echo "<pre>";
     // print_r($id_ruangan);
     // echo "</pre>";
     $this->template->set('no', $no);
     $this->template->set('id_jahitan', $id_jahitan);
     $this->template->set('id_ruangan', $id_ruangan);
+    $this->template->set('id_quotation', $id_quotation);
     $this->template->render('form_jahit_curtain');
   }
 
@@ -2385,12 +2441,14 @@ class Quotation_proses extends Admin_Controller
     $type = $this->input->post('type');
     $id_jahitan = $this->input->post('id_jahitan');
     $id_ruangan = $this->input->post('id_ruangan');
+    $id_quotation = $this->input->post('id_quotation');
     // echo "<pre>";
     // print_r($id_ruangan);
     // echo "</pre>";
     $this->template->set('no', $no);
     $this->template->set('id_jahitan', $id_jahitan);
     $this->template->set('id_ruangan', $id_ruangan);
+    $this->template->set('id_quotation', $id_quotation);
     $this->template->render('form_jahit_lining');
   }
 
@@ -2401,17 +2459,21 @@ class Quotation_proses extends Admin_Controller
     $type = $this->input->post('type');
     $id_jahitan = $this->input->post('id_jahitan');
     $id_ruangan = $this->input->post('id_ruangan');
-    $vitrage = $this->db->get_where('qtt_product_fabric', ['id_ruangan' => $id_ruangan, 'jahitan' => $id_jahitan])->row();
+    $id_quotation = $this->input->post('id_quotation');
+    // exit;
+    $vitrage = $this->db->get_where('qtt_product_fabric', ['id_ruangan' => $id_ruangan, 'id_quotation' => $id_quotation])->row();
     $jahitan = $this->db->get_where('sewing', ['activation' => 'aktif'])->result();
 
-    // echo "<pre>";
-    // print_r($id_ruangan);
-    // echo "</pre>";
-    $this->template->set('no', $no);
-    $this->template->set('id_jahitan', $id_jahitan);
-    $this->template->set('id_ruangan', $id_ruangan);
-    $this->template->set('vitrage', $vitrage);
-    $this->template->set('jahitan', $jahitan);
+    $this->template->set(
+      [
+        'no' => $no,
+        'id_jahitan' => $id_jahitan,
+        'id_ruangan' => $id_ruangan,
+        'vitrage' => $vitrage,
+        'jahitan' => $jahitan
+      ]
+    );
+
     $this->template->render('form_jahit_vitrage');
   }
 
@@ -2419,11 +2481,11 @@ class Quotation_proses extends Admin_Controller
   {
     $no = $this->input->post('no');
     $id_ruangan = $this->input->post('id_ruangan');
-    // echo "<pre>";
-    // print_r($id_ruangan);
-    // echo "</pre>";
+    $id_quotation = $this->input->post('id_quotation');
+
     $this->template->set('no', $no);
     $this->template->set('id_ruangan', $id_ruangan);
+    $this->template->set('id_quotation', $id_quotation);
     $this->template->render('rail_curtain');
   }
 
@@ -2432,12 +2494,10 @@ class Quotation_proses extends Admin_Controller
   {
     $no = $this->input->post('no');
     $id_ruangan = $this->input->post('id_ruangan');
-    $fabrics_lining = $this->db->get_where('qtt_product_fabric', ['id_ruangan' => $id_ruangan, 'item' => 'lining'])->row();
+    $id_quotation = $this->input->post('id_quotation');
+    $fabrics_lining = $this->db->get_where('qtt_product_fabric', ['id_ruangan' => $id_ruangan, 'id_quotation' => $id_quotation, 'item' => 'lining'])->row();
     $rails = $this->db->get_where('mp_rail', ['activation' => 'aktif'])->result();
 
-    // echo "<pre>";
-    // print_r($id_ruangan);
-    // echo "</pre>";
     $this->template->set('no', $no);
     $this->template->set('id_ruangan', $id_ruangan);
     $this->template->set('fabrics_lining', $fabrics_lining);
@@ -2449,12 +2509,10 @@ class Quotation_proses extends Admin_Controller
   {
     $no = $this->input->post('no');
     $id_ruangan = $this->input->post('id_ruangan');
-    $fabrics_vitrage = $this->db->get_where('qtt_product_fabric', ['id_ruangan' => $id_ruangan, 'item' => 'vitrage'])->row();
+    $id_quotation = $this->input->post('id_quotation');
+    $fabrics_vitrage = $this->db->get_where('qtt_product_fabric', ['id_ruangan' => $id_ruangan, 'id_quotation' => $id_quotation, 'item' => 'vitrage'])->row();
     $rails = $this->db->get_where('mp_rail', ['activation' => 'aktif'])->result();
 
-    // echo "<pre>";
-    // print_r($id_ruangan);
-    // echo "</pre>";
     $this->template->set('no', $no);
     $this->template->set('id_ruangan', $id_ruangan);
     $this->template->set('fabrics_vitrage', $fabrics_vitrage);

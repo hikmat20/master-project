@@ -410,12 +410,14 @@ if (!empty($rooms)) {
         if (no != '') {
 
             id_ruangan = $('#id_ruangan' + no).val();
+            id_quotation = $('#id_qtt').val();
             $.ajax({
                 type: 'POST',
                 url: siteurl + active_controller + 'addCurtain',
                 data: {
                     'no': no,
-                    'id_ruangan': id_ruangan
+                    'id_ruangan': id_ruangan,
+                    'id_quotation': id_quotation
                 },
                 success: function(result) {
                     $(".box-curtain" + no).html(result);
@@ -452,13 +454,15 @@ if (!empty($rooms)) {
         if (no != '') {
 
             id_ruangan = $('#id_ruangan' + no).val();
+            id_quotation = $('#id_qtt').val();
             // alert(id_ruangan)
             $.ajax({
                 type: 'POST',
                 url: siteurl + active_controller + 'addLining',
                 data: {
                     'no': no,
-                    'id_ruangan': id_ruangan
+                    'id_ruangan': id_ruangan,
+                    'id_quotation': id_quotation
                 },
                 success: function(result) {
                     $(".box-lining" + no).html(result);
@@ -535,6 +539,7 @@ if (!empty($rooms)) {
     }
 
     function detailAcc(no) {
+        var id_quotation = $('#id_qtt').val();
         if (no != '') {
             // alert(no);
             id_ruangan = $('#id_ruangan' + no).val();
@@ -544,7 +549,8 @@ if (!empty($rooms)) {
                 url: siteurl + active_controller + 'addaccessories',
                 data: {
                     'no': no,
-                    'id_ruangan': id_ruangan
+                    'id_ruangan': id_ruangan,
+                    'id_quotation': id_quotation
                 },
                 success: function(result) {
                     $(".box-accessories" + no).html(result);
@@ -1185,6 +1191,7 @@ if (!empty($rooms)) {
         var no = $(this).data('id');
         dataType = $(this).data('type');
         type = $(this).val();
+        id_quotation = $('#id_qtt').val();
         id_product = $('#product_curtain' + no).val();
         id_ruangan = $('#id_ruangan' + no).val();
         lbrKainCurtain = $('#lebar_kain' + no).val() || 0;
@@ -1205,6 +1212,7 @@ if (!empty($rooms)) {
                         'dataType': dataType,
                         'id_product': id_product,
                         'id_ruangan': id_ruangan
+                        // 'id_quotation': id_quotation
                     },
                     success: function(result) {
                         // console.log(result);
@@ -1256,7 +1264,8 @@ if (!empty($rooms)) {
                         'type': type,
                         'dataType': dataType,
                         'id_product': id_product,
-                        'id_ruangan': id_ruangan
+                        'id_ruangan': id_ruangan,
+                        'id_quotation': id_quotation
                     },
                     success: function(result) {
                         // console.log(result);
@@ -1276,6 +1285,7 @@ if (!empty($rooms)) {
         // alert(dataType)
 
         id_ruangan = $('#id_ruangan' + no).val();
+        id_quotation = $('#id_qtt').val();
 
         if (dataType == 'panel-curtain') {
             type = $('#panel' + no).val();;
@@ -1292,7 +1302,8 @@ if (!empty($rooms)) {
                         'type': type,
                         'dataType': dataType,
                         'id_product': id_product,
-                        'id_ruangan': id_ruangan
+                        'id_ruangan': id_ruangan,
+                        'id_quotation': id_quotation
                     },
                     success: function(result) {
                         // console.log(result);
@@ -1320,7 +1331,8 @@ if (!empty($rooms)) {
                         'type': type,
                         'dataType': dataType,
                         'id_product': id_product,
-                        'id_ruangan': id_ruangan
+                        'id_ruangan': id_ruangan,
+                        'id_quotation': id_quotation
                     },
                     success: function(result) {
                         console.log(result);
@@ -1348,7 +1360,8 @@ if (!empty($rooms)) {
                         'type': type,
                         'dataType': dataType,
                         'id_product': id_product,
-                        'id_ruangan': id_ruangan
+                        'id_ruangan': id_ruangan,
+                        'id_quotation': id_quotation
                     },
                     success: function(result) {
                         // console.log(result);
@@ -1370,6 +1383,7 @@ if (!empty($rooms)) {
     $(document).on('change', '.jahitan', function() {
         var no = $(this).data('id');
         var id_jahitan = $(this).val();
+        var qty_unit = $('#qty_unit' + no).val();
         $.ajax({
             type: 'POST',
             url: siteurl + 'quotation_proses/dataJahitan',
@@ -1378,8 +1392,8 @@ if (!empty($rooms)) {
             },
             dataType: 'json',
             success: function(result) {
-                // console.log(result['sewing']);
-                $('#hrg_jahitan' + no).val(result['sewing'].price.replace(/\B(?=(?:\d{3})+(?!\d))/g, ","));
+                t_price = parseInt(result['sewing'].price) * parseInt(qty_unit);
+                $('#hrg_jahitan' + no).val(('' + t_price).replace(/\B(?=(?:\d{3})+(?!\d))/g, ","));
                 disc_jahitan_curtain(no);
             },
             error: function() {
@@ -1441,6 +1455,7 @@ if (!empty($rooms)) {
     function changeJahit(type, no) {
         id_jahitan = $('#dt_jns_jahit' + no).data('jht');
         id_ruangan = $('#id_ruangan' + no).val();
+        id_quotation = $('#id_qtt').val();
         // alert(id_jahitan)
         if (type == 'yes') {
             // alert('type=' + no)
@@ -1450,7 +1465,8 @@ if (!empty($rooms)) {
                 data: {
                     'no': no,
                     'id_jahitan': id_jahitan,
-                    'id_ruangan': id_ruangan
+                    'id_ruangan': id_ruangan,
+                    'id_quotation': id_quotation
                 },
                 success: function(result) {
                     // console.log(result)
@@ -1470,6 +1486,7 @@ if (!empty($rooms)) {
     function changeJahitLining(type, no) {
         id_jahitan = $('#dt_jns_jahit-lining' + no).data('jht');
         id_ruangan = $('#id_ruangan' + no).val();
+        id_quotation = $('#id_qtt').val();
         if (type == 'yes') {
             $.ajax({
                 type: 'POST',
@@ -1477,7 +1494,8 @@ if (!empty($rooms)) {
                 data: {
                     'no': no,
                     'id_jahitan': id_jahitan,
-                    'id_ruangan': id_ruangan
+                    'id_ruangan': id_ruangan,
+                    'id_quotation': id_quotation
                 },
                 success: function(result) {
                     // console.log(result)
@@ -1508,13 +1526,15 @@ if (!empty($rooms)) {
 
     function changeRail(no, type) {
         var id_ruangan = $('#id_ruangan' + no).val();
+        var id_quotation = $('#id_qtt').val();
         if (type == 'yes') {
             $.ajax({
                 type: 'POST',
                 url: siteurl + active_controller + 'get_rail_curtain',
                 data: {
                     'no': no,
-                    'id_ruangan': id_ruangan
+                    'id_ruangan': id_ruangan,
+                    'id_quotation': id_quotation
                 },
                 success: function(result) {
                     $("#dt_rail_curtain" + no).html(result);
@@ -1561,6 +1581,7 @@ if (!empty($rooms)) {
                         $('#t_price_rail' + x).val(("" + t_hrga_rail).replace(/\B(?=(?:\d{3})+(?!\d))/g, ','));
                         $('#cust_rail_name' + x).val(result['list'][0].name_product);
 
+                        overlap_curtain(x);
                         getBasicComponent(id_rail, x);
                         getAdditionalComponent(id_rail, x);
                     },
@@ -1625,16 +1646,16 @@ if (!empty($rooms)) {
                         '<input type="hidden" name="addt_comp[' + x + '][' + i + '][id_comp]" data-id="' + data[i].id_rail_add + '" value="' + data[i].id_rail_add + '" >' +
                         '</td>' +
                         '<td>' +
-                        '<input type="number" style="width:100%" name="addt_comp[' + x + '][' + i + '][qty]" data-id="' + data[i].id_rail_add + '" class="qty_add_comp form-control numberOnly required text-right" placeholder="0" min="0" max="100">' +
+                        '<input type="number" style="width:100%" name="addt_comp[' + x + '][' + i + '][qty]" data-id="' + data[i].id_rail_add + '" id="qty_' + data[i].id_rail_add + '" class="qty_add_comp form-control numberOnly required text-right" placeholder="0" min="0" max="100">' +
                         '</td>' +
                         '<td>' + data[i].uom +
-                        '<input type="hidden" style="width:100%" name="addt_comp[' + x + '][' + i + '][uom]" value="' + data[i].uom + '" class="form-control text-right" placeholder="0">' +
+                        '<input type="hidden" style="width:100%" name="addt_comp[' + x + '][' + i + '][uom]" value="' + data[i].uom + '" id="uom_' + data[i].id_rail_add + '" class="form-control text-right" placeholder="0">' +
                         '</td>' +
                         '<td>' + ('' + data[i].selling_price).replace(/\B(?=(?:\d{3})+(?!\d))/g, ',') +
-                        '<input type="hidden" style="width:100%" name="addt_comp[' + x + '][' + i + '][price]" id="price' + data[i].id_rail_add + '" value="' + data[i].selling_price + '"  class="form-control input-sm numberOnly nominal value text-right" placeholder="0">' +
+                        '<input type="hidden" style="width:100%" name="addt_comp[' + x + '][' + i + '][price]" value="' + data[i].selling_price + '"  id="price_' + data[i].id_rail_add + '" class="form-control input-sm numberOnly nominal value text-right" placeholder="0">' +
                         '</td>' +
                         '<td>' +
-                        '<input type="text" readonly style="width:100%" name="addt_comp[' + x + '][' + i + '][t_price]" id="t_price' + data[i].id_rail_add + '" class="form-control text-right" placeholder="0">' +
+                        '<input type="text" readonly style="width:100%" name="addt_comp[' + x + '][' + i + '][t_price]" id="t_price_' + data[i].id_rail_add + '" class="form-control text-right" placeholder="0">' +
                         '</td>' +
                         '<td>' +
                         '<a class="text-red hapus" href="javascript:void(0)" title="Hapus Item"><i class="fa fa-times"></i></a><span class="numbering"></span>' +
@@ -1648,12 +1669,13 @@ if (!empty($rooms)) {
 
     $(document).on('change input', '.qty_add_comp', function() {
         let id = $(this).data('id');
+        let no = $(this).parents('table').data('id');
         let qty = parseInt($(this).val());
-        let price = parseInt($('#price' + id).val().replace(/'/g, '') || 0);
+        let price = parseInt($('#price_' + id).val().replace(/'/g, '') || 0);
         // console.log(id)
         // console.log(qty * price);
         let t_price = qty * price;
-        $('#t_price' + id).val(('' + t_price).replace(/\B(?=(?:\d{3})+(?!\d))/g, ','));
+        $('table#additional_comp_rail' + no).find('input#t_price_' + id).val(('' + t_price).replace(/\B(?=(?:\d{3})+(?!\d))/g, ','));
 
     })
 
@@ -2174,16 +2196,16 @@ if (!empty($rooms)) {
                                 '<input type="hidden" name="addt_comp[' + x + '][' + i + '][id_comp]" value="' + data[list_arr[i]].id_rail_add + '" >' +
                                 '</td>' +
                                 '<td>' +
-                                '<input type="number" style="width:100%" name="addt_comp[' + x + '][' + i + '][qty]" value="' + '" data-id="' + data[list_arr[i]].id_rail_add + '" class="qty_add_comp form-control numberOnly text-right" placeholder="0" min="0" max="100">' +
+                                '<input type="number" style="width:100%" name="addt_comp[' + x + '][' + i + '][qty]" value="' + '" id="qty_' + data[list_arr[i]].id_rail_add + '" data-id="' + data[list_arr[i]].id_rail_add + '" class="qty_add_comp form-control numberOnly text-right" placeholder="0" min="0" max="100">' +
                                 '</td>' +
                                 '<td>' + data[list_arr[i]].uom +
                                 '<input type="hidden" style="width:100%" name="addt_comp[' + x + '][' + i + '][uom]" value="' + data[list_arr[i]].uom + '" class="form-control text-right" placeholder="0">' +
                                 '</td>' +
                                 '<td>' + ('' + data[list_arr[i]].selling_price).replace(/\B(?=(?:\d{3})+(?!\d))/g, ',') +
-                                '<input type="hidden" style="width:100%" name="addt_comp[' + x + '][' + i + '][price]" id="price' + data[list_arr[i]].id_rail_add + '" value="' + data[list_arr[i]].selling_price + '" class="form-control input-sm numberOnly nominal value text-right" placeholder="0">' +
+                                '<input type="hidden" style="width:100%" name="addt_comp[' + x + '][' + i + '][price]" id="price_' + data[list_arr[i]].id_rail_add + '" value="' + data[list_arr[i]].selling_price + '" class="form-control input-sm numberOnly nominal value text-right" placeholder="0">' +
                                 '</td>' +
                                 '<td>' +
-                                '<input type="text" readonly style="width:100%" name="addt_comp[' + x + '][' + i + '][t_price]" id="t_price' + data[list_arr[i]].id_rail_add + '" class="form-control required text-right" placeholder="0">' +
+                                '<input type="text" readonly style="width:100%" name="addt_comp[' + x + '][' + i + '][t_price]" id="t_price_' + data[list_arr[i]].id_rail_add + '" class="form-control required text-right" placeholder="0">' +
                                 '</td>' +
                                 '<td>' +
                                 '<a class="text-red hapus" href="javascript:void(0)" title="Hapus Item"><i class="fa fa-times"></i></a><span class="numbering"></span>' +
@@ -2209,16 +2231,16 @@ if (!empty($rooms)) {
                                 '<input type="hidden" name="addt_comp-lining[' + x + '][' + i + '][id_comp]" value="' + data[list_arr[i]].id_rail_add + '" >' +
                                 '</td>' +
                                 '<td>' +
-                                '<input type="number" style="width:100%" name="addt_comp-lining[' + x + '][' + i + '][qty]" data-id="' + data[list_arr[i]].id_rail_add + '" class="qty_add_comp-lining form-control numberOnly text-right" placeholder="0" maxLength="3" min="0" max="100">' +
+                                '<input type="number" style="width:100%" name="addt_comp-lining[' + x + '][' + i + '][qty]" id="qty_' + data[list_arr[i]].id_rail_add + '" data-id="' + data[list_arr[i]].id_rail_add + '" class="qty_add_comp-lining form-control numberOnly text-right" placeholder="0" maxLength="3" min="0" max="100">' +
                                 '</td>' +
                                 '<td>' + data[list_arr[i]].uom +
                                 '<input type="hidden" style="width:100%" name="addt_comp-lining[' + x + '][' + i + '][uom]" value="' + data[list_arr[i]].uom + '" class="form-control text-right" placeholder="0">' +
                                 '</td>' +
                                 '<td>' + ('' + data[list_arr[i]].selling_price).replace(/\B(?=(?:\d{3})+(?!\d))/g, ',') +
-                                '<input type="hidden" style="width:100%" name="addt_comp-lining[' + x + '][' + i + '][price]" id="price_lining' + data[list_arr[i]].id_rail_add + '" class="form-control text-right" placeholder="0">' +
+                                '<input type="hidden" style="width:100%" name="addt_comp-lining[' + x + '][' + i + '][price]" id="price_' + data[list_arr[i]].id_rail_add + '" class="form-control text-right" placeholder="0">' +
                                 '</td>' +
                                 '<td>' + ('' + data[list_arr[i]].selling_price).replace(/\B(?=(?:\d{3})+(?!\d))/g, ',') +
-                                '<input type="text" readonly style="width:100%" name="addt_comp-lining[' + x + '][' + i + '][price]" id="t_price_lining' + data[list_arr[i]].id_rail_add + '" class="form-control text-right" placeholder="0">' +
+                                '<input type="text" readonly style="width:100%" name="addt_comp-lining[' + x + '][' + i + '][price]" id="t_price_' + data[list_arr[i]].id_rail_add + '" class="form-control text-right" placeholder="0">' +
                                 '</td>' +
                                 '<td>' +
                                 '<a class="text-red hapus" href="javascript:void(0)" title="Hapus Item"><i class="fa fa-times"></i></a><span class="numbering"></span>' +
@@ -2244,16 +2266,16 @@ if (!empty($rooms)) {
                                 '<input type="hidden" name="addt_comp-vitrage[' + x + '][' + i + '][id_comp]" value="' + data[list_arr[i]].id_rail_add + '" >' +
                                 '</td>' +
                                 '<td>' +
-                                '<input type="number"  style="width:100%" name="addt_comp-vitrage[' + x + '][' + i + '][qty]" data-id="' + data[list_arr[i]].id_rail_add + '" class="qty_add_comp-vitrage form-control numberOnly text-right" placeholder="0" min="0" max="100">' +
+                                '<input type="number" style="width:100%" name="addt_comp-vitrage[' + x + '][' + i + '][qty]" id="qty_' + data[list_arr[i]].id_rail_add + '" data-id="' + data[list_arr[i]].id_rail_add + '" class="qty_add_comp-vitrage form-control numberOnly text-right" placeholder="0" min="0" max="100">' +
                                 '</td>' +
                                 '<td>' + data[list_arr[i]].uom +
                                 '<input type="hidden" style="width:100%" name="addt_comp-vitrage[' + x + '][' + i + '][uom]" value="' + data[list_arr[i]].uom + '" class="form-control text-right" placeholder="0">' +
                                 '</td>' +
                                 '<td>' + ('' + data[list_arr[i]].selling_price).replace(/\B(?=(?:\d{3})+(?!\d))/g, ',') +
-                                '<input type="hidden" style="width:100%" name="addt_comp-vitrage[' + x + '][' + i + '][price]" id="price_vitrage' + data[list_arr[i]].id_rail_add + '" value="' + data[list_arr[i]].selling_price + '" class="form-control numberOnly nominal value text-right" placeholder="0">' +
+                                '<input type="hidden" style="width:100%" name="addt_comp-vitrage[' + x + '][' + i + '][price]" id="price_' + data[list_arr[i]].id_rail_add + '" value="' + data[list_arr[i]].selling_price + '" class="form-control numberOnly nominal value text-right" placeholder="0">' +
                                 '</td>' +
                                 '<td>' +
-                                '<input type="text" readonly style="width:100%" name="addt_comp-vitrage[' + x + '][' + i + '][t_price]" id="t_price_vitrage' + data[list_arr[i]].id_rail_add + '" class="form-control text-right" placeholder="0">' +
+                                '<input type="text" readonly style="width:100%" name="addt_comp-vitrage[' + x + '][' + i + '][t_price]" id="t_price_' + data[list_arr[i]].id_rail_add + '" class="form-control text-right" placeholder="0">' +
                                 '</td>' +
                                 '<td>' +
                                 '<a class="text-red hapus" href="javascript:void(0)" title="Hapus Item"><i class="fa fa-times"></i></a><span class="numbering"></span>' +
@@ -2303,7 +2325,7 @@ if (!empty($rooms)) {
                                 '<input type="number" min="0" id="disc_acc' + data[i].id_accessories + '" data-id="' + data[i].id_accessories + '" name="product_acc[' + x + '][' + i + '][disc_acc]" class="form-control disc_acc text-right" placeholder="0">' +
                                 '</td>' +
                                 '<td class="text-right"> ' +
-                                '<span class="v_disc_acc' + data[i].id_accessories + '">0</span><input type="hidden" id="v_disc_acc' + data[i].id_accessories + '" data-id="' + data[i].id_accessories + '" style="width:100%" name="product_acc[' + x + '][' + i + '][v_disc_acc]" class="form-control text-right" placeholder="0">' +
+                                '<span class="v_disc_acc' + data[i].id_accessories + '">0</span><input type="hidden" id="v_disc_acc' + data[i].id_accessories + '" data-id="' + data[i].id_accessories + '" style="width:100%" name="product_acc[' + x + '][' + i + '][val_disc_acc]" class="form-control text-right" placeholder="0">' +
                                 '</td>' +
                                 '<td class="text-right"> ' +
                                 '<span class="t_price_acc' + data[i].id_accessories + '">0</span><input type="hidden" id="t_price_acc' + data[i].id_accessories + '" data-id="' + data[i].id_accessories + '" style="width:100%" name="product_acc[' + x + '][' + i + '][t_price]" class="form-control text-right" placeholder="0">' +
@@ -2781,6 +2803,7 @@ if (!empty($rooms)) {
     function changeJahitVitrage(type, no) {
         id_jahitan = $('#dt_jns_jahit-vitrage' + no).data('jht');
         id_ruangan = $('#id_ruangan' + no).val();
+        id_quotation = $('#id_qtt').val();
         if (type == 'yes') {
             $.ajax({
                 type: 'POST',
@@ -2788,7 +2811,8 @@ if (!empty($rooms)) {
                 data: {
                     'no': no,
                     'id_jahitan': id_jahitan,
-                    'id_ruangan': id_ruangan
+                    'id_ruangan': id_ruangan,
+                    'id_quotation': id_quotation
                 },
                 success: function(result) {
                     // console.log(result)
@@ -2835,6 +2859,7 @@ if (!empty($rooms)) {
 
     function changeRailVitrage(no, type) {
         var id_ruangan = $('#id_ruangan' + no).val();
+        var id_quotation = $('#id_qtt').val();
 
         if (type == 'yes') {
             $.ajax({
@@ -2842,7 +2867,8 @@ if (!empty($rooms)) {
                 url: siteurl + active_controller + 'get_rail_vitrage',
                 data: {
                     'no': no,
-                    'id_ruangan': id_ruangan
+                    'id_ruangan': id_ruangan,
+                    'id_quotation': id_quotation
                 },
                 success: function(result) {
                     $("#dt_rail-vitrage" + no).html(result);
@@ -2992,16 +3018,16 @@ if (!empty($rooms)) {
                         '<input type="hidden" name="addt_comp-vitrage[' + x + '][' + i + '][id_comp]" data-id="' + data[i].id_rail_add + '" value="' + data[i].id_rail_add + '" >' +
                         '</td>' +
                         '<td>' +
-                        '<input type="number" style="width:100%" name="addt_comp-vitrage[' + x + '][' + i + '][qty]" data-id="' + data[i].id_rail_add + '" class="qty_add_comp-vitrage form-control required input-sm text-right" placeholder="0" maxLength="3" min="0" max="100">' +
+                        '<input type="number" style="width:100%" name="addt_comp-vitrage[' + x + '][' + i + '][qty]" id="qty_' + data[i].id_rail_add + '"  data-id="' + data[i].id_rail_add + '" class="qty_add_comp-vitrage form-control required input-sm text-right" placeholder="0" maxLength="3" min="0" max="100">' +
                         '</td>' +
                         '<td>' + data[i].uom +
                         '<input type="hidden" style="width:100%" name="addt_comp-vitrage[' + x + '][' + i + '][uom]" value="' + data[i].uom + '" class="form-control text-right" placeholder="0">' +
                         '</td>' +
                         '<td>' + ('' + data[i].selling_price).replace(/\B(?=(?:\d{3})+(?!\d))/g, ',') +
-                        '<input type="hidden" style="width:100%" name="addt_comp-vitrage[' + x + '][' + i + '][price]" id="price_vitrage' + data[i].id_rail_add + '"  value="' + data[i].selling_price + '"  class="form-control input-sm numberOnly nominal value text-right" placeholder="0">' +
+                        '<input type="hidden" style="width:100%" name="addt_comp-vitrage[' + x + '][' + i + '][price]" id="price_' + data[i].id_rail_add + '"  value="' + data[i].selling_price + '"  class="form-control input-sm numberOnly nominal value text-right" placeholder="0">' +
                         '</td>' +
                         '<td>' +
-                        '<input type="text" readonly style="width:100%" name="addt_comp-vitrage[' + x + '][' + i + '][t_price]" id="t_price_vitrage' + data[i].id_rail_add + '"  class="form-control text-right" placeholder="0">' +
+                        '<input type="text" readonly style="width:100%" name="addt_comp-vitrage[' + x + '][' + i + '][t_price]" id="t_price_' + data[i].id_rail_add + '"  class="form-control text-right" placeholder="0">' +
                         '</td>' +
                         '<td>' +
                         '<a class="text-red hapus" href="javascript:void(0)" title="Hapus Item"><i class="fa fa-times"></i></a><span class="numbering"></span>' +
@@ -3015,10 +3041,11 @@ if (!empty($rooms)) {
 
     $(document).on('change input', '.qty_add_comp-vitrage', function() {
         let id = $(this).data('id');
+        let no = $(this).parents('table').data('id');
         let qty = parseInt($(this).val());
-        let price = parseInt($('#price_vitrage' + id).val().replace(/'/g, '') || 0);
+        let price = parseInt($('#price_' + id).val().replace(/'/g, '') || 0);
         let t_price = qty * price;
-        $('#t_price_vitrage' + id).val(('' + t_price).replace(/\B(?=(?:\d{3})+(?!\d))/g, ','));
+        $('table#additional_comp_rail-vitrage' + no).find('input#t_price_' + id).val(('' + t_price).replace(/\B(?=(?:\d{3})+(?!\d))/g, ','));
         // console.log(t_price)
     })
 
@@ -3613,13 +3640,15 @@ if (!empty($rooms)) {
 
     function changeRailLining(no, type) {
         var id_ruangan = $('#id_ruangan' + no).val();
+        var id_quotation = $('#id_qtt').val();
         if (type == 'yes') {
             $.ajax({
                 type: 'POST',
                 url: siteurl + active_controller + 'get_rail_lining',
                 data: {
                     'no': no,
-                    'id_ruangan': id_ruangan
+                    'id_ruangan': id_ruangan,
+                    'id_quotation': id_quotation
                 },
                 success: function(result) {
                     $("#dt_rail_lining" + no).html(result);
@@ -3769,16 +3798,16 @@ if (!empty($rooms)) {
                         '<input type="hidden" name="addt_comp-lining[' + x + '][' + i + '][id_comp]" data-id="' + data[i].id_rail_add + '" value="' + data[i].id_rail_add + '" >' +
                         '</td>' +
                         '<td>' +
-                        '<input type="number" style="width:100%" name="addt_comp-lining[' + x + '][' + i + '][qty]" data-id="' + data[i].id_rail_add + '" class="qty_add_comp-lining form-control input-sm required text-right" placeholder="0" maxLength="3" min="0" max="100">' +
+                        '<input type="number" style="width:100%" name="addt_comp-lining[' + x + '][' + i + '][qty]" id="qty_' + data[i].id_rail_add + '" data-id="' + data[i].id_rail_add + '" class="qty_add_comp-lining form-control input-sm required text-right" placeholder="0" maxLength="3" min="0" max="100">' +
                         '</td>' +
                         '<td>' + data[i].uom +
                         '<input type="hidden" style="width:100%" name="addt_comp-lining[' + x + '][' + i + '][uom]" value="' + data[i].uom + '" class="form-control text-right" placeholder="0">' +
                         '</td>' +
                         '<td>' + ('' + data[i].selling_price).replace(/\B(?=(?:\d{3})+(?!\d))/g, ',') +
-                        '<input type="hidden" style="width:100%" name="addt_comp-lining[' + x + '][' + i + '][price]" id="price_lining' + data[i].id_rail_add + '" value="' + data[i].selling_price + '"  class="form-control input-sm numberOnly nominal value text-right" placeholder="0">' +
+                        '<input type="hidden" style="width:100%" name="addt_comp-lining[' + x + '][' + i + '][price]" id="price_' + data[i].id_rail_add + '" value="' + data[i].selling_price + '"  class="form-control input-sm numberOnly nominal value text-right" placeholder="0">' +
                         '</td>' +
                         '<td>' +
-                        '<input type="text" readonly style="width:100%" name="addt_comp-lining[' + x + '][' + i + '][t_price]" id="t_price_lining' + data[i].id_rail_add + '"  class="form-control input-sm numberOnly nominal value text-right" placeholder="0">' +
+                        '<input type="text" readonly style="width:100%" name="addt_comp-lining[' + x + '][' + i + '][t_price]" id="t_price_' + data[i].id_rail_add + '"  class="form-control input-sm numberOnly nominal value text-right" placeholder="0">' +
                         '</td>' +
                         '<td>' +
                         '<a class="text-red hapus" href="javascript:void(0)" title="Hapus Item"><i class="fa fa-times"></i></a><span class="numbering"></span>' +
@@ -3792,11 +3821,12 @@ if (!empty($rooms)) {
 
     $(document).on('change input', '.qty_add_comp-lining', function() {
         let id = $(this).data('id');
+        let no = $(this).parents('table').data('id');
         let qty = parseInt($(this).val());
-        let price = parseInt($('#price_lining' + id).val().replace(/'/g, '') || 0);
+        let price = parseInt($('#price_' + id).val().replace(/'/g, '') || 0);
         let t_price = qty * price;
-        $('#t_price_lining' + id).val(('' + t_price).replace(/\B(?=(?:\d{3})+(?!\d))/g, ','));
-        console.log(t_price)
+        $('table#additional_comp_rail-lining' + no).find('input#t_price_' + id).val(('' + t_price).replace(/\B(?=(?:\d{3})+(?!\d))/g, ','));
+        // console.log(t_price)
     })
 
 
@@ -3946,13 +3976,15 @@ if (!empty($rooms)) {
 
     $(document).on('change', '.switch-accessories', function() {
         var no = $(this).data('id');
+        var id_accessories = $('#id_qtt').val();
         if ($('div.accessories-switch' + no + ' input[type="checkbox"]').is(":checked")) {
             setTimeout(function() {
                 $.ajax({
                     type: 'POST',
                     url: siteurl + active_controller + 'addaccessories',
                     data: {
-                        'no': no
+                        'no': no,
+                        'id_accessories': id_accessories
                     },
                     success: function(result) {
                         $(".box-accessories" + no).html(result);

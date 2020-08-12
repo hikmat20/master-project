@@ -1,7 +1,6 @@
 <?php
-$fabrics_curtain = $this->db->get_where('qtt_product_fabric', ['id_ruangan' => $id_ruangan, 'item' => 'curtain'])->row();
+$fabrics_curtain = $this->db->get_where('qtt_product_fabric', ['id_ruangan' => $id_ruangan, 'id_quotation' => $id_quotation, 'item' => 'curtain'])->row();
 $rails = $this->db->get_where('mp_rail', ['activation' => 'aktif'])->result();
-
 
 ?>
 <div class="col-md-6">
@@ -200,18 +199,18 @@ $rails = $this->db->get_where('mp_rail', ['activation' => 'aktif'])->result();
 									<input type="hidden" name="addt_comp[<?= $no ?>][<?= $addt ?>][id_comp]" value="<?= $component ? $component->id_additional_comp : '-' ?>">
 								</td>
 								<td>
-									<input type="number" min="0" style="width:100%" data-id="<?= $component->id_additional_comp ?>" name="addt_comp[<?= $no ?>][<?= $addt ?>][qty]" value="<?= $component ? $component->qty : '0' ?>" class="qty_add_comp numberOnly form-control text-right" placeholder="0" maxlength="3" min="0" max="100">
+									<input type="number" min="0" id="qty_<?= $component->id_additional_comp ?>" style="width:100%" data-id="<?= $component->id_additional_comp ?>" name="addt_comp[<?= $no ?>][<?= $addt ?>][qty]" value="<?= $component ? $component->qty : '0' ?>" class="qty_add_comp numberOnly form-control text-right" placeholder="0" maxlength="3" min="0" max="100">
 								</td>
 								<td>
 									<?= $component ? $component->uom : '-' ?>
-									<input type="hidden" style="width:100%" name="addt_comp[<?= $no ?>][<?= $addt ?>][uom]" value="<?= $component ? $component->uom : '-' ?>" class="form-control text-right" placeholder="0">
+									<input type="hidden" id="uom_<?= $component->id_additional_comp ?>" style="width:100%" name="addt_comp[<?= $no ?>][<?= $addt ?>][uom]" value="<?= $component ? $component->uom : '-' ?>" class="form-control text-right" placeholder="0">
 								</td>
 								<td>
 									<?= $component ? number_format($component->selling_price) : '0' ?>
-									<input type="hidden" style="width:100%" name="addt_comp[<?= $no ?>][<?= $addt ?>][price]" id="price<?= $component->id_additional_comp ?>" value="<?= $component ? $component->selling_price : '0' ?>" class="form-control text-right" placeholder="0">
+									<input type="hidden" id="price_<?= $component->id_additional_comp ?>" style="width:100%" name="addt_comp[<?= $no ?>][<?= $addt ?>][price]" id="price<?= $component->id_additional_comp ?>" value="<?= $component ? $component->selling_price : '0' ?>" class="form-control text-right" placeholder="0">
 								</td>
 								<td>
-									<input type="text" readonly style="width:100%" name="addt_comp[<?= $no ?>][<?= $addt ?>][t_price]" id="t_price<?= $component->id_additional_comp ?>" value="<?= $component ? number_format($component->selling_price * $component->qty) : '0' ?>" class="form-control text-right" placeholder="0">
+									<input type="text" readonly id="t_price_<?= $component->id_additional_comp ?>" style="width:100%" name="addt_comp[<?= $no ?>][<?= $addt ?>][t_price]" id="t_price<?= $component->id_additional_comp ?>" value="<?= $component ? number_format($component->selling_price * $component->qty) : '0' ?>" class="form-control text-right" placeholder="0">
 								</td>
 								<td>
 									<a class="text-red hapus" href="javascript:void(0)" title="Hapus Item"><i class="fa fa-times"></i></a>
@@ -248,7 +247,7 @@ $rails = $this->db->get_where('mp_rail', ['activation' => 'aktif'])->result();
 								$this->db->select('a.*,b.name_pic');
 								$this->db->from('qtt_ext_commission a');
 								$this->db->join('child_customer_pic b', 'a.id_pic = b.id_pic');
-								$this->db->where(['a.id_pic' => $comm->id_pic, 'id_quotation' => $comm->id_quotation, 'item' => 'rail-curtain', 'section' => $no]);
+								$this->db->where(['a.id_pic' => $comm->id_pic, 'id_quotation' => $comm->id_quotation, 'a.item' => 'rail-curtain', 'a.section' => $no]);
 								$railCommissi = $this->db->get()->result();
 								foreach ($railCommissi as $Commission) {
 						?>

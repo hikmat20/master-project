@@ -6,9 +6,8 @@
                 <select class="form-control required select2 jahitan" data-id="<?= $no ?>" name="product_curtain[<?= $no ?>][jahitan]" id="jahitan<?= $no ?>">
                     <option value=""></option>
                     <?php
-                    $curtain = $this->db->get_where('qtt_product_fabric', ['id_ruangan' => $id_ruangan, 'jahitan' => $id_jahitan])->row();
+                    $curtain = $this->db->get_where('qtt_product_fabric', ['id_ruangan' => $id_ruangan, 'id_quotation' => $id_quotation, 'jahitan' => $id_jahitan])->row();
                     $jahitan = $this->db->get_where('sewing', ['activation' => 'aktif'])->result();
-
                     if ($curtain->jahit == 'yes') { ?>
                         <?php foreach ($jahitan as $jahit) { ?>
                             <option value="<?= $jahit->id_sewing ?>" <?= $curtain->jahitan == $jahit->id_sewing ? 'selected' : '' ?>><?= $jahit->item ?></option>

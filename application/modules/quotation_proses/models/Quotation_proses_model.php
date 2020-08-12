@@ -13,8 +13,8 @@ class Quotation_proses_model extends BF_Model
     /**
      * @var string  User Table Name
      */
-    protected $table_name = 'delivery';
-    protected $key        = 'id_delivery';
+    protected $table_name = 'quotation_header';
+    protected $key        = 'id';
 
     /**
      * @var string Field name to use for the created time column in the DB table
@@ -64,29 +64,31 @@ class Quotation_proses_model extends BF_Model
         parent::__construct();
     }
 
-    function generate_id($id_negara) {
-      $query = $this->db->query("SELECT MAX(id_supplier) as max_id FROM supplier where id_negara='$id_negara'");
-      $row = $query->row_array();
-      $max_id = $row['max_id'];
-      $max_id1 =(int) substr($max_id,3,3);
-      $counter = $max_id1 +1;
-      $idsup = $id_negara.str_pad($counter, 3, "0", STR_PAD_LEFT);
-      return $idsup;
+    function generate_id($id_negara)
+    {
+        $query = $this->db->query("SELECT MAX(id_supplier) as max_id FROM supplier where id_negara='$id_negara'");
+        $row = $query->row_array();
+        $max_id = $row['max_id'];
+        $max_id1 = (int) substr($max_id, 3, 3);
+        $counter = $max_id1 + 1;
+        $idsup = $id_negara . str_pad($counter, 3, "0", STR_PAD_LEFT);
+        return $idsup;
     }
 
-    function get_idtoko($kode=''){
+    function get_idtoko($kode = '')
+    {
         $query = $this->db->query("SELECT MAX(id_toko) as max_id FROM customer_toko");
         $row = $query->row_array();
         $max_id = $row['max_id'];
-        $max_id1 =(int) substr($max_id,12,3);
-        $counter = $max_id1 +1;
-        $idcusttoko = $kode."-T".str_pad($counter, 3, "0", STR_PAD_LEFT);
+        $max_id1 = (int) substr($max_id, 12, 3);
+        $counter = $max_id1 + 1;
+        $idcusttoko = $kode . "-T" . str_pad($counter, 3, "0", STR_PAD_LEFT);
         return $idcusttoko;
     }
 
     function pilih_provinsi()
     {
-        $query="SELECT
+        $query = "SELECT
                 provinsi.id_prov,
                 provinsi.nama
                 FROM
@@ -94,55 +96,62 @@ class Quotation_proses_model extends BF_Model
         return $this->db->query($query);
     }
 
-    function get_prov($id){
+    function get_prov($id)
+    {
         $query = $this->db->query("SELECT id_prov FROM supplier WHERE id_supplier='$id'");
         $row = $query->row_array();
         $provinsi     = $row['id_prov'];
         return $provinsi;
     }
 
-    function pilih_kota($provinsi){
-        $query="SELECT
+    function pilih_kota($provinsi)
+    {
+        $query = "SELECT
                 kabupaten.id_kab,
                 kabupaten.nama
                 FROM kabupaten where id_prov='$provinsi'";
         return $this->db->query($query);
     }
 
-    function pilih_marketing(){
-        $query="SELECT
+    function pilih_marketing()
+    {
+        $query = "SELECT
                 karyawan.id_karyawan,
                 karyawan.nama_karyawan
                 FROM karyawan where divisi='Marketing'";
         return $this->db->query($query);
     }
 
-    function pilih_supplier(){
-        $query="SELECT
+    function pilih_supplier()
+    {
+        $query = "SELECT
                 supplier.id_supplier,
                 supplier.nm_supplier
                 FROM supplier where sts_aktif='aktif'";
         return $this->db->query($query);
     }
 
-    function tampil_foto($id_customer){
-        $query="SELECT
+    function tampil_foto($id_customer)
+    {
+        $query = "SELECT
                 customer.foto
                 FROM customer WHERE id_customer='$id_customer'";
         $data = $this->db->query($query);
         return $data->row();
     }
 
-    function get_inisial($id){
-        $query="SELECT
+    function get_inisial($id)
+    {
+        $query = "SELECT
                 negara.id_negara
                 FROM negara WHERE id='$id'";
         $data = $this->db->query($query);
         return $data->row();
     }
 
-    function rekap_data(){
-        $query="SELECT
+    function rekap_data()
+    {
+        $query = "SELECT
         supplier.id_supplier,
         supplier.nm_supplier,
         negara.nm_negara,
@@ -167,8 +176,9 @@ class Quotation_proses_model extends BF_Model
         return $this->db->query($query);
     }
 
-    function print_data_supplier($id){
-        $query="SELECT
+    function print_data_supplier($id)
+    {
+        $query = "SELECT
         supplier.id_supplier,
         supplier.nm_supplier,
         negara.nm_negara,
@@ -231,5 +241,4 @@ class Quotation_proses_model extends BF_Model
         $this->db->where('id_supplier_barang', $id);
         return $this->db->delete('supplier_barang');
     }
-
 }

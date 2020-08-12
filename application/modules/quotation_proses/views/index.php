@@ -27,7 +27,7 @@ $ENABLE_DELETE  = has_permission('Quotation_proses.Delete');
             <thead>
               <tr>
                 <th width="5">#</th>
-                <th>Quotation Code</th>
+                <th>Quotation Number</th>
                 <th>Date</th>
                 <th>Customer</th>
                 <th>Marketing</th>
@@ -47,7 +47,7 @@ $ENABLE_DELETE  = has_permission('Quotation_proses.Delete');
             <tfoot>
               <tr>
                 <th width="5">#</th>
-                <th>Quotation Code</th>
+                <th>Quotation Number</th>
                 <th>Date</th>
                 <th>Customer</th>
                 <th>Marketing</th>
@@ -161,11 +161,11 @@ $ENABLE_DELETE  = has_permission('Quotation_proses.Delete');
     //Edit
     $(document).on('click', '.edit', function(e) {
       var id = $(this).data('id_quotation');
-      new_id = id.replace(/\//g, '-');
+      // new_id = id.replace(/\//g, '-');
       // alert(new_id);
       // $(".modal-dialog").css('width', '80%');
       // $("#head_title").html("<b>EDIT QUOTATION</b>");
-      window.location.href = siteurl + active_controller + 'editQuotation/' + new_id;
+      window.location.href = siteurl + active_controller + 'editQuotation/' + id;
       // $("#view").load(siteurl + active_controller + '/modal_Process/Delivery/edit/' + id);
       // $("#ModalView").modal();
     });
@@ -202,13 +202,13 @@ $ENABLE_DELETE  = has_permission('Quotation_proses.Delete');
 
     $(document).on('click', '.detail', function(e) {
       var id = $(this).data('id_quotation');
-      newId = id.replace(/\//g, '-');
+      // newId = id.replace(/\//g, '-');
       // alert(newId)
       $.ajax({
         type: "post",
         url: siteurl + active_controller + 'modal_view',
         data: {
-          'id': newId
+          'id': id
         },
         success: function(result) {
           $(".modal-dialog").css('width', '90%');

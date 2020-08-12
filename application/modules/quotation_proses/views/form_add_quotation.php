@@ -4,19 +4,16 @@
 
 if (!empty($this->uri->segment(3))) {
 
-	$getData        = $this->db->get_where('quotation_header', array('id_quotation' => $id))->row();
+	$getData        = $this->db->get_where('quotation_header', array('id' => $id))->row();
 	$customer     	= $this->db->get_where('master_customer', array('id_customer' => $getData->id_customer))->row();
 	$cat_cust     	= $this->db->get_where('child_customer_category', array('id_category_customer' => $getData->id_cust_cut))->row();
 	$pic_cust     	= $this->db->get_where('child_customer_pic', array('id_customer' => $getData->id_customer))->row();
-	$ruang     		= $this->db->get_where('quotation_room', array('id_quotation' => $getData->id_quotation))->result();
+	$ruang     		= $this->db->get_where('quotation_room', array('id_quotation' => $getData->id))->result();
 }
-// foreach ($ruang as $ruangan) {
-// 	echo "<pre>";
-// 	print_r($ruangan);
-// 	echo "</pre>";
-// 	# code...
-// }
-
+// echo "<pre>";
+// print_r($getData);
+// echo "<pre>";
+// exit;
 ?>
 <form id="form-quotation" class="form-active" method="post" enctype="multipart/form-data">
 	<div class="box box-success">
@@ -31,21 +28,21 @@ if (!empty($this->uri->segment(3))) {
 		</div>
 
 		<input type="hidden" name="type" value="<?= !empty($getData) ? 'edit' : 'add' ?>">
+		<input type="hidden" name="id_quotation" id="id_qtt" value="<?= $getData->id ?>">
 		<div class="box-body">
 			<div class="row">
 				<div class="col-md-4 col-md-offset-1">
 					<div class="form-group">
 						<div><label>Quotation Number <span class='text-red'>*</span></label></div>
 						<strong>
-							<input type="text" class="form-control input input-sm required" name="id_quotation" id="id_quotation" value="<?= $getData->id_quotation;
-																																			empty($getData->id_quotation) ? '' : $getData->id_quotation ?>" readonly>
-							<label class="label label-danger id_quotation hideIt">Quotation Number Can't be empty!</label>
+							<input type="text" class="form-control input required" name="nomor" id="nomor" value="<?= empty($getData->nomor) ? '' : $getData->nomor ?>" readonly>
+							<label class="label label-danger nomor hideIt">Quotation Number Can't be empty!</label>
 						</strong>
 					</div>
 					<div class="form-group">
 						<div><label>Customer <span class='text-red'>*</span></label></div>
 						<strong>
-							<select class="form-control input-sm required select2" name="id_cuctomer" id="id_cuctomer"></select>
+							<select class="form-control required select2" name="id_cuctomer" id="id_cuctomer"></select>
 							<label class="label label-danger id_cuctomer hideIt">Customer Can't be empty!</label>
 							<input type="hidden" id="id_cust" value="<?= $customer ? $customer->id_customer : '' ?>">
 						</strong>
@@ -53,7 +50,7 @@ if (!empty($this->uri->segment(3))) {
 					<div class="form-group">
 						<div><label>PIC </label></div>
 						<strong>
-							<input type="hidden" class="form-control input input-sm required w50" name="id_pic" id="id_pic">
+							<input type="hidden" class="form-control input required w50" name="id_pic" id="id_pic" value="<?= $pic_cust->id_pic ?>">
 							<input type="text" class="form-control input" name="nm_pic" id="nm_pic" placeholder="Name PIC" value="<?= $pic_cust ? $pic_cust->name_pic : '' ?>" readonly>
 							<label class="label label-danger nm_pic hideIt">PIC Can't be empty!</label>
 						</strong>
@@ -119,7 +116,7 @@ if (!empty($this->uri->segment(3))) {
 					<div class="form-group">
 						<div><label>Marketing <span class='text-red'>*</span></label></div>
 						<strong>
-							<select class="form-control input-sm input required select2" name="id_karyawan" id="id_karyawan"></select>
+							<select class="form-control input required select2" name="id_karyawan" id="id_karyawan"></select>
 							<label class="label label-danger id_karyawan hideIt">Marketing Can't be empty!</label></label>
 						</strong>
 					</div>

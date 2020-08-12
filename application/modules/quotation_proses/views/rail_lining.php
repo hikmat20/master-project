@@ -115,11 +115,11 @@
 						</thead>
 						<tbody>
 							<?php
-							$this->db->select('*,c.name_component');
+							$this->db->select('a.*,c.name_component');
 							$this->db->from('qtt_basic_comp_rail a');
 							$this->db->join('mp_rail_basic b', 'a.id_basic_comp = b.id_rail_basic');
 							$this->db->join('master_component c', 'b.id_component = c.id');
-							$this->db->where(['a.id_quotation' => $fabrics_lining->id_quotation, 'item' => 'lining', 'section' => $no]);
+							$this->db->where(['a.id_quotation' => $fabrics_lining->id_quotation, 'a.item' => 'lining', 'a.section' => $no]);
 							$bsRailComponent = $this->db->get()->result();
 							foreach ($bsRailComponent as $bs => $component) {
 
@@ -175,31 +175,31 @@
 					</thead>
 					<tbody>
 						<?php
-						$this->db->select('*,c.name_component');
+						$this->db->select('a.*,c.name_component');
 						$this->db->from('qtt_additional_comp_rail a');
 						$this->db->join('mp_rail_additional b', 'a.id_additional_comp = b.id_rail_add');
 						$this->db->join('master_component c', 'b.id_component = c.id');
-						$this->db->where(['a.id_quotation' => $fabrics_lining->id_quotation, 'item' => 'lining', 'section' => $no]);
+						$this->db->where(['a.id_quotation' => $fabrics_lining->id_quotation, 'a.item' => 'lining', 'a.section' => $no]);
 						$adtRailComponent = $this->db->get()->result();
 						foreach ($adtRailComponent as $addt => $component) { ?>
 							<tr>
 								<td>
 									<?= $component ? $component->name_component : '-' ?>
-									<input type="hidden" name="addt_comp-lining[<?= $no ?>][<?= $addt ?>][id_comp]" value="<?= $component ? $component->id_basic_comp : '-' ?>">
+									<input type="hidden" id="id_<?= $component->id_basic_comp ?>" name="addt_comp-lining[<?= $no ?>][<?= $addt ?>][id_comp]" value="<?= $component ? $component->id_basic_comp : '-' ?>">
 								</td>
 								<td>
-									<input type="number" style="width:100%" name="addt_comp-lining[<?= $no ?>][<?= $addt ?>][qty]" data-id="<?= $component->id_basic_comp ?>" value="<?= $component ? $component->qty : '0' ?>" class="qty_add_comp-lining form-control text-right" placeholder="0" min="0" max="100">
+									<input type="number" id="qty_<?= $component->id_basic_comp ?>" style="width:100%" name="addt_comp-lining[<?= $no ?>][<?= $addt ?>][qty]" data-id="<?= $component->id_basic_comp ?>" value="<?= $component ? $component->qty : '0' ?>" class="qty_add_comp-lining form-control text-right" placeholder="0" min="0" max="100">
 								</td>
 								<td>
 									<?= $component ? $component->uom : '-' ?>
-									<input type="hidden" style="width:100%" name="addt_comp-lining[<?= $no ?>][<?= $addt ?>][uom]" value="<?= $component ? $component->uom : '-' ?>" class="form-control text-right" placeholder="0">
+									<input type="hidden" id="uom_<?= $component->id_basic_comp ?>" style="width:100%" name="addt_comp-lining[<?= $no ?>][<?= $addt ?>][uom]" value="<?= $component ? $component->uom : '-' ?>" class="form-control text-right" placeholder="0">
 								</td>
 								<td>
 									<?= $component ? number_format($component->selling_price) : '-' ?>
-									<input type="hidden" style="width:100%" name="addt_comp-lining[<?= $no ?>][<?= $addt ?>][price]" id="price_lining<?= $component->id_basic_comp ?>" value="<?= $component ? $component->selling_price : '-' ?>" class="form-control text-right" placeholder="0">
+									<input type="hidden" id="price_<?= $component->id_basic_comp ?>" style="width:100%" name="addt_comp-lining[<?= $no ?>][<?= $addt ?>][price]" id="price_lining<?= $component->id_basic_comp ?>" value="<?= $component ? $component->selling_price : '-' ?>" class="form-control text-right" placeholder="0">
 								</td>
 								<td>
-									<input type="text" readonly style="width:100%" name="addt_comp-lining[<?= $no ?>][<?= $addt ?>][t_price]" id="t_price_lining<?= $component->id_basic_comp ?>" value="<?= $component ? number_format($component->selling_price * $component->qty) : '0' ?>" class="form-control text-right" placeholder="0">
+									<input type="text" id="t_price_<?= $component->id_basic_comp ?>" readonly style="width:100%" name="addt_comp-lining[<?= $no ?>][<?= $addt ?>][t_price]" id="t_price_lining<?= $component->id_basic_comp ?>" value="<?= $component ? number_format($component->selling_price * $component->qty) : '0' ?>" class="form-control text-right" placeholder="0">
 								</td>
 								<td>
 									<a class="text-red hapus" href="javascript:void(0)" title="Hapus Item"><i class="fa fa-times"></i></a>
@@ -230,14 +230,19 @@
 					<tbody>
 						<?php
 						$exCOmm = $this->db->get_where('qtt_ext_commission', ['id_quotation' => $fabrics_lining->id_quotation, 'item' => 'rail-lining', 'section' => $no])->result();
+						// echo "<pre>";
+						// print_r($exCOmm);
+						// echo "<pre>";
+						// exit;
 						if ($exCOmm) {
 							foreach ($exCOmm as $cm => $comm) {
 								$this->db->select('a.*,b.name_pic');
 								$this->db->from('qtt_ext_commission a');
 								$this->db->join('child_customer_pic b', 'a.id_pic = b.id_pic');
-								$this->db->where(['a.id_pic' => $comm->id_pic, 'id_quotation' => $comm->id_quotation, 'item' => 'lining', 'section' => $no]);
+								$this->db->where(['a.id_pic' => $comm->id_pic, 'a.id_quotation' => $comm->id_quotation, 'a.item' => 'rail-lining', 'a.section' => $no]);
 								$railCommissi = $this->db->get()->result();
 								foreach ($railCommissi as $Commission) {
+
 						?>
 									<tr>
 										<td><?= $Commission->name_pic ?>
@@ -261,8 +266,6 @@
 			</strong>
 		</div>
 	</div>
-
-
 </div>
 
 <script>

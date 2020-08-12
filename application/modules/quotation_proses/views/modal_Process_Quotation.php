@@ -1,7 +1,5 @@
 <form class="" id="form-quotation" action="" method="post" enctype="multipart/form-data">
-
   <input type="hidden" name="type" class="form-control" value="<?= !empty($data->payment_term) ? 'edit' : 'add' ?>">
-
   <div class=" box-solid">
     <div class="box-header">
       <table id="my-grid3" class="table-condensed" width="100%">
@@ -21,8 +19,8 @@
                 <td width="30%">
                   <label>Quotation Number</label>
                 </td>
-                <td>: <?= $data->id_quotation ?></td>
-                <input type="hidden" name="id_quotation" value="<?= $data->id_quotation ?>">
+                <td>: <?= $data->nomor ?></td>
+                <input type="hidden" name="id_quotation" value="<?= $data->nomor ?>">
               </tr>
               <tr>
                 <td>
@@ -150,6 +148,10 @@
         </div>
       </div>
       <hr>
+
+
+      <!-- ================================ DETAIL JENDELA ==========================================  -->
+
       <div class="box box-solid">
         <table id="my-grid3" class="table-condensed" width="100%">
           <thead>
@@ -205,7 +207,8 @@
 
       <!-- CURTAIN -->
       <?php
-          $qttCurtain = $this->db->get_where('qtt_product_fabric', ['id_ruangan' => $room->id_ruangan, 'item' => 'curtain'])->row();
+          $qttCurtain = $this->db->get_where('qtt_product_fabric', ['id_ruangan' => $room->id_ruangan, 'id_quotation' => $data->id, 'item' => 'curtain'])->row();
+
           if ($qttCurtain) { ?>
         <div class="box box-primary">
           <div class="box-header with-border">
@@ -235,7 +238,7 @@
                   <td>
                     <?php
                     $curtain = $this->db->get_where('master_product_fabric', ['id_product' => $qttCurtain->id_product])->row();
-                    $t_hrg_kain = $qttCurtain->harga_kain * $qttCurtain->t_kain;
+                    $t_hrg_kain = ($qttCurtain->harga_kain * $qttCurtain->t_kain) * $qttCurtain->qty;
                     $total = $t_hrg_kain - ($t_hrg_kain * $qttCurtain->disc_persen / 100);
                     ?>
                     <label><?= $curtain->id_product ?></label><br>
@@ -260,6 +263,10 @@
                 <?php
                 $rail = $this->db->get_where('mp_rail', ['id_rail' => $qttCurtain->rail_material])->row();
                 $total_rail = $qttCurtain->t_price - ($qttCurtain->t_price * $qttCurtain->diskon_rail / 100);
+                // echo "<pre>";
+                // print_r($qttCurtain->width);
+                // echo "<pre>";
+                // exit;
                 ?>
                 <tr>
                   <td><?= $rail->id_rail . " - " . $rail->name_product ?></td>
@@ -274,6 +281,36 @@
                   <td class="text-center"><?= $rail->status_wh ?></td>
                   <td class=""><?= $qttCurtain->ket_rail ?></td>
                 </tr>
+                <tr>
+                  <td colspan="10"><label for="">Additional Component</label></td>
+                </tr>
+                <?php
+
+                $this->db->select('a.*,c.name_component');
+                $this->db->from('qtt_additional_comp_rail a');
+                $this->db->join('mp_rail_additional b', 'a.id_additional_comp = b.id_rail_add');
+                $this->db->join('master_component c', 'b.id_component = c.id');
+                $this->db->where(['a.section' => $no, 'a.id_quotation' => $qttCurtain->id_quotation, 'a.item' => 'curtain']);
+                $additionalComponent = $this->db->get()->result();
+                foreach ($additionalComponent as $addComp) {
+                  // exit;
+                ?>
+                  <tr>
+                    <td>
+                      <?= $addComp->id_additional_comp . ' - ' . $addComp->name_component ?>
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td class="text-center"><?= $addComp->qty ?></td>
+                    <td class="text-right"><?= number_format($addComp->selling_price) ?></td>
+                    <td class="text-right"><?= number_format($addComp->t_price) ?></td>
+                    <td class="text-center"><?= '0' ?>%</td>
+                    </td>
+                    <td class="text-right"><?= number_format($addComp->t_price) ?></td>
+                    <td class="text-center"></td>
+                    <td class=""></td>
+                  </tr>
+                <?php } ?>
                 <tr>
                   <td colspan="10"><label for="">Jahitan</label></td>
                 </tr>
@@ -362,7 +399,7 @@
                   <td>
                     <?php
                     $lining = $this->db->get_where('master_product_fabric', ['id_product' => $qttLining->id_product])->row();
-                    $t_hrg_kain = $qttLining->harga_kain * $qttLining->t_kain;
+                    $t_hrg_kain = ($qttLining->harga_kain * $qttLining->t_kain) * $qttLining->qty;
                     $total = $t_hrg_kain - ($t_hrg_kain * $qttLining->disc_persen / 100);
                     ?>
                     <label><?= $lining->id_product ?></label><br>
@@ -400,6 +437,36 @@
                   <td class="text-center"><?= $rail->status_wh ?></td>
                   <td class=""><?= $qttLining->ket_rail ?></td>
                 </tr>
+                <tr>
+                  <td colspan="10"><label for="">Additional Component</label></td>
+                </tr>
+                <?php
+
+                $this->db->select('a.*,c.name_component');
+                $this->db->from('qtt_additional_comp_rail a');
+                $this->db->join('mp_rail_additional b', 'a.id_additional_comp = b.id_rail_add');
+                $this->db->join('master_component c', 'b.id_component = c.id');
+                $this->db->where(['a.section' => $no, 'a.id_quotation' => $qttCurtain->id_quotation, 'a.item' => 'lining']);
+                $addCompLining = $this->db->get()->result();
+                foreach ($addCompLining as $cl) {
+                  // exit;
+                ?>
+                  <tr>
+                    <td>
+                      <?= $cl->id_additional_comp . ' - ' . $cl->name_component ?>
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td class="text-center"><?= $cl->qty ?></td>
+                    <td class="text-right"><?= number_format($cl->selling_price) ?></td>
+                    <td class="text-right"><?= number_format($cl->t_price) ?></td>
+                    <td class="text-center"><?= '0' ?>%</td>
+                    </td>
+                    <td class="text-right"><?= number_format($cl->t_price) ?></td>
+                    <td class="text-center"></td>
+                    <td class=""></td>
+                  </tr>
+                <?php } ?>
                 <tr>
                   <td colspan="10"><label for="">Jahitan</label></td>
                 </tr>
@@ -444,7 +511,7 @@
                 <label class="control-label col-sm-2" for="email">Air Freight Lining</label>
                 <div class="col-sm-3">
                   <input type="hidden" name="lining[<?= $no ?>][id_ruangan]" value="<?= $room->id_ruangan ?>">
-                  <input type="text" readonly value="<?= $afl != '' ? number_format($afl->total_air_freight) : '' ?>" class="total_af orm-control text-right required" name="lining[<?= $no ?>][t_air_freight_lining]" id="t_air_freight_lining<?= $no ?>" placeholder="0">
+                  <input type="text" readonly value="<?= $afl != '' ? number_format($afl->total_air_freight) : '' ?>" class="total_af form-control text-right required" name="lining[<?= $no ?>][t_air_freight_lining]" id="t_air_freight_lining<?= $no ?>" placeholder="0">
                 </div>
               </div>
 
@@ -459,7 +526,7 @@
 
       <!-- VITRAGE -->
       <?php
-          $qttVitrage = $this->db->get_where('qtt_product_fabric', ['id_ruangan' => $room->id_ruangan, 'item' => 'vitrage'])->row();
+          $qttVitrage = $this->db->get_where('qtt_product_fabric', ['id_ruangan' => $room->id_ruangan, 'id_quotation' => $data->id, 'item' => 'vitrage'])->row();
           if ($qttVitrage) { ?>
         <div class="box box-warning">
           <div class="box-header with-border">
@@ -489,7 +556,7 @@
                   <td>
                     <?php
                     $vitrage = $this->db->get_where('master_product_fabric', ['id_product' => $qttVitrage->id_product])->row();
-                    $t_hrg_kain = $qttVitrage->harga_kain * $qttVitrage->t_kain;
+                    $t_hrg_kain = ($qttVitrage->harga_kain * $qttVitrage->t_kain) * $qttVitrage->qty;
                     $total = $t_hrg_kain - ($t_hrg_kain * $qttVitrage->disc_persen / 100);
                     ?>
                     <label><?= $vitrage->id_product ?></label><br>
@@ -527,6 +594,36 @@
                   <td class="text-center"><?= $rail->status_wh ?></td>
                   <td class=""><?= $qttVitrage->ket_rail ?></td>
                 </tr>
+                <tr>
+                  <td colspan="10"><label for="">Additional Component</label></td>
+                </tr>
+                <?php
+
+                $this->db->select('a.*,c.name_component');
+                $this->db->from('qtt_additional_comp_rail a');
+                $this->db->join('mp_rail_additional b', 'a.id_additional_comp = b.id_rail_add');
+                $this->db->join('master_component c', 'b.id_component = c.id');
+                $this->db->where(['a.section' => $no, 'a.id_quotation' => $qttCurtain->id_quotation, 'a.item' => 'vitrage']);
+                $addCompVitrage = $this->db->get()->result();
+                foreach ($addCompVitrage as $cv) {
+                  // exit;
+                ?>
+                  <tr>
+                    <td>
+                      <?= $cv->id_additional_comp . ' - ' . $cv->name_component ?>
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td class="text-center"><?= $cv->qty ?></td>
+                    <td class="text-right"><?= number_format($cv->selling_price) ?></td>
+                    <td class="text-right"><?= number_format($cv->t_price) ?></td>
+                    <td class="text-center"><?= '0' ?>%</td>
+                    </td>
+                    <td class="text-right"><?= number_format($cv->t_price) ?></td>
+                    <td class="text-center"></td>
+                    <td class=""></td>
+                  </tr>
+                <?php } ?>
                 <tr>
                   <td colspan="10"><label for="">Jahitan</label></td>
                 </tr>
@@ -587,7 +684,7 @@
 
       <!-- ACCESSORIESS -->
       <?php
-          $qttAcc = $this->db->get_where('qtt_accessoriess', ['id_ruangan' => $room->id_ruangan])->result();
+          $qttAcc = $this->db->get_where('qtt_accessoriess', ['id_ruangan' => $room->id_ruangan, 'id_quotation' => $data->id])->result();
           if ($qttAcc) { ?>
         <div class="box box-danger">
           <div class="box-header with-border">
@@ -641,7 +738,7 @@
       </div>
       <div class="box-body">
         <?php
-        $qttDelivery = $this->db->get_where('qtt_delivery', ['id_quotation' => $data->id_quotation])->row();
+        $qttDelivery = $this->db->get_where('qtt_delivery', ['id_quotation' => $data->id])->row();
         ?>
         <table class="table-condensed table-bordered table-striped" width="100%">
           <thead class="bg-blue">
@@ -709,7 +806,7 @@
           </thead>
           <tbody>
             <?php
-            $meal_cost = $this->db->get_where('qtt_meal_cost', ['id_quotation' => $data->id_quotation])->result();
+            $meal_cost = $this->db->get_where('qtt_meal_cost', ['id_quotation' => $data->id])->result();
             if (!empty($meal_cost)) {
               $no = 0;
               foreach ($meal_cost as $meal) {
@@ -761,7 +858,7 @@
           </thead>
           <tbody>
             <?php
-            $transport = $this->db->get_where('qtt_transport_cost', ['id_quotation' => $data->id_quotation])->result();
+            $transport = $this->db->get_where('qtt_transport_cost', ['id_quotation' => $data->id])->result();
             if (!empty($transport)) {
               $no = 0;
               foreach ($transport as $trans) {
@@ -820,7 +917,7 @@
           </thead>
           <tbody>
             <?php
-            $housing = $this->db->get_where('qtt_housing_cost', ['id_quotation' => $data->id_quotation])->result();
+            $housing = $this->db->get_where('qtt_housing_cost', ['id_quotation' => $data->id])->result();
             if (!empty($housing)) {
               $no = 0;
               foreach ($housing as $hous) {
@@ -866,7 +963,7 @@
           </thead>
           <tbody>
             <?php
-            $other = $this->db->get_where('qtt_other_cost', ['id_quotation' => $data->id_quotation])->result();
+            $other = $this->db->get_where('qtt_other_cost', ['id_quotation' => $data->id])->result();
             if (!empty($other)) {
               $no = 0;
               foreach ($other as $oth) {
@@ -898,44 +995,47 @@
       <?php
       $sumCurtain = $this->db->query('SELECT
             SUM((harga_kain * t_kain) * qty) AS subtotal,
-            SUM(((harga_kain * t_kain) * disc_persen )/100) AS discount,
-            SUM((harga_kain * t_kain) - ((harga_kain * t_kain) * disc_persen )/100) AS total,
+            SUM((((harga_kain * t_kain) * qty) * disc_persen )/100) AS discount,
+            SUM((( harga_kain * t_kain ) * qty ) - ((( harga_kain * t_kain )* qty  ) * disc_persen )/ 100 ) AS total,
             SUM(t_kain) AS t_kain,
-            SUM((hrg_jahitan * t_kain)) AS hrg_jahitan,
-            SUM((val_disc_jahit  * t_kain)) AS disc_jahitan,
-            SUM((t_hrg_jahitan  * t_kain)) AS total_jahitan,
-            SUM(t_price) AS subtotal_rail,
-            SUM(v_diskon_rail) AS discount_rail,
-            SUM((t_price) - (v_diskon_rail )) AS total_rail
+            SUM(((hrg_jahitan * t_kain)* qty)) AS hrg_jahitan,
+            SUM(((val_disc_jahit  * t_kain) * qty)) AS disc_jahitan,
+            SUM(((t_hrg_jahitan  * t_kain) * qty)) AS total_jahitan,
+            SUM((t_price* qty)) AS subtotal_rail,
+            SUM((v_diskon_rail* qty)) AS discount_rail,
+            SUM((t_price* qty) - (v_diskon_rail * qty)) AS total_rail
             FROM
               qtt_product_fabric
-            WHERE id_quotation = "' . $data->id_quotation . '"')->row();
+            WHERE id_quotation = "' . $data->id . '"')->row();
 
-      $sumAcc = $this->db->query('SELECT SUM(t_price_acc) AS total_acc FROM qtt_accessoriess WHERE id_quotation = "' . $data->id_quotation . '"')->row();
-      $sumAddComp = $this->db->query('SELECT SUM(t_price) AS total_addc FROM qtt_additional_comp_rail WHERE id_quotation = "' . $data->id_quotation . '"')->row();
+      $sumAcc = $this->db->query('SELECT SUM(t_price_acc) AS total_acc FROM qtt_accessoriess WHERE id_quotation = "' . $data->id . '"')->row();
+      $sumAddComp = $this->db->query('SELECT SUM(t_price) AS total_addc FROM qtt_additional_comp_rail WHERE id_quotation = "' . $data->id . '"')->row();
       $sumRail = $sumCurtain->subtotal_rail + $sumAddComp->total_addc;
       $sumRailAcc = $sumAcc->total_acc + $sumCurtain->subtotal_rail + $sumAddComp->total_addc;
+      $sumRailAccTotal = $sumRailAcc - $sumCurtain->discount_rail;
 
-      $sumAf = $this->db->query('SELECT sum(total_air_freight) as total_air_freight from qtt_air_freight where id_quotation = "' . $data->id_quotation . '"')->row();
-      $sumDeliv = $this->db->query('SELECT sum(price) as t_delivery from qtt_delivery where id_quotation = "' . $data->id_quotation . '"')->row();
-      $sumMeal = $this->db->query('SELECT sum(total) as t_meal from qtt_meal_cost where id_quotation = "' . $data->id_quotation . '"')->row();
-      $sumTrans = $this->db->query('SELECT sum(total) as t_trans from qtt_transport_cost where id_quotation = "' . $data->id_quotation . '"')->row();
-      $sumHouse = $this->db->query('SELECT sum(total) as t_house from qtt_housing_cost where id_quotation = "' . $data->id_quotation . '"')->row();
-      $sumOth = $this->db->query('SELECT sum(cost) as t_oth from qtt_other_cost where id_quotation = "' . $data->id_quotation . '"')->row();
+
+      $sumAf = $this->db->query('SELECT sum(total_air_freight) as total_air_freight from qtt_air_freight where id_quotation = "' . $data->id . '"')->row();
+      $sumDeliv = $this->db->query('SELECT sum(price) as t_delivery from qtt_delivery where id_quotation = "' . $data->id . '"')->row();
+      $sumMeal = $this->db->query('SELECT sum(total) as t_meal from qtt_meal_cost where id_quotation = "' . $data->id . '"')->row();
+      $sumTrans = $this->db->query('SELECT sum(total) as t_trans from qtt_transport_cost where id_quotation = "' . $data->id . '"')->row();
+      $sumHouse = $this->db->query('SELECT sum(total) as t_house from qtt_housing_cost where id_quotation = "' . $data->id . '"')->row();
+      $sumOth = $this->db->query('SELECT sum(cost) as t_oth from qtt_other_cost where id_quotation = "' . $data->id . '"')->row();
 
       $sumBiaya = $sumCurtain->total_jahitan + $sumAf->total_air_freight + $sumDeliv->t_delivery + $sumMeal->t_meal + $sumTrans->t_trans + $sumHouse->t_house + $sumOth->t_oth;
       $sumDiscBiaya = $sumCurtain->disc_jahitan;
       $t_sumBiaya = $sumBiaya - $sumDiscBiaya;
 
-      // $sumMoq = $this->db->query('SELECT sum(price) as subtotal_moq, sum(total) as t_moq, sum(val_disc) as disc_moq from qtt_moq where id_quotation = "' . $data->id_quotation . '"')->row();
+      // $sumMoq = $this->db->query('SELECT sum(price) as subtotal_moq, sum(total) as t_moq, sum(val_disc) as disc_moq from qtt_moq where id_quotation = "' . $data->id . '"')->row();
       $subtotalFabric = $sumCurtain->subtotal;
       $discFabric = $sumCurtain->discount;
       $totalFabric = $sumCurtain->total;
 
-      $subtotal = $totalFabric + $sumBiaya + $sumRailAcc;
+      $subtotal = $totalFabric + $sumBiaya + $sumRailAccTotal;
       $ppn = ($subtotal * 10) / 100;
       $gTotal = $subtotal + $ppn;
-      $qttHeader = $this->db->get_where('quotation_header', ['id_quotation' => $data->id_quotation])->row();
+      $qttHeader = $this->db->get_where('quotation_header', ['id' => $data->id])->row();
+      $gTotalRounding = $subtotal + $ppn - $qttHeader->rounding;
 
       ?>
       <input type="hidden" id="sumJahitan" value="<?= round($sumCurtain->total_jahitan) ?>">
@@ -967,9 +1067,9 @@
             </tr>
             <tr>
               <td>Rail & Acc</td>
-              <td class="text-right"><?= number_format($sumRail) ?> <input type="hidden" name="subtotal_rail" value=" <?= $sumRail ?>"></td>
+              <td class="text-right"><?= number_format($sumRailAcc) ?> <input type="hidden" name="subtotal_rail" value=" <?= $sumRailAcc ?>"></td>
               <td class="text-right"><?= number_format($sumCurtain->discount_rail) ?> <input type="hidden" name="discount_rail" value=" <?= $sumCurtain->discount_rail ?>"></td>
-              <th class="text-right"><?= number_format($sumRailAcc) ?> <input type="hidden" id="sumRailAcc" name="sumRailAcc" value=" <?= $sumRailAcc ?>"></th>
+              <th class="text-right"><?= number_format($sumRailAccTotal) ?> <input type="hidden" id="sumRailAcc" name="sumRailAcc" value=" <?= $sumRailAccTotal ?>"></th>
             </tr>
             <tr>
               <td>Biaya</td>
@@ -1029,11 +1129,13 @@
               <td colspan="3" class="text-right">
                 <h4>
                   <strong>
-                    <span id="grand_total"><?= number_format($qttHeader->grand_total) ?>
+                    <span id="grand_total">
+                      <!-- <?= number_format($qttHeader->grand_total) ?> -->
+                      <?= number_format($gTotalRounding) ?>
                     </span>
                   </strong>
                 </h4>
-                <input type="hidden" name="grand_total" id="grand_total_quotation" value="<?= $qttHeader->grand_total ?>" class="required form-control text-right">
+                <input type="hidden" name="grand_total" id="grand_total_quotation" value="  <?= number_format($gTotalRounding) ?>" class="required form-control text-right">
               </td>
             </tr>
           </table>
@@ -1558,7 +1660,7 @@
     var column = 'id_customer';
     var column_fill = '';
     var column_name = 'nm_customer';
-    var table_name = 'customer';
+    var table_name = 'master_customer';
     var key = 'id_customer';
     var act = 'free';
     $.ajax({

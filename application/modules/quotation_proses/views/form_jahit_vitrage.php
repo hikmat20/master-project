@@ -1,3 +1,9 @@
+<?php
+// echo "<pre>";
+// print_r($vitrage);
+// echo "<pre>";
+// exit;
+?>
 <div class="col-md-6">
     <div class="form-group">
         <label class="control-label col-sm-3">Item</label>

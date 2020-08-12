@@ -1,5 +1,11 @@
 <?php
+// echo "<pre>";
+// print_r($dataPanel);
+// echo "<pre>";
+// exit;
 ?>
+
+
 <div class="col-md-6" data-type="panel" id="type_vitrage<?= $no ?>">
 	<br>
 	<div class="form-group">
@@ -140,7 +146,7 @@
 					<input type="number" class="form-control disc_vitrage" value="<?= $dataPanel->disc_persen != '' ? $dataPanel->disc_persen : '' ?>" placeholder="0" min="0" data-id="<?= $no ?>" name="product_vitrage[<?= $no ?>][disc_vitrage]" id="disc_vitrage<?= $no ?>">
 					<span class="input-group-addon">%</span>
 					<span class="input-group-addon">Rp.</span>
-					<input type="text" class="form-control text-right" value="<?= $dataPanel->disc_value != '' ? $dataPanel->disc_value : '' ?>" readonly placeholder="0" min="0" name="product_vitrage[<?= $no ?>][t_disc_vitrage]" id="t_disc_vitrage<?= $no ?>">
+					<input type="text" class="form-control text-right" value="<?= $dataPanel->disc_value != '' ? number_format($dataPanel->disc_value) : '' ?>" readonly placeholder="0" min="0" name="product_vitrage[<?= $no ?>][t_disc_vitrage]" id="t_disc_vitrage<?= $no ?>">
 
 				</div>
 				<label class="label label-danger disc_vitrage<?= $no ?> hideIt">Diskon Fabric Can't be empty!</label>

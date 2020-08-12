@@ -180,7 +180,7 @@
                             $this->db->from('qtt_booking_roll a');
                             $this->db->join('warehouse b', 'a.id_roll = b.id_roll');
                             $this->db->join('master_product_fabric c', 'b.id_product = c.id_product');
-                            $this->db->where(['a.id_roll' => $Book->id_roll, 'id_quotation' => $Book->id_quotation]);
+                            $this->db->where(['a.id_roll' => $Book->id_roll, 'id_quotation' => $Book->id_quotation, 'section' => $no, 'panel' => 'no', 'item' => 'lining']);
                             $dtRoll = $this->db->get()->result();
                             foreach ($dtRoll as $roll) {
                     ?>

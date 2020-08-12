@@ -1,7 +1,3 @@
-<?php
-$dataPanel = $this->db->get_where('qtt_product_fabric', ['id_quotation' => $id_qtt, 'item' => 'lining', 'section' => $no, 'panel' => 'yes'])->row();
-?>
-
 <div class="col-md-6" data-type="panel" id="type_lining<?= $no ?>">
 	<div class="form-group">
 		<label class="control-label col-sm-3" for="bukaan<?= $no ?>">Buka Arah <span class="text-red">*</span></label>
@@ -206,7 +202,7 @@ $dataPanel = $this->db->get_where('qtt_product_fabric', ['id_quotation' => $id_q
 							$this->db->from('qtt_booking_roll a');
 							$this->db->join('warehouse b', 'a.id_roll = b.id_roll');
 							$this->db->join('master_product_fabric c', 'b.id_product = c.id_product');
-							$this->db->where(['a.id_roll' => $Book->id_roll, 'id_quotation' => $Book->id_quotation, 'item' => 'lining', 'section' => $no]);
+							$this->db->where(['a.id_roll' => $Book->id_roll, 'id_quotation' => $Book->id_quotation, 'item' => 'lining', 'section' => $no, 'panel' => 'yes',]);
 							$dtRoll = $this->db->get()->result();
 							foreach ($dtRoll as $roll) {
 					?>
@@ -249,13 +245,13 @@ $dataPanel = $this->db->get_where('qtt_product_fabric', ['id_quotation' => $id_q
 				</thead>
 				<tbody>
 					<?php
-					$dtComm = $this->db->get_where('qtt_ext_commission', ['id_quotation' => $dataPanel->id_quotation, 'item' => 'lining', 'panel' => 'no', 'section' => $no])->result();
+					$dtComm = $this->db->get_where('qtt_ext_commission', ['id_quotation' => $dataPanel->id_quotation, 'item' => 'lining', 'panel' => 'yes', 'section' => $no])->result();
 					if ($dtComm) {
 						foreach ($dtComm as $cm => $comm) {
 							$this->db->select('a.*,b.name_pic');
 							$this->db->from('qtt_ext_commission a');
 							$this->db->join('child_customer_pic b', 'a.id_pic = b.id_pic');
-							$this->db->where(['a.id_pic' => $comm->id_pic, 'id_quotation' => $comm->id_quotation, 'item' => 'lining', 'section' => $no]);
+							$this->db->where(['a.id_pic' => $comm->id_pic, 'a.id_quotation' => $comm->id_quotation, 'a.item' => 'lining', 'a.section' => $no, 'a.panel' => 'yes']);
 							$Commissi = $this->db->get()->result();
 							foreach ($Commissi as $Commission) {
 					?>

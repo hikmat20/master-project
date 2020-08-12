@@ -6,7 +6,7 @@
                 <select class="form-control required select2 jahitan-lining" data-id="<?= $no ?>" name="product_lining[<?= $no ?>][jahitan]" id="jahitan-lining<?= $no ?>">
                     <option value=""></option>
                     <?php
-                    $lining = $this->db->get_where('qtt_product_fabric', ['id_ruangan' => $id_ruangan, 'jahitan' => $id_jahitan])->row();
+                    $lining = $this->db->get_where('qtt_product_fabric', ['id_ruangan' => $id_ruangan, 'id_quotation' => $id_quotation, 'jahitan' => $id_jahitan])->row();
                     $jahitan = $this->db->get_where('sewing', ['activation' => 'aktif'])->result();
 
                     if ($lining->jahit == 'yes') { ?>
