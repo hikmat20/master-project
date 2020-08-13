@@ -42,13 +42,18 @@ class Menu_generator
 				->get()
 				->result();
 
-			$html = "<ul class='sidebar-menu'>
-							<li class='header'></li>
-	                        <li class='" . check_class('dashboard', TRUE) . "'>
-	                            <a href='" . site_url() . "'>
-	                                <i class='fa fa-dashboard fa-size-25'></i>&nbsp <span>Dashboard</span>
-	                            </a>
-	                        </li>";
+			// echo "<pre>";
+			// print_r($menu);
+			// echo "<pre>";
+			// exit;
+			$html = "<ul class='sidebar-menu nav nav-pills nav-sidebar flex-column nav-child-indent' data-widget='treeview' role='menu' data-accordion='false'>
+					<li class='nav-item'>
+						<a href='" . site_url() . "' class='nav-link " . check_class('dashboard', TRUE) . "'>
+							<i class='nav-icon fas fa-tachometer-alt'></i>
+							<p>Dashboard <i class='right fas fa-angle-left'></i></p>
+						</a>
+					</li>";
+
 
 			if (is_array($menu) && count($menu)) {
 				foreach ($menu as $rw) {
@@ -82,28 +87,32 @@ class Menu_generator
 							if (strpos($this->uri, '/' . $link . '/') !== FALSE) {
 								$active = "active";
 							}
-							$html .= "<li class='{$active}'><a href='" . ($link == '#' ? '#' : site_url($link)) . "' " . ($target == '_blank' ? "target='_blank'" : "") . "><i class='{$icon} fa-size-25 text-center'></i> &nbsp <span>" . ucwords($title) . "</span></a></li>";
+							$html .= "<li class='nav-item'>
+								<a href='" . ($link == '#' ? '#' : site_url($link)) . "' " . ($target == '_blank' ? "target='_blank'" : "") . " class='nav-link {$active}'>
+								<i class='nav-icon {$icon} text-center'></i> 
+								<p>" . ucwords($title) . "</p>
+								</a>
+								</li>";
 						}
 						goto end_for;
 					}
 
 					$active = "";
+					$menu_open = "";
 					foreach ($submenu as $subs => $sub) {
 						if (strpos($this->uri, '/' . $sub->link . '/') !== FALSE) {
+							$menu_open = "menu-open";
 							$active = "active";
 							//break;
 						}
 					}
 					$html .= "
-            			  <li class='treeview {$active}'>
-                      <a href='#'>
-                        <i class='" . $icon . " fa-size-25 text-center'></i> &nbsp
-                        <span>" . ucwords($title) . "</span>
-                        <span class='pull-right-container'>
-						            	<i class='fa fa-angle-left pull-right'></i>
-						          	</span>
-                      </a>
-                      <ul class='treeview-menu'>";
+            			  <li class='nav-item has-treeview {$menu_open}'>
+						<a href='#'  class='nav-link {$active}'>
+							<i class='nav-icon fas " . $icon . " '></i>
+							<p>" . ucwords($title) . " <i class='right fas fa-angle-left'></i></p>
+						</a>
+						<ul class='nav nav-treeview'>";
 
 					//Make Sub Menu
 					foreach ($submenu as $sub) {
@@ -141,32 +150,31 @@ class Menu_generator
 									$active = "active";
 								}
 								$html .= "
-								<li class='" . $active . "'>
-									<a href='" . ($sublink == '#' ? '#' : site_url($sublink)) . "'" . " " . $subtarget . ">
-										<i class='" . $subicon . "'></i>" . ucwords($subtitle) . "
+								<li class='nav-item'>
+									<a href='" . ($sublink == '#' ? '#' : site_url($sublink)) . "'" . " " . $subtarget . " class='nav-link " . $active . "'>
+										<i class='far " . $subicon . " nav-icon'></i>
+                  							<p>" . ucwords($subtitle) . "</p>
 									</a>
 								</li>";
-								//echo $html;
-								//exit;
 							}
 							goto end_for_sub;
 						}
 						$active = "";
+						$menu_open = "";
 						foreach ($submenusub as $subsub) {
 							if (strpos($this->uri, '/' . $subsub->link . '/') !== FALSE) {
+								$menu_open = "menu-open";
 								$active = "active";
 								break;
 							}
 						}
 						$html .= "
-	            			  <li class='treeview {$active}'>
-	                      <a href='#'>
-	                        <i class='" . $subicon . " '></i>" . ucwords($subtitle) . "
-	                        <span class='pull-right-container'>
-							            	<i class='fa fa-angle-left pull-right'></i>
-							          	</span>
-	                      </a>
-	                      <ul class='treeview-menu'>";
+	            			  <li class='nav-item has-treeview {$menu_open}'>
+							<a href='#' class='nav-link {$active}'>
+								<i class='nav-icon fas " . $subicon . " '></i>
+								<p>" . ucwords($subtitle) . " <i class='right fas fa-angle-left'></i></p>
+							</a>
+							<ul class='nav nav-treeview'>";
 						//Make Sub Menu
 						foreach ($submenusub as $subsub) {
 							$subidsub 		= $subsub->id;
@@ -185,55 +193,26 @@ class Menu_generator
 								$active = "";
 							}
 							$html .= "
-							<li class='" . $active . "'>
-								<a href='" . ($sublinksub == '#' ? '#' : site_url($sublinksub)) . "'" . " " . $subtargetsub . ">
-									<i class='" . $subiconsub . " '></i>" . ucwords($subtitlesub) . "
+							<li class='nav-item'>
+								<a href='" . ($sublinksub == '#' ? '#' : site_url($sublinksub)) . "'" . " " . $subtargetsub . " class='nav-link " . $active . "'>
+									<i class='nav-icon fas " . $subiconsub . " '></i>
+									<p>" . ucwords($subtitlesub) . "</p>
 								</a>
 							</li>";
 						}
 
-						/*$html .="
-							</ul>
-						</li>";*/
-						//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 						$html .= "
 							</ul>
 						</li>";
-
-						//Check current link
-						/*if(strpos($this->uri, '/'.$sublink.'/')!==FALSE)
-						{
-							$active = "active";
-						}
-						else
-						{
-							$active="";
-						}
-						$html .= "
-						<li class='".$active."'>
-							<a href='".($sublink == '#' ? '#' : site_url($sublink))."'"." ".$subtarget.">
-								<i class='".$subicon."'></i>".ucwords($subtitle)."
-							</a>
-						</li>";*/
 						end_for_sub:
 					}
 					$html .= "
 						</ul>
 					</li>";
-
-					//Jump Point
 					end_for:
-					//END FOREACH MENU
 				}
-				$html .= "
-					</ul>";
-				/*=================================================================================================================
-					===================================================================================================================
-					===================================================================================================================
-					*/
+				$html .= "</ul>";
 			}
-		} else {
-			//other menu
 		}
 
 		return $html;
